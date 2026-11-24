@@ -370,6 +370,29 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
 .sim-note{font-size:11.5px;color:var(--muted);margin:12px 0 0;border-top:1px dotted var(--line);padding-top:10px}
 .sim-note{font-size:11.5px;color:var(--muted);margin:12px 0 0;border-top:1px dotted var(--line);padding-top:10px}
 
+/* 角色切换器 */
+.role-explorer{border:1px solid var(--line-strong);background:var(--white);margin:24px 0 30px}
+.role-tabs{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line);background:var(--paper-2)}
+.role-tabs button{min-height:44px;padding:10px 8px;border:0;border-right:1px solid var(--line);background:none;font-family:var(--sans);font-size:13px;color:var(--muted);cursor:pointer}
+.role-tabs button:last-child{border-right:0}
+.role-tabs button.active{background:var(--white);color:var(--green);box-shadow:inset 0 -2px 0 var(--green);font-weight:600}
+.role-body{padding:16px 18px 18px}
+.role-body .grid2{gap:14px}
+.role-body .card{padding:14px 15px}
+.role-body .card h4{font-size:13.5px}
+.role-body .card p,.role-body .card li{font-size:12.5px;line-height:1.65;color:var(--muted)}
+.role-body ul{margin:0;padding-left:16px}
+.role-body li{margin:4px 0}
+.diagram-frame.natural{text-align:center}
+.diagram-frame.natural img{width:auto;max-width:100%;min-width:0}
+@media (max-width:760px){
+  .diagram-frame.natural img{min-width:520px}
+}
+@media (max-width:760px){
+  .role-tabs button{font-size:12px;padding:10px 6px}
+  .role-body{padding:14px}
+}
+
 :focus-visible{outline:2px solid var(--green);outline-offset:2px}
 .chapter.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
 .chapter.reveal.in{opacity:1;transform:none}
@@ -470,7 +493,7 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
       <div class="hero-meta">
         <div><span>读者</span><p>产品、研发、算法、业务负责人，第一次搭记忆模块的人</p></div>
         <div><span>读完能做什么</span><p>定边界、定字段、跑通写入与召回、把权限和删除做完整</p></div>
-        <div><span>推进方式</span><p>按 5 个接入阶段和 8 周排期，从试点走到灰度上线</p></div>
+        <div><span>推进方式</span><p>按接入五阶段和分角色灰度，从试点走到上线</p></div>
       </div>
     </div>
 
@@ -493,12 +516,12 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
       </div>
     </div>
   </div>
-  <div class="scroll-cue">向下读 / 01—10</div>
+  <div class="scroll-cue">向下读 / 01—11</div>
 </section>
 
 <div class="shell">
 <aside class="toc" aria-label="目录">
-  <p class="toc-title"><span>CONTENTS</span><span>10 CH.</span></p>
+  <p class="toc-title"><span>CONTENTS</span><span>11 CH.</span></p>
   <a href="#ch1" class="active"><span class="n">01</span><span>先定边界<br>记忆不是聊天记录</span></a>
   <a href="#ch2"><span class="n">02</span><span>准入<br>什么该进记忆</span></a>
   <a href="#ch3"><span class="n">03</span><span>架构<br>六层平台怎么分</span></a>
@@ -509,6 +532,7 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
   <a href="#ch8"><span class="n">08</span><span>接入<br>五阶段上线</span></a>
   <a href="#ch9"><span class="n">09</span><span>推进<br>团队与 8 周排期</span></a>
   <a href="#ch10"><span class="n">10</span><span>坑与清单<br>上线前逐项过</span></a>
+  <a href="#ch11"><span class="n">11</span><span>从零接手<br>CRM 记忆模块实战</span></a>
 </aside>
 
 <main>
@@ -1449,6 +1473,697 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
   </div>
 </section>
 
+<section class="chapter" id="ch11">
+  <div class="chapter-head">
+    <div class="chapter-no">11<small>PLAYBOOK</small></div>
+    <div>
+      <h2>从零接手：CRM Agent 记忆模块怎么干</h2>
+      <p class="lede">这一章不再解释“记忆是什么”，而是回答“明天上班先做什么”。以一个车企 CRM 的 Agent 助手为例：使用者是普通销售、店长、区域负责人。你要从他们的角色和场景出发，把记忆做成他们敢用、用得上的东西。</p>
+    </div>
+  </div>
+
+  <p>先记住一句话：<strong>新场景不是从建库、选型、接模型开始，而是从角色访谈和场景盘点开始。</strong> 你真正要回答的是：谁在什么时刻、做什么决定、缺哪条信息、这条信息 24 小时后还成不成立。把这四个问题答清楚，记忆类型、字段、权限、召回才有落点。</p>
+
+  <div class="note">
+    <span class="label">本章交付物</span>
+    <p>照着做完，你手里应该有 7 张纸：<strong>角色任务表、场景评分表、记忆盘点表、字段模型、角色权限矩阵、12 周计划、验收指标。</strong> 没有这 7 张纸，不要开始写代码；否则你会做出一个“能存很多、但没人敢用”的记忆库。</p>
+  </div>
+
+  <div class="figure">
+    <div class="figure-head"><span class="cap">FIG. 6 / SEVEN-STEP PLAYBOOK</span><span class="src">原生流程图</span></div>
+    <div class="diagram-frame natural" style="max-width:560px;margin:0 auto"><img src="assets/06-playbook.svg" style="width:100%;max-width:460px;margin:0 auto" alt="七步开工法三阶段概览：角色与场景、模型与链路、灰度验收"></div>
+    <p class="figure-note">这张图把七步压成三个阶段，先看骨架；每一步的具体产物和退出标准看下面这张表。七步不是七个会议，而是七个有产物的节点。</p>
+  </div>
+
+  <p class="table-caption">七步开工法：每一步的产物与退出标准</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:9%"><col style="width:18%"><col style="width:37%"><col style="width:36%"></colgroup>
+      <thead><tr><th>步</th><th>动作</th><th>具体做什么</th><th>退出标准</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td>盘点角色与任务</td><td>找普通销售、店长、区域负责人各 1–2 人，按“最近一次任务”访谈，不听功能诉求</td><td>每个角色有一张任务表：时刻、任务、决定、信息缺口</td></tr>
+        <tr><td><strong>2</strong></td><td>画场景地图</td><td>把角色 × 任务 × 频率 × 后果 × 数据可得性铺开，标出哪些场景最依赖“上次的记忆”</td><td>至少 6 个候选场景，每个都有明确下一步动作</td></tr>
+        <tr><td><strong>3</strong></td><td>选 3 个试点场景</td><td>只选高频、后果重、记忆能改变动作、数据拿得到、权限边界清楚的三条</td><td>业务负责人签字确认“首期就做这三条”</td></tr>
+        <tr><td><strong>4</strong></td><td>做记忆盘点</td><td>把每条候选信息过“四问 + 24 小时规则”，标主体、类型、生命周期、权威来源</td><td>形成记忆清单：记 / 不记 / 待确认 / 查系统</td></tr>
+        <tr><td><strong>5</strong></td><td>定模型与权限</td><td>把清单落成 Identity / Content / Policy 字段，再画角色可见性矩阵</td><td>字段表 + 注册表 + 权限矩阵评审通过</td></tr>
+        <tr><td><strong>6</strong></td><td>接写入与召回</td><td>首期只接 2 个事件源；先做一条“事件 → 抽取 → 证据包”的闭环</td><td>20 条真实事件可回放，top-3 可解释</td></tr>
+        <tr><td><strong>7</strong></td><td>灰度与验收</td><td>影子召回 → 10 个销售 → 1 个店 → 区域只读聚合；每层有退出标准</td><td>角色指标达标，越权 0，能决定扩不扩</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">11.1</span>第一天：只做角色与场景盘点</h3>
+  <p>不要问“你想要什么记忆”，这个问题得到的答案通常是“都想要”。要问的是：<strong>你最近一次做慢了的决定是什么？当时缺哪条信息？</strong> 记忆的价值不在“存了多少”，而在“下一次能不能少问一句、少错一步”。</p>
+
+  <p class="table-caption">三类角色：他们的一天、关键决定与记忆需求</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:14%"><col style="width:26%"><col style="width:22%"><col style="width:22%"><col style="width:16%"></colgroup>
+      <thead><tr><th>角色</th><th>一天在做什么</th><th>关键决定</th><th>记忆能帮什么</th><th>绝不能看到什么</th></tr></thead>
+      <tbody>
+        <tr><td><strong>普通销售</strong></td><td>接线索、电话邀约、到店接待、试驾、报价、跟进、成交或战败</td><td>今天先跟谁、推荐哪款车、怎么回应异议、什么时候再联系</td><td>客户顾虑、预算、决策人、竞品、上次承诺、沟通偏好</td><td>其他销售的客户明细、门店战败全量、区域价格底线</td></tr>
+        <tr><td><strong>店长</strong></td><td>晨会、分线索、盯跟进、陪访、处理战败和投诉、复盘</td><td>线索给谁、哪单要介入、谁需要辅导、本周抓什么</td><td>本店跟进缺口、战败原因、有效话术、辅导记录、风险客户</td><td>其他门店数据、销售私人聊天、区域未下发政策</td></tr>
+        <tr><td><strong>区域负责人</strong></td><td>巡店、看经营看板、开复盘会、定打法、协调资源</td><td>哪个店要支持、什么打法可复制、政策是否执行到位</td><td>跨店模式、最佳实践、政策偏差、区域风险客户、门店能力画像</td><td>单个销售私聊、未脱敏客户明细、跨区域原始数据</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="figure">
+    <div class="figure-head"><span class="cap">FIG. 7 / ROLE PROJECTION</span><span class="src">原生流程图</span></div>
+    <div class="diagram-frame natural" style="max-width:820px;margin:0 auto"><img src="assets/07-role-view.svg" style="width:100%;max-width:760px;margin:0 auto" alt="三类角色的记忆投影：普通销售、店长、区域负责人，经权限与聚合检查后形成证据包"></div>
+    <p class="figure-note">同一份原始记录，普通销售看客户级、店长看门店级、区域看聚合级；越权或超出聚合级别时返回空，而不是把原始明细换个标题继续下发。</p>
+  </div>
+
+  <p class="table-caption">点角色：他会为什么买单，又绝不能看到什么</p>
+  <div class="role-explorer">
+    <div class="role-tabs" id="role-tabs" role="tablist" aria-label="切换角色">
+      <button type="button" role="tab" data-role="sales" class="active" aria-selected="true">普通销售</button>
+      <button type="button" role="tab" data-role="store" aria-selected="false">店长</button>
+      <button type="button" role="tab" data-role="region" aria-selected="false">区域负责人</button>
+    </div>
+    <div class="role-body" id="role-body"></div>
+  </div>
+
+  <p>访谈不要一次问十个抽象问题。围绕“昨天/上周的一次真实任务”追四层：当时在做什么、卡在哪、最后怎么解决、如果助手在，最希望它说什么。下面八个问题足够打开话匣子。</p>
+
+  <p class="table-caption">角色访谈问题清单</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:8%"><col style="width:52%"><col style="width:40%"></colgroup>
+      <thead><tr><th>#</th><th>问什么</th><th>你想验证什么</th></tr></thead>
+      <tbody>
+        <tr><td>Q1</td><td>昨天你接待或跟进的第一批客户，开口前最想知道什么？</td><td>任务起点、信息缺口、记忆是否真的被使用</td></tr>
+        <tr><td>Q2</td><td>哪个客户你跟到一半断了？当时缺哪条信息？</td><td>记忆能否补上“上次聊到哪、下一步是什么”</td></tr>
+        <tr><td>Q3</td><td>客户问价格、库存、交付，你去哪里查？哪些答案绝不能靠记忆？</td><td>权威系统边界、高频变化值清单</td></tr>
+        <tr><td>Q4</td><td>客户交接给同事时，你必须交代哪三件事？</td><td>交接字段、权限变化、最易漏的信息</td></tr>
+        <tr><td>Q5</td><td>你什么时候会翻历史记录？翻完做了什么决定？</td><td>召回时机、召回目的、证据要求</td></tr>
+        <tr><td>Q6</td><td>哪些信息你绝对不希望别人看到？</td><td>隐私红线、角色可见性、聚合级别</td></tr>
+        <tr><td>Q7</td><td>店长/区域负责人向你要什么数字或判断？你怎么准备？</td><td>上卷聚合、管理视图、跨角色复用</td></tr>
+        <tr><td>Q8</td><td>如果助手只能帮你记住三件事，你选哪三件？</td><td>首期记忆类型、优先级、验收指标</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">访谈记录字段：别只留聊天记录</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:24%"><col style="width:16%"><col style="width:60%"></colgroup>
+      <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>role_id</code> / <code>role_name</code></td><td>string</td><td>角色标识与业务叫法；同一角色在不同区域可能叫法不同</td></tr>
+        <tr><td><code>reports_to</code> / <code>scope</code></td><td>string</td><td>汇报关系与管理范围：本人、门店、区域</td></tr>
+        <tr><td><code>daily_tasks[]</code></td><td>string[]</td><td>一天里重复发生的任务，按频率排序</td></tr>
+        <tr><td><code>decisions[]</code></td><td>string[]</td><td>他会做的关键决定，以及做错/做慢的后果</td></tr>
+        <tr><td><code>information_gaps[]</code></td><td>string[]</td><td>决定前缺的那条信息；不是“想要更多数据”</td></tr>
+        <tr><td><code>memory_candidates[]</code></td><td>string[]</td><td>访谈中出现的候选记忆，先记录不急着定类型</td></tr>
+        <tr><td><code>forbidden[]</code></td><td>string[]</td><td>明确不愿被谁看到的信息，写清“谁不能看”</td></tr>
+        <tr><td><code>success_metric</code></td><td>string</td><td>这个角色判断“助手有用”的一句话标准</td></tr>
+        <tr><td><code>evidence_uri</code></td><td>string</td><td>访谈录音/纪要的引用，方便回查原话</td></tr>
+        <tr><td><code>interviewed_at</code></td><td>int64</td><td>访谈时间；角色和流程会变，记录时点很重要</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">11.2</span>把场景排优先级：首期只选 3 个</h3>
+  <p>不要按“功能重要性”排，按“记忆能不能改变下一步动作”排。一个场景再重要，如果记忆召回后销售也不知道该做什么，就不适合首期。用五个维度打分：<strong>频率、后果、信息缺口、数据可得性、权限复杂度</strong>；前四项越高越优先，权限复杂度越高越往后放。</p>
+
+  <p class="table-caption">CRM 候选场景与首期结论</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:28%"><col style="width:12%"><col style="width:10%"><col style="width:10%"><col style="width:18%"><col style="width:10%"><col style="width:12%"></colgroup>
+      <thead><tr><th>场景</th><th>主要角色</th><th>频率</th><th>后果</th><th>信息缺口</th><th>数据可得</th><th>首期结论</th></tr></thead>
+      <tbody>
+        <tr><td>到店 / 电话前准备</td><td>普通销售</td><td>每天多次</td><td>高</td><td>高：不知道上次聊到哪</td><td>高：CRM + 录音</td><td><strong>P0 试点</strong></td></tr>
+        <tr><td>二次跟进 / 承诺兑现</td><td>普通销售</td><td>每天</td><td>高：漏跟进丢单</td><td>高：承诺散落</td><td>中：录音 + 待办</td><td><strong>P0 试点</strong></td></tr>
+        <tr><td>晨会跟进盘点</td><td>店长</td><td>每天</td><td>高</td><td>高：不知道谁要盯</td><td>中：CRM + 记忆</td><td><strong>P0 试点</strong></td></tr>
+        <tr><td>试驾后异议处理</td><td>普通销售</td><td>每周</td><td>高</td><td>中：反馈没沉淀</td><td>高：试驾表单</td><td>P1 第二批</td></tr>
+        <tr><td>战败复盘</td><td>店长</td><td>每周</td><td>中</td><td>高：原因不成体系</td><td>中：CRM + 人工</td><td>P1 第二批</td></tr>
+        <tr><td>区域打法复制</td><td>区域负责人</td><td>每月</td><td>高</td><td>高：跨店不可比</td><td>低：口径不统一</td><td>P2 第三批</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note warn">
+    <span class="label">SELECTION RULE</span>
+    <p><strong>首期三条必须同时满足：每天会发生、做慢会丢单或返工、记忆能给出一个具体下一步、数据在现有系统里拿得到。</strong> 只要权限复杂度高到需要法务先评估，就放到第二批，不要用它拖住第一条闭环。</p>
+  </div>
+
+  <p class="table-caption">场景卡字段：一张卡说清一个场景</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:24%"><col style="width:14%"><col style="width:62%"></colgroup>
+      <thead><tr><th>字段</th><th>类型</th><th>说明与示例</th></tr></thead>
+      <tbody>
+        <tr><td><code>scene_id</code></td><td>string</td><td>稳定标识，例如 <span class="mono">crm_pre_call</span></td></tr>
+        <tr><td><code>role</code></td><td>enum</td><td>sales / store_manager / region_manager</td></tr>
+        <tr><td><code>trigger</code></td><td>string</td><td>什么时候发生：电话前 5 分钟、晨会开始、巡店前</td></tr>
+        <tr><td><code>task</code></td><td>string</td><td>用户要完成的任务：准备一次回访、排今天的跟进名单</td></tr>
+        <tr><td><code>decision</code></td><td>string</td><td>要做哪个决定：先跟谁、推荐什么、何时再联系</td></tr>
+        <tr><td><code>memory_needed</code></td><td>string[]</td><td>缺哪几条记忆：顾虑、预算、承诺、偏好</td></tr>
+        <tr><td><code>authoritative_source</code></td><td>string</td><td>哪些值必须查系统：报价、库存、订单、客户归属</td></tr>
+        <tr><td><code>success_metric</code></td><td>string</td><td>怎么算这个场景被帮到了：准备时间、命中率、承诺按时率</td></tr>
+        <tr><td><code>frequency</code></td><td>enum</td><td>daily / weekly / monthly；首期只选 daily 或高频 weekly</td></tr>
+        <tr><td><code>phase</code></td><td>enum</td><td>P0 / P1 / P2；写清楚为什么是这个阶段</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">11.3</span>记忆盘点：把场景里的信息逐条过筛</h3>
+  <p>CRM 里最危险的错误，是把“当前事实”当记忆。报价、库存、订单状态、客户归属、业绩数字，这些值第二天就会变；记忆里最多留一个历史引用，当前值必须查权威系统。下面这张表可以直接当评审底稿。</p>
+
+  <p class="table-caption">CRM 记忆盘点示例</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:30%"><col style="width:13%"><col style="width:14%"><col style="width:11%"><col style="width:10%"><col style="width:22%"></colgroup>
+      <thead><tr><th>候选信息</th><th>主体</th><th>建议类型</th><th>谁用</th><th>24h 会变？</th><th>结论 / 处理</th></tr></thead>
+      <tbody>
+        <tr><td>后排空间小，坐三个大人偏挤</td><td>customer</td><td>concern</td><td>销售</td><td>否</td><td>记，180 天复核</td></tr>
+        <tr><td>预算 30–35 万，可接受分期</td><td>customer</td><td>fact</td><td>销售</td><td>否</td><td>记，90 天复核；变更走 supersede</td></tr>
+        <tr><td>家里两位老人常坐后排</td><td>customer</td><td>fact</td><td>销售</td><td>否</td><td>记，低敏感；用于推荐车型</td></tr>
+        <tr><td>决策人是太太，销售不是</td><td>customer</td><td>relationship</td><td>销售</td><td>否</td><td>记，必须带证据</td></tr>
+        <tr><td>看过竞品 X，担心保值</td><td>customer</td><td>relationship</td><td>销售</td><td>否</td><td>记，90 天</td></tr>
+        <tr><td>上次承诺周三 18:00 前回电</td><td>customer + task</td><td>commitment</td><td>销售</td><td>否</td><td>记，完成后关闭</td></tr>
+        <tr><td>沟通偏好：先给结论，再展开</td><td>customer</td><td>preference</td><td>销售</td><td>否</td><td>长期，除非客户改口</td></tr>
+        <tr><td>试驾反馈：刹车偏硬、后排颠</td><td>customer + vehicle</td><td>feedback</td><td>销售</td><td>否</td><td>记，90 天</td></tr>
+        <tr><td>客户归属浦东直营店</td><td>customer</td><td>fact</td><td>店长 / 区域</td><td>是</td><td>不记，查 CRM</td></tr>
+        <tr><td>当前报价 / 优惠、库存、订单状态</td><td>quote / vehicle / order</td><td>fact</td><td>销售</td><td>是</td><td>不记，分别查报价、库存、订单系统</td></tr>
+        <tr><td>本月销量、转化率、客单价</td><td>store / user</td><td>metric</td><td>店长 / 区域</td><td>是</td><td>不记，查 BI</td></tr>
+        <tr><td>战败原因：价格没谈拢</td><td>customer / order</td><td>experience</td><td>店长</td><td>否</td><td>记，审核后共享</td></tr>
+        <tr><td>门店有效话术：先试驾再报价</td><td>store</td><td>procedure</td><td>店长</td><td>否</td><td>记，脱敏 + 审核</td></tr>
+        <tr><td>区域价格底线 / 政策</td><td>region</td><td>policy_ref</td><td>区域</td><td>是</td><td>不记值，只记 <span class="mono">policy_id + version</span></td></tr>
+        <tr><td>销售个人私事、情绪、家庭情况</td><td>user</td><td>private</td><td>无</td><td>—</td><td>不记，不进入组织记忆</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">在通用准入记录上，再加 7 个 CRM 字段</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:24%"><col style="width:14%"><col style="width:62%"></colgroup>
+      <thead><tr><th>字段</th><th>类型</th><th>为什么需要</th></tr></thead>
+      <tbody>
+        <tr><td><code>dealer_group_id</code></td><td>string</td><td>经销商集团/品牌，B 端第一层租户；同一个人可能属于多个集团</td></tr>
+        <tr><td><code>store_id</code></td><td>string</td><td>门店；店长视图、门店聚合、调店交接都靠它</td></tr>
+        <tr><td><code>region_id</code></td><td>string</td><td>区域；区域负责人只看聚合，不能靠它绕过 ACL</td></tr>
+        <tr><td><code>role_scope</code></td><td>string[]</td><td>这条信息对哪些角色可见：owner_sales / store_manager / region_manager</td></tr>
+        <tr><td><code>customer_stage</code></td><td>enum</td><td>lead / contacted / test_drive / quoted / ordered / delivered / lost；影响记忆权重</td></tr>
+        <tr><td><code>pii_level</code></td><td>enum</td><td>low / medium / high；决定脱敏、加密、审计和共享范围</td></tr>
+        <tr><td><code>aggregation_level</code></td><td>enum</td><td>individual / store / region；决定召回时能不能下钻到人</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">11.4</span>定模型：先定主体，再定类型，最后定权限</h3>
+  <p>车企 CRM 里“客户”不是一个主体。客户、意向车型、订单、门店、区域、员工、试驾、跟进任务，都是不同主体。主体不先分清，后面一定会出现“把订单状态写进客户记忆”“把库存车当成客户意向车型”的问题。</p>
+
+  <p class="table-caption">CRM 主体类型</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:16%"><col style="width:22%"><col style="width:20%"><col style="width:42%"></colgroup>
+      <thead><tr><th>entity_type</th><th>例子</th><th>主键</th><th>不要混用什么</th></tr></thead>
+      <tbody>
+        <tr><td><code>customer</code></td><td>客户 / 家庭</td><td><code>customer_id</code></td><td>不要把联系人、微信好友直接当客户主键</td></tr>
+        <tr><td><code>vehicle</code></td><td>意向车型 / 车辆</td><td><code>vehicle_id</code> / <code>model_code</code></td><td>不要把库存车和客户意向车型混成一个主体</td></tr>
+        <tr><td><code>order</code></td><td>订单</td><td><code>order_id</code></td><td>订单状态是权威值，不做记忆缓存</td></tr>
+        <tr><td><code>store</code></td><td>门店</td><td><code>store_id</code></td><td>门店归属是组织事实，不要当客户偏好</td></tr>
+        <tr><td><code>region</code></td><td>区域</td><td><code>region_id</code></td><td>区域聚合不是新租户，不能绕过租户隔离</td></tr>
+        <tr><td><code>user</code></td><td>员工</td><td><code>user_id</code></td><td>角色变化要更新 <span class="mono">permission_version</span></td></tr>
+        <tr><td><code>test_drive</code></td><td>试驾</td><td><code>test_drive_id</code></td><td>试驾反馈可记，试驾预约状态查系统</td></tr>
+        <tr><td><code>follow_up</code></td><td>跟进任务</td><td><code>task_id</code></td><td>完成状态查任务系统，不靠记忆判断</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">CRM 记忆类型注册表</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:15%"><col style="width:30%"><col style="width:13%"><col style="width:10%"><col style="width:18%"><col style="width:14%"></colgroup>
+      <thead><tr><th>memory_type</th><th>记什么</th><th>主体</th><th>默认 TTL</th><th>写策略</th><th>默认可见</th></tr></thead>
+      <tbody>
+        <tr><td><code>preference</code></td><td>沟通方式、配置偏好、时间偏好</td><td>customer / user</td><td>长期</td><td>cover（改口时 supersede）</td><td>本人客户</td></tr>
+        <tr><td><code>fact</code></td><td>预算、家庭结构、用车场景等稳定事实</td><td>customer</td><td>90–180 天</td><td>require_merge</td><td>本人客户</td></tr>
+        <tr><td><code>concern</code></td><td>顾虑、异议、抗拒点</td><td>customer</td><td>180 天</td><td>require_merge</td><td>本人客户</td></tr>
+        <tr><td><code>commitment</code></td><td>答应客户的事、下一步、回访时间</td><td>customer + task</td><td>到 due_at 后 30 天</td><td>append / close</td><td>本人 + 店长</td></tr>
+        <tr><td><code>relationship</code></td><td>决策链、竞品关系、转介绍关系</td><td>customer</td><td>180 天</td><td>require_merge</td><td>本人客户</td></tr>
+        <tr><td><code>feedback</code></td><td>试驾反馈、交付反馈、产品意见</td><td>customer + vehicle</td><td>90 天</td><td>append</td><td>本人 + 店长</td></tr>
+        <tr><td><code>experience</code></td><td>战败原因、成功打法、可复用经验</td><td>store / order</td><td>180 天</td><td>producer + 审核</td><td>本店；区域审核后</td></tr>
+        <tr><td><code>procedure</code></td><td>话术、SOP、门店最佳实践</td><td>store</td><td>180 天</td><td>producer + 审核</td><td>本店；跨店审核后</td></tr>
+        <tr><td><code>policy_ref</code></td><td>区域政策、价格底线、活动规则的引用</td><td>region</td><td>跟随政策版本</td><td>direct（只存引用）</td><td>按角色只读</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">Identity / Content / Policy 的 CRM 扩展字段</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:26%"><col style="width:12%"><col style="width:62%"></colgroup>
+      <thead><tr><th>字段</th><th>归属</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>dealer_group_id</code></td><td>Identity</td><td>集团/品牌租户，不能只按 user_id 混存</td></tr>
+        <tr><td><code>store_id</code> / <code>region_id</code></td><td>Identity</td><td>组织归属；调店、区域变更时重算</td></tr>
+        <tr><td><code>role_scope</code></td><td>Identity</td><td>允许哪些角色读取，不是最终鉴权</td></tr>
+        <tr><td><code>owner_sales_id</code></td><td>Identity</td><td>客户负责人；转交时变更并递增权限版本</td></tr>
+        <tr><td><code>collaborator_ids</code></td><td>Identity</td><td>协作者列表；移除后立即失效其召回</td></tr>
+        <tr><td><code>customer_stage</code></td><td>Content</td><td>客户阶段；影响记忆权重和召回场景</td></tr>
+        <tr><td><code>intent_vehicle_id</code></td><td>Content</td><td>意向车型；不要把库存车辆 ID 写进来</td></tr>
+        <tr><td><code>due_at</code></td><td>Content</td><td>承诺/跟进的到期时间；用于逾期提醒</td></tr>
+        <tr><td><code>pii_level</code></td><td>Policy</td><td>敏感级别；决定脱敏、加密、审计与共享</td></tr>
+        <tr><td><code>aggregation_level</code></td><td>Policy</td><td>individual / store / region；决定能否下钻</td></tr>
+        <tr><td><code>permission_version</code></td><td>Policy</td><td>调岗、转交、角色变化时递增；召回必须校验</td></tr>
+        <tr><td><code>visibility</code></td><td>Policy</td><td>private / team / tenant；不等于最终 ACL</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>把上面这些字段收成一条真实记录。注意：这条记忆只记“客户要求周三回电”这个承诺，不记“当前报价 30 万”；报价要去报价系统查。</p>
+
+  <pre class="codeblock">{
+  "memory_id": "M-4471",
+  "tenant_id": "group_shanghai",
+  "project_id": "crm_agent",
+  "entity_type": "customer",
+  "entity_id": "C-2087",
+  "memory_type": "commitment",
+  "sub_type": "follow_up",
+  "text": "客户要求周三 18:00 前回电，确认后排空间方案",
+  "predicate": "下次回电时间",
+  "value": "周三 18:00 前",
+  "due_at": 1763383200000,
+  "owner_sales_id": "U-118",
+  "store_id": "S-003",
+  "region_id": "R-01",
+  "role_scope": ["owner_sales", "store_manager"],
+  "visibility": "team",
+  "aggregation_level": "individual",
+  "source_type": "call_recording",
+  "source_id": "R-215",
+  "source_session_id": "SESS-8891",
+  "evidence_quote": "你周三晚上六点前给我回个电话",
+  "occurred_at": 1763188320000,
+  "valid_from": 1763188320000,
+  "valid_until": 1763383200000,
+  "review_at": 1763383200000,
+  "confidence_level": "customer_quote",
+  "pii_level": "low",
+  "status": "active",
+  "version": 1,
+  "supersedes_id": null,
+  "permission_version": 7
+}</pre>
+
+  <p class="table-caption">角色可见性矩阵：同一份记忆，三类角色看到不同粒度</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:20%"><col style="width:17%"><col style="width:18%"><col style="width:18%"><col style="width:27%"></colgroup>
+      <thead><tr><th>记忆类型</th><th>普通销售</th><th>店长</th><th>区域负责人</th><th>规则</th></tr></thead>
+      <tbody>
+        <tr><td>客户顾虑 / 偏好 / 预算</td><td>本人客户可读写</td><td>本店可读（辅导用）</td><td>仅聚合</td><td>区域不下钻姓名、电话、聊天原文</td></tr>
+        <tr><td>跟进承诺</td><td>本人可读写</td><td>本店可读</td><td>仅聚合</td><td>逾期名单可到店，不到人</td></tr>
+        <tr><td>试驾反馈</td><td>本人可读写</td><td>本店可读</td><td>仅聚合</td><td>用于产品/话术复盘，不跨店点名</td></tr>
+        <tr><td>战败原因</td><td>本人可写</td><td>本店读写</td><td>聚合 + 审核后经验</td><td>跨店只读脱敏后的模式，不读原始客户</td></tr>
+        <tr><td>门店话术 / 经验</td><td>本店可读</td><td>本店读写</td><td>跨店审核后可读</td><td>发布前必须审核、脱敏、带证据</td></tr>
+        <tr><td>区域政策 / 价格底线</td><td>只读引用</td><td>只读</td><td>读写</td><td>只存 <span class="mono">policy_id + version</span>，不缓存值</td></tr>
+        <tr><td>销售个人私事</td><td>仅本人</td><td>不可见</td><td>不可见</td><td>不进入组织记忆，不参与聚合</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="small">这张表是产品投影，不是权限系统的替代品。最终以企业 CRM / HR 权限为准；每次召回前必须再按租户、角色、对象 ACL、聚合级别、<span class="mono">permission_version</span> 过滤一次。</p>
+
+  <h3><span class="h3n">11.5</span>接写入：先接两个事件源，不要一口吃全</h3>
+  <p>首期只接两个事件源：<strong>通话录音/ASR</strong> 和 <strong>CRM 跟进记录</strong>。试驾、报价、订单先做“引用”，不写值。事件源越多，幂等、冲突、权限、回放越难；先把两个跑通，再扩。</p>
+
+  <p class="table-caption">CRM 事件源与首期取舍</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:18%"><col style="width:20%"><col style="width:30%"><col style="width:16%"><col style="width:16%"></colgroup>
+      <thead><tr><th>事件源</th><th>触发</th><th>拿到什么</th><th>写入模式</th><th>首期</th></tr></thead>
+      <tbody>
+        <tr><td>通话录音 / ASR</td><td>通话结束</td><td>转写文本、说话人、时间戳、录音引用</td><td>Producer</td><td><strong>是</strong></td></tr>
+        <tr><td>CRM 跟进记录</td><td>销售提交</td><td>customer_id、stage、note、next_follow_at</td><td>Direct</td><td><strong>是</strong></td></tr>
+        <tr><td>企微 / 在线聊天</td><td>会话结束</td><td>消息、发送人、时间、附件引用</td><td>Producer</td><td>第二批</td></tr>
+        <tr><td>试驾记录</td><td>试驾完成</td><td>试驾反馈、意向车型、陪同人</td><td>Direct</td><td>第二批</td></tr>
+        <tr><td>报价 / 订单事件</td><td>报价创建 / 订单变更</td><td>quote_id、order_id、状态、版本</td><td>Direct（只存引用）</td><td>只做引用</td></tr>
+        <tr><td>人工导入</td><td>批量导入旧录音/Excel</td><td>历史事件、旧录音、批量记录</td><td>Producer</td><td>只做回放</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">CRM 写入策略：同样一句“预算 30 万”，处理方式不一样</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:34%"><col style="width:24%"><col style="width:42%"></colgroup>
+      <thead><tr><th>场景</th><th>策略</th><th>为什么</th></tr></thead>
+      <tbody>
+        <tr><td>客户第一次说预算 30 万</td><td><code>require_merge</code></td><td>同主体可能已有预算，先合并再判断是否冲突</td></tr>
+        <tr><td>客户改口预算 35 万</td><td><code>cover</code> + <code>supersedes_id</code></td><td>新值生效，旧版本保留可追溯</td></tr>
+        <tr><td>同一通话重复上传</td><td><code>ignore</code></td><td><span class="mono">source_id</span> 幂等，避免版本膨胀</td></tr>
+        <tr><td>客户新增一条独立顾虑</td><td><code>append</code></td><td>不同顾虑可以并存，不要互相覆盖</td></tr>
+        <tr><td>两个销售给出不同预算</td><td><code>require_merge</code> + <span class="mono">disputed</span></td><td>不自动选一个，保留双方证据再核实</td></tr>
+        <tr><td>晚到的旧录音</td><td>按 <span class="mono">occurred_at</span> 保留历史</td><td>旧记录不能覆盖新事实，默认取最新</td></tr>
+        <tr><td>报价 / 库存 / 订单状态</td><td>不写</td><td>查权威系统；记忆只存“查过”的引用</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>抽取模型的输出不要只给一段文本。至少要让平台知道：这是谁的、什么类型、值是什么、什么时候到期、给谁看、证据在哪。</p>
+
+  <pre class="codeblock">{
+  "should_remember": true,
+  "reason": "客户明确要求回电，是下次跟进必须兑现的承诺",
+  "memory_type": "commitment",
+  "entity": {"type": "customer", "id": "C-2087"},
+  "predicate": "下次回电时间",
+  "value": "周三 18:00 前",
+  "due_at": 1763383200000,
+  "owner_sales_id": "U-118",
+  "store_id": "S-003",
+  "role_scope": ["owner_sales", "store_manager"],
+  "confidence_level": "customer_quote",
+  "evidence_quote": "你周三晚上六点前给我回个电话",
+  "occurred_at": 1763188320000,
+  "pii_level": "low",
+  "aggregation_level": "individual"
+}</pre>
+
+  <p class="table-caption">异步状态与 UI 文案：不要把“已提交”显示成“已记住”</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:20%"><col style="width:28%"><col style="width:52%"></colgroup>
+      <thead><tr><th>状态</th><th>UI 文案</th><th>产品要求</th></tr></thead>
+      <tbody>
+        <tr><td><code>PENDING</code></td><td>正在整理</td><td>允许用户继续做别的事，不阻塞主流程</td></tr>
+        <tr><td><code>RUNNING</code></td><td>正在整理</td><td>可显示进度；超过 SLA 要告警</td></tr>
+        <tr><td><code>SUCCEEDED</code></td><td>已记录</td><td>显示记忆卡片，可点来源、可纠错</td></tr>
+        <tr><td><code>PARTIAL</code></td><td>部分已记录，待确认</td><td>列出成功/失败项，不要整条静默丢失</td></tr>
+        <tr><td><code>FAILED</code></td><td>整理失败，可重试</td><td>保留原始事件，提供重试入口</td></tr>
+        <tr><td><code>disputed</code></td><td>待核实</td><td>不自动生效；展示双方证据和裁决人</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">11.6</span>接召回：三类角色，问的不是同一个问题</h3>
+  <p>销售要的是“今天怎么跟这个客户”，店长要的是“今天先盯谁”，区域负责人要的是“哪个店的做法可以复制”。同一个记忆库，召回目的不同，top-k、过滤条件、输出格式都应该不同。</p>
+
+  <p class="table-caption">三类角色的召回场景</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:16%"><col style="width:24%"><col style="width:24%"><col style="width:8%"><col style="width:14%"><col style="width:14%"></colgroup>
+      <thead><tr><th>角色 / 时刻</th><th>他会问什么</th><th>召回什么</th><th>top-k</th><th>不能出现什么</th><th>输出</th></tr></thead>
+      <tbody>
+        <tr><td>销售 · 电话前</td><td>这个客户上次聊到哪，今天先说什么？</td><td>顾虑、预算、决策人、承诺、偏好</td><td>5</td><td>当前报价、库存</td><td>3 条提醒 + 1 个下一步</td></tr>
+        <tr><td>销售 · 试驾后</td><td>客户试驾后最在意什么？</td><td>试驾反馈、顾虑、竞品</td><td>3</td><td>订单状态、交付时间</td><td>异议清单 + 推荐话术</td></tr>
+        <tr><td>店长 · 晨会</td><td>今天哪些客户要盯？</td><td>逾期承诺、停滞客户、风险客户</td><td>10</td><td>销售私聊原文</td><td>名单 + 原因 + 建议动作</td></tr>
+        <tr><td>店长 · 1v1</td><td>小王最近哪类客户总丢？</td><td>战败模式、辅导记录、有效话术</td><td>5</td><td>个人私事</td><td>辅导主题 + 证据</td></tr>
+        <tr><td>区域 · 巡店</td><td>哪个店打法可以复制？</td><td>跨店最佳实践、模式</td><td>5</td><td>客户姓名、电话</td><td>模式 + 适用门店</td></tr>
+        <tr><td>区域 · 政策</td><td>哪些店政策执行有偏差？</td><td>政策引用、异常、执行记录</td><td>5</td><td>个人明细</td><td>偏差清单 + 门店</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">召回请求字段：把“谁、为什么、看多深”写进请求</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:26%"><col style="width:14%"><col style="width:60%"></colgroup>
+      <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>tenant_id</code> / <code>project_id</code></td><td>string</td><td>租户与项目；来自鉴权上下文，不由前端传</td></tr>
+        <tr><td><code>role</code></td><td>enum</td><td>sales / store_manager / region_manager；决定默认投影</td></tr>
+        <tr><td><code>user_id</code></td><td>string</td><td>当前使用者；用于本人客户与协作者判断</td></tr>
+        <tr><td><code>store_id</code> / <code>region_id</code></td><td>string</td><td>当前组织范围；与角色交叉校验</td></tr>
+        <tr><td><code>purpose</code></td><td>enum</td><td>prepare_call / after_test_drive / morning_review / coaching / region_review</td></tr>
+        <tr><td><code>entity_type</code> / <code>entity_id</code></td><td>string</td><td>本次要召回的主体；客户、门店或区域</td></tr>
+        <tr><td><code>as_of</code></td><td>int64</td><td>以哪个时点判断新旧；默认当前，但回放要传历史时点</td></tr>
+        <tr><td><code>top_k</code> / <code>token_budget</code></td><td>int</td><td>召回条数与注入预算；首期 top-k 3–5，店长名单可到 10</td></tr>
+        <tr><td><code>allowed_aggregation_level</code></td><td>enum</td><td>individual / store / region；区域只能请求 region 或 store</td></tr>
+        <tr><td><code>permission_version</code></td><td>int64</td><td>当前权限版本；与记忆上的版本不一致时拒绝</td></tr>
+        <tr><td><code>trace_id</code></td><td>string</td><td>串联召回、回答、反馈；用于解释“为什么给它看这条”</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>证据包不是“把 top-k 拼成一段话”。每条都要能点回来源，还要告诉模型缺口是什么、下一步做什么。</p>
+
+  <pre class="codeblock">{
+  "role": "sales",
+  "purpose": "prepare_call",
+  "items": [
+    {
+      "memory_id": "M-4471",
+      "text": "后排空间小，坐三个大人偏挤",
+      "evidence_quote": "后面坐三个人有点挤",
+      "occurred_at": 1763188320000,
+      "confidence": "customer_quote",
+      "scope": "owner_sales",
+      "why_relevant": "上次到店提到的核心顾虑"
+    },
+    {
+      "memory_id": "M-4510",
+      "text": "预算上调到 35 万",
+      "evidence_quote": "35 万落地能接受",
+      "occurred_at": 1763274720000,
+      "confidence": "customer_quote",
+      "scope": "owner_sales",
+      "why_relevant": "报价前必须确认"
+    }
+  ],
+  "gaps": ["当前报价未查", "本周库存未查"],
+  "next_actions": ["先确认预算是否仍是 35 万", "带客户复看后排"]
+}</pre>
+
+  <p class="table-caption">三类角色的 Prompt 约束</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:14%"><col style="width:26%"><col style="width:30%"><col style="width:30%"></colgroup>
+      <thead><tr><th>角色</th><th>可以看</th><th>必须做</th><th>禁止</th></tr></thead>
+      <tbody>
+        <tr><td>普通销售</td><td>本人负责与协作的客户</td><td>3 条提醒 + 1 个下一步 + 每条来源</td><td>不报当前价/库存；不展示其他销售客户</td></tr>
+        <tr><td>店长</td><td>本店客户与门店聚合</td><td>名单 + 原因 + 至少 2 条证据</td><td>不展示销售私聊原文；不跨店下钻</td></tr>
+        <tr><td>区域负责人</td><td>跨店聚合、审核后经验</td><td>模式 + 适用门店 + 证据</td><td>不出现姓名/电话；不下钻个人</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">一条记忆在一天里怎么被用起来</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:10%"><col style="width:14%"><col style="width:28%"><col style="width:48%"></colgroup>
+      <thead><tr><th>时间</th><th>角色</th><th>动作</th><th>记忆发生了什么</th></tr></thead>
+      <tbody>
+        <tr><td>09:20</td><td>销售</td><td>打开助手，准备第一个回访</td><td>召回 3 条：后排顾虑、预算 35 万、上周承诺回电；提示“当前报价未查”</td></tr>
+        <tr><td>09:35</td><td>销售</td><td>通话 12 分钟</td><td>ASR 抽取新增顾虑“担心保值”，承诺“周三 18:00 前回电”；进入 PENDING</td></tr>
+        <tr><td>09:50</td><td>销售</td><td>确认记忆卡片并建待办</td><td>记忆变 active，待办 due_at 写入；来源可点回录音片段</td></tr>
+        <tr><td>10:10</td><td>店长</td><td>晨会看今日跟进</td><td>本店聚合召回：3 个逾期承诺、2 个停滞客户；不展示销售私聊原文</td></tr>
+        <tr><td>15:00</td><td>区域负责人</td><td>巡店前看区域</td><td>区域聚合召回：A 店“先试驾再报价”转化高；只给模式与证据，不给客户姓名</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">11.7</span>权限与交接：B 端最容易翻车的地方</h3>
+  <p>客户转交、销售调店、离职、店长升区域，这四件事会把记忆的归属全部打乱。很多项目写入和召回都做对了，最后死在“人走了，记忆还在；客户转交了，旧销售还能看”。</p>
+
+  <p class="table-caption">交接场景与必做动作</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:16%"><col style="width:32%"><col style="width:28%"><col style="width:24%"></colgroup>
+      <thead><tr><th>场景</th><th>必须做什么</th><th>最容易漏什么</th><th>验收</th></tr></thead>
+      <tbody>
+        <tr><td>客户转交</td><td>换 <span class="mono">owner_sales_id</span>；重算 <span class="mono">owner_scope</span>；通知新销售；旧销售转只读</td><td>会话缓存、历史分享链接、已建待办</td><td>新销售能召回；旧销售不能写</td></tr>
+        <tr><td>销售调店</td><td>换 <span class="mono">store_id</span> / <span class="mono">region_id</span>；重算可见范围；移出原店聚合</td><td>原店历史分享链接、导出文件</td><td>原店不再看到个人明细</td></tr>
+        <tr><td>离职</td><td>冻结账号；交接客户/待办/记忆；撤销分享链接；删除个人私事</td><td>会话缓存、浏览器缓存、导出文件</td><td>账号停用后召回为空</td></tr>
+        <tr><td>店长升区域</td><td>角色从 store 变 region；聚合级别变化；不能带走原店个人明细</td><td><span class="mono">permission_version</span> 未递增</td><td>只能看区域聚合</td></tr>
+        <tr><td>协作者移除</td><td>从 <span class="mono">owner_scope</span> 移除；失效其缓存；重算可见性</td><td>已建待办仍指向旧协作者</td><td>不能继续读写</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">交接记录字段：一次交接要留下可审计的闭环</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:28%"><col style="width:14%"><col style="width:58%"></colgroup>
+      <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>handover_id</code></td><td>string</td><td>交接唯一 ID，重试保持稳定</td></tr>
+        <tr><td><code>from_user</code> / <code>to_user</code></td><td>string</td><td>交接双方；离职场景 to_user 可为团队池</td></tr>
+        <tr><td><code>customer_ids[]</code></td><td>string[]</td><td>本次转交的客户范围</td></tr>
+        <tr><td><code>memory_ids[]</code></td><td>string[]</td><td>需要转移归属的记忆；不是全量复制</td></tr>
+        <tr><td><code>pending_task_ids[]</code></td><td>string[]</td><td>未完成的跟进、回访、交付任务</td></tr>
+        <tr><td><code>shared_links[]</code></td><td>string[]</td><td>历史分享链接；必须撤销或重新授权</td></tr>
+        <tr><td><code>session_cache_keys[]</code></td><td>string[]</td><td>会话缓存键；交接后立即失效</td></tr>
+        <tr><td><code>permission_version_before</code> / <code>after</code></td><td>int64</td><td>交接前后权限版本；召回校验用</td></tr>
+        <tr><td><code>effective_at</code></td><td>int64</td><td>生效时间；支持预约生效和回滚</td></tr>
+        <tr><td><code>approved_by</code></td><td>string</td><td>审批人；店长/区域/HR 按场景不同</td></tr>
+        <tr><td><code>audit_id</code></td><td>string</td><td>审计事件 ID；与删除、权限变更同一条 Trace</td></tr>
+        <tr><td><code>rollback_plan</code></td><td>string</td><td>交接失败时怎么恢复；不能只写“人工处理”</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">删除穿透：用户说“删掉”，就要真的查不到</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:24%"><col style="width:42%"><col style="width:34%"></colgroup>
+      <thead><tr><th>存储位置</th><th>删除动作</th><th>验收</th></tr></thead>
+      <tbody>
+        <tr><td>Record 主表</td><td>逻辑删除 + 保留最小审计摘要；敏感原文硬删</td><td>按 ID 查不到原文</td></tr>
+        <tr><td>向量 / 全文索引</td><td>按 memory_id 删除；重建任务补偿</td><td>召回不再返回</td></tr>
+        <tr><td>图谱索引</td><td>删除节点与边；保留匿名统计需单独审批</td><td>多跳查询不再命中</td></tr>
+        <tr><td>会话缓存 / 浏览器缓存</td><td>失效 key；通知客户端清理</td><td>刷新后不再出现</td></tr>
+        <tr><td>派生摘要 / 组织记忆</td><td>标记来源失效，重算聚合；不能继续引用</td><td>摘要中不再含该条</td></tr>
+        <tr><td>分享链接 / 导出文件</td><td>撤销链接；记录导出批次并回收</td><td>旧链接 403</td></tr>
+        <tr><td>审计日志</td><td>保留“谁在何时删除”的最小记录，不保留敏感正文</td><td>可审计但不泄露</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">越权测试用例：上线前必须跑</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:46%"><col style="width:24%"><col style="width:30%"></colgroup>
+      <thead><tr><th>用例</th><th>期望</th><th>检查点</th></tr></thead>
+      <tbody>
+        <tr><td>销售查同事负责的客户</td><td><span class="mono">permission_denied</span></td><td>不是返回空数组，而是明确无权限</td></tr>
+        <tr><td>店长查其他门店客户</td><td><span class="mono">scope_mismatch</span></td><td>聚合视图也不能绕过</td></tr>
+        <tr><td>区域负责人查客户姓名/电话</td><td><span class="mono">pii_denied</span> / <span class="mono">aggregated_only</span></td><td>只返回门店级统计</td></tr>
+        <tr><td>离职员工打开旧分享链接</td><td><span class="mono">link_revoked</span></td><td>链接 403，缓存失效</td></tr>
+        <tr><td>调岗后访问原客户</td><td><span class="mono">permission_denied</span></td><td><span class="mono">permission_version</span> 已递增</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">11.8</span>试点与验收：先让 10 个销售用起来</h3>
+  <p>不要一上来全店全区域。先影子召回，再 10 个销售，再 1 个店，最后区域只读聚合。每一层都要有退出标准；不达标就只修一个变量，不要同时改模型、改 Prompt、改权限。</p>
+
+  <p>第 9 章的 8 周是“一个闭环”的通用排期；CRM 有三类角色、多家门店、还要做交接和区域聚合，建议按 12 周排，不要把 8 周硬套。多出来的时间不是写更多功能，而是做访谈、权限和验收。</p>
+
+  <p class="table-caption">12 周推进表</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:10%"><col style="width:38%"><col style="width:30%"><col style="width:22%"></colgroup>
+      <thead><tr><th>周</th><th>动作</th><th>产物</th><th>退出标准</th></tr></thead>
+      <tbody>
+        <tr><td>W1</td><td>角色访谈、场景评分、禁止清单</td><td>角色任务表、场景评分表、禁止清单</td><td>业务负责人签字确认 3 个试点</td></tr>
+        <tr><td>W2–3</td><td>记忆盘点、字段模型、权限矩阵</td><td>注册表、字段表、角色可见性矩阵</td><td>评审通过，无悬空主体/权限</td></tr>
+        <tr><td>W3–5</td><td>接通话录音 + CRM 跟进记录</td><td>写入链路、抽取 Schema、审计</td><td>20 条真实事件可回放</td></tr>
+        <tr><td>W5–6</td><td>销售召回影子模式</td><td>证据包、召回日志、Badcase</td><td>top-3 有用率 ≥60%（影子）</td></tr>
+        <tr><td>W7–8</td><td>10 个销售灰度</td><td>反馈表、指标看板</td><td>每人每周 ≥3 次真实使用</td></tr>
+        <tr><td>W9–12</td><td>1 个店 + 区域只读聚合</td><td>门店报告、区域模式报告</td><td>越权 0，PII 0，能决定扩不扩</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">验收指标：按角色验收，不要只验“召回准确率”</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:16%"><col style="width:34%"><col style="width:32%"><col style="width:18%"></colgroup>
+      <thead><tr><th>角色/维度</th><th>指标</th><th>口径</th><th>目标</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="4">普通销售</td><td>准备时间</td><td>从打开助手到敢打电话/接待</td><td>≤2 分钟</td></tr>
+        <tr><td>top-3 有用率</td><td>3 条里至少 2 条被采用或纠错</td><td>≥70%</td></tr>
+        <tr><td>重复问客户次数</td><td>同一客户同一问题重复问</td><td>−30%</td></tr>
+        <tr><td>承诺按时率</td><td>due_at 前完成回访/交付</td><td>+15%</td></tr>
+        <tr><td rowspan="3">店长</td><td>晨会风险客户覆盖</td><td>名单覆盖本周应盯客户</td><td>≥80%</td></tr>
+        <tr><td>辅导有证据率</td><td>1v1 辅导至少带 2 条证据</td><td>≥60%</td></tr>
+        <tr><td>经验复用</td><td>门店话术/经验被再次引用</td><td>≥3 条/月</td></tr>
+        <tr><td rowspan="3">区域负责人</td><td>可复制打法</td><td>审核后进入区域经验库</td><td>≥2 条/季度</td></tr>
+        <tr><td>政策偏差发现时间</td><td>从发生到被看到</td><td>−50%</td></tr>
+        <tr><td>聚合样本</td><td>区域结论至少覆盖门店数</td><td>≥3 店</td></tr>
+        <tr><td rowspan="6">平台</td><td>召回 P95</td><td>RetrieveMemory 端到端</td><td>≤300ms</td></tr>
+        <tr><td>写入受理 P95</td><td>提交到返回 job_id</td><td>≤2s</td></tr>
+        <tr><td>陈旧率</td><td>召回结果中已过期/被替代占比</td><td>&lt;5%</td></tr>
+        <tr><td>删除 SLA</td><td>从申请到全链路不可召回</td><td>&lt;24h</td></tr>
+        <tr><td>审计覆盖</td><td>写入/召回/删除/交接留痕</td><td>100%</td></tr>
+        <tr><td>越权事件</td><td>线上越权召回/写入</td><td>0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">试点结论怎么下</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:18%"><col style="width:50%"><col style="width:32%"></colgroup>
+      <thead><tr><th>结论</th><th>判定</th><th>下一步</th></tr></thead>
+      <tbody>
+        <tr><td><strong>通过</strong></td><td>销售 top-3 有用率 ≥70%，越权 0，删除 SLA 达标</td><td>扩到第二个门店；区域只读聚合</td></tr>
+        <tr><td><strong>有条件通过</strong></td><td>指标达标但抽取/延迟有一项不稳</td><td>只修一个变量，缩流量再跑两周</td></tr>
+        <tr><td><strong>不通过</strong></td><td>销售不用、top-3 无用、越权或删除不可接受</td><td>停扩；回到场景/字段/权限其中一层复盘</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">第一周开工清单：每天一个可验收产物</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:10%"><col style="width:44%"><col style="width:46%"></colgroup>
+      <thead><tr><th>天</th><th>做什么</th><th>当天产物</th></tr></thead>
+      <tbody>
+        <tr><td>D1</td><td>找业务负责人，要角色清单、组织图、权限规则、现有系统清单</td><td>访谈名单 + 权限 owner + 系统清单</td></tr>
+        <tr><td>D2</td><td>访谈 2 个销售、1 个店长、1 个区域负责人</td><td>角色任务表 v0</td></tr>
+        <tr><td>D3</td><td>跟 3 次真实任务：电话、到店、晨会</td><td>信息缺口清单 + 反例</td></tr>
+        <tr><td>D4</td><td>场景评分，选 3 个试点</td><td>场景评分表 + 首期范围</td></tr>
+        <tr><td>D5</td><td>记忆盘点、禁止清单、权限矩阵 v0</td><td>评审包，约业务负责人过 60 分钟</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <span class="label">KICKOFF / 60 MIN</span>
+    <p><strong>10 分钟角色与场景；15 分钟三个试点；15 分钟记忆清单与禁止清单；10 分钟权限与交接；10 分钟指标、owner、回滚条件。</strong> 会议结束必须有一页签字版范围说明，不能只留会议纪要。</p>
+  </div>
+
+  <h3><span class="h3n">11.9</span>换一个系统，照这张表重做</h3>
+  <p>这套方法不只适用于 CRM。换到工单、客服、研发、办公助手，角色和场景不同，但开工顺序不变：先问人，再问信息，再问权限，最后才问模型。</p>
+
+  <p class="table-caption">任何新系统的 7 个开工问题</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:38%"><col style="width:40%"><col style="width:22%"></colgroup>
+      <thead><tr><th>问题</th><th>你要得到的答案</th><th>落到哪张表</th></tr></thead>
+      <tbody>
+        <tr><td>谁在用？在什么时刻？做什么决定？</td><td>角色、任务、决策、后果</td><td>角色任务表</td></tr>
+        <tr><td>缺哪条信息会让他做错或做慢？</td><td>具体的信息缺口，不是“更多数据”</td><td>场景评分表</td></tr>
+        <tr><td>这条信息 24 小时内会变吗？</td><td>稳定 / 每日 / 实时；实时转权威系统</td><td>记忆盘点表</td></tr>
+        <tr><td>它属于谁？谁能看？交接怎么变？</td><td>主体、范围、聚合级别、权限版本</td><td>权限矩阵 + 交接表</td></tr>
+        <tr><td>来源在哪？能不能回点？</td><td>source_type、source_id、evidence_quote</td><td>字段模型</td></tr>
+        <tr><td>错了怎么纠？怎么删？</td><td>纠错、失效、删除穿透、审计</td><td>治理清单</td></tr>
+        <tr><td>怎么证明它有用？</td><td>角色指标 + 平台指标 + 反例</td><td>验收指标</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>把答案压成一页纸，直接作为立项材料。字段可以按团队习惯改名，语义不要丢。</p>
+
+  <pre class="codeblock">{
+  "system": "CRM Agent 助手",
+  "roles": ["普通销售", "店长", "区域负责人"],
+  "pilot_scenes": ["电话前准备", "二次跟进", "晨会盘点"],
+  "decisions": ["先跟谁", "推荐什么", "何时再联系"],
+  "memory_types": ["concern", "fact", "commitment", "preference", "experience"],
+  "authoritative_sources": ["CRM", "报价系统", "库存系统", "订单系统", "BI"],
+  "forbidden": ["当前报价", "库存", "订单状态", "客户归属", "业绩数字", "个人私事"],
+  "permission_model": "tenant + role + object ACL + aggregation_level",
+  "pilot": "10 sales -> 1 store -> region read-only",
+  "metrics": ["top-3 useful rate", "commitment on-time rate", "permission incidents"],
+  "owner": "crm-product / sales-ops",
+  "review_at": "2026-12-31"
+}</pre>
+
+  <h3><span class="h3n">11.10</span>五件不要先做的事</h3>
+  <ol>
+    <li><strong>不要先选型、搭向量库。</strong> 你还没弄清角色和场景，选型只会把错误固化。</li>
+    <li><strong>不要先接全量数据。</strong> 先接两个事件源，跑通 20 条真实事件，再谈全量。</li>
+    <li><strong>不要先做区域/组织记忆。</strong> 个人和门店的权限还没跑通，上卷只会放大越权风险。</li>
+    <li><strong>不要用 Demo 数据验收。</strong> 必须用真实录音、真实跟进记录、真实交接场景。</li>
+    <li><strong>不要把权限交给 namespace。</strong> 租户、角色、对象 ACL、聚合级别、权限版本，缺一不可。</li>
+  </ol>
+
+  <div class="note">
+    <span class="label">ONE SENTENCE</span>
+    <p><strong>先让一个角色、一个场景、一个事件源跑通；再复制到第二个角色、第二个门店、第二个区域。记忆平台的价值不是记得多，而是让下一个人少问一次、少错一步。</strong></p>
+  </div>
+</section>
+
+
 <section class="chapter" id="appendix">
   <div class="chapter-head">
     <div class="chapter-no">A<small>APPENDIX</small></div>
@@ -1529,7 +2244,7 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
     for (const s of sections){
       if (s.offsetTop - 130 <= st) current = s;
     }
-    const id = current && current.id === 'appendix' ? 'ch10' : (current ? current.id : 'ch1');
+    const id = current && current.id === 'appendix' ? 'ch11' : (current ? current.id : 'ch1');
     tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
   }
   window.addEventListener('scroll', onScroll, {passive:true});
@@ -1655,6 +2370,60 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
     nav.appendChild(b);
   });
   renderStep(0);
+
+  // 角色切换器
+  const roleData = {
+    sales: {
+      label:'普通销售', scope:'我的客户',
+      day:'接线索、电话邀约、到店接待、试驾、报价、跟进，最后成交或战败。每天要决定：先跟谁、推荐哪款、怎么回应异议、什么时候再联系。',
+      memory:['客户明确说过的顾虑与异议','预算区间、决策人和关键关系','上次承诺与下一步时间','沟通偏好：先结论还是先细节'],
+      forbidden:['其他销售负责的客户明细','门店战败全量名单','区域价格底线与未下发政策'],
+      pilot:'电话前准备 + 二次跟进',
+      metrics:'准备 ≤2 分钟；top-3 有用率 ≥70%；重复问客户次数 −30%'
+    },
+    store: {
+      label:'店长', scope:'我的门店',
+      day:'晨会、分线索、盯跟进、陪访、处理战败和投诉。每天要决定：线索给谁、哪单要介入、谁需要辅导、本周抓什么。',
+      memory:['本店逾期承诺与停滞客户','战败原因与可复用话术','销售辅导记录与改进点','门店级风险客户'],
+      forbidden:['其他门店客户与经营数据','销售个人私聊原文','区域未下发的价格政策'],
+      pilot:'晨会跟进盘点 + 1v1 辅导',
+      metrics:'风险客户覆盖 ≥80%；辅导有证据 ≥60%；经验复用 ≥3 条/月'
+    },
+    region: {
+      label:'区域负责人', scope:'我的区域',
+      day:'巡店、看经营、开复盘会、定打法、协调资源。要决定：哪个店要支持、什么打法可复制、政策是否执行到位。',
+      memory:['跨店可复制的打法与模式','政策执行偏差与异常','门店能力画像','区域风险客户（脱敏聚合）'],
+      forbidden:['单个销售私聊','未脱敏客户姓名/电话','跨区域原始明细'],
+      pilot:'区域只读聚合 + 最佳实践',
+      metrics:'可复制打法 ≥2 条/季度；政策偏差发现时间 −50%；PII 0'
+    }
+  };
+  const roleTabs = $('#role-tabs');
+  const roleBody = $('#role-body');
+  function renderRole(key){
+    const d = roleData[key];
+    if (!d) return;
+    roleBody.innerHTML = '<div class="grid2">' +
+      '<div class="card"><span class="num">他的一天</span><h4>' + d.label + ' · ' + d.scope + '</h4><p>' + d.day + '</p></div>' +
+      '<div class="card"><span class="num">该记住什么</span><h4>先记这四类</h4><ul>' + d.memory.map(x => '<li>' + x + '</li>').join('') + '</ul></div>' +
+      '<div class="card"><span class="num">绝不能给什么</span><h4>越权红线</h4><ul>' + d.forbidden.map(x => '<li>' + x + '</li>').join('') + '</ul></div>' +
+      '<div class="card"><span class="num">首期试点</span><h4>' + d.pilot + '</h4><p>' + d.metrics + '</p></div>' +
+      '</div>';
+  }
+  if (roleTabs && roleBody){
+    $$('#role-tabs button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        $$('#role-tabs button').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected','false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected','true');
+        renderRole(btn.dataset.role);
+      });
+    });
+    renderRole('sales');
+  }
 
   // 召回权重重排模拟
   const memories = [

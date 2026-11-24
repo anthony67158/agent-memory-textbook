@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="710" height="1119" viewBox="4.0 -4.0 710.0 1119.0" font-family="PingFang SC, Microsoft YaHei, sans-serif">
+<rect x="4.0" y="-4.0" width="710.0" height="1119.0" fill="#ffffff"/>
+<marker id="m646a73" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#646a73"/></marker>
+<marker id="md9504f" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#d9504f"/></marker>
+<marker id="mdee0e3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#dee0e3"/></marker>
+<marker id="m2e9d5b" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#2e9d5b"/></marker>
+<marker id="mea580c" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#ea580c"/></marker>
+<marker id="me11d48" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#e11d48"/></marker>
+<marker id="m7c3aed" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#7c3aed"/></marker>
+<path d="M 133.0,219.0 L 133.0,347.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 133.0,437.0 L 133.0,565.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<text x="133.0" y="498.0" font-size="13" fill="#1f2329" text-anchor="middle" stroke="#ffffff" stroke-width="3.5" paint-order="stroke">普通销售</text>
+<path d="M 175.2,437.0 L 175.2,501.0 L 251.5,501.0 L 251.5,578.5 L 282.0,578.5" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<text x="251.5" y="536.8" font-size="13" fill="#1f2329" text-anchor="middle" stroke="#ffffff" stroke-width="3.5" paint-order="stroke">店长</text>
+<path d="M 229.0,423.5 L 488.0,423.5 L 488.0,578.5 L 512.0,578.5" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<text x="358.5" y="420.5" font-size="13" fill="#1f2329" text-anchor="middle" stroke="#ffffff" stroke-width="3.5" paint-order="stroke">区域</text>
+<path d="M 133.5,655.0 L 133.5,783.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 282.0,641.5 L 260.0,641.5 L 260.0,796.5 L 238.0,796.5" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 601.0,655.0 L 601.0,828.0 L 238.0,828.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 133.0,873.0 L 133.0,1001.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<ellipse cx="133.0" cy="174.0" rx="103.0" ry="45.0" fill="#eff0f5" stroke="#8f959e" stroke-width="1.6"/>
+<text x="133.0" y="160.6" font-size="14" fill="#1f2329" text-anchor="middle">客户事件与原始记录</text>
+<text x="133.0" y="179.0" font-size="14" fill="#1f2329" text-anchor="middle">通话 / 到店 / 试驾</text>
+<text x="133.0" y="197.5" font-size="14" fill="#1f2329" text-anchor="middle">跟进 / 交车</text>
+<rect x="37.0" y="347.0" width="192.0" height="90.0" rx="8" fill="#e8f3ff" stroke="#4e83fd" stroke-width="1.6"/>
+<text x="133.0" y="378.6" font-size="14" fill="#1f2329" text-anchor="middle">按角色与权限投影</text>
+<text x="133.0" y="397.0" font-size="14" fill="#1f2329" text-anchor="middle">同一份 Record，</text>
+<text x="133.0" y="415.5" font-size="14" fill="#1f2329" text-anchor="middle">不同角色看到不同记忆</text>
+<rect x="33.0" y="565.0" width="201.0" height="90.0" rx="8" fill="#e6faff" stroke="#0891b2" stroke-width="1.6"/>
+<text x="133.5" y="596.6" font-size="14" fill="#164e63" text-anchor="middle">普通销售视图</text>
+<text x="133.5" y="615.0" font-size="14" fill="#164e63" text-anchor="middle">我的客户：顾虑 / 预算</text>
+<text x="133.5" y="633.5" font-size="14" fill="#164e63" text-anchor="middle">决策人 / 上次承诺</text>
+<rect x="282.0" y="565.0" width="182.0" height="90.0" rx="8" fill="#e9fbf3" stroke="#059669" stroke-width="1.6"/>
+<text x="373.0" y="596.6" font-size="14" fill="#064e3b" text-anchor="middle">店长视图</text>
+<text x="373.0" y="615.0" font-size="14" fill="#064e3b" text-anchor="middle">我的门店：跟进缺口</text>
+<text x="373.0" y="633.5" font-size="14" fill="#064e3b" text-anchor="middle">战败 / 辅导 / 话术</text>
+<rect x="512.0" y="565.0" width="178.0" height="90.0" rx="8" fill="#fff7e6" stroke="#d97706" stroke-width="1.6"/>
+<text x="601.0" y="596.6" font-size="14" fill="#78350f" text-anchor="middle">区域负责人视图</text>
+<text x="601.0" y="615.0" font-size="14" fill="#78350f" text-anchor="middle">我的区域：跨店模式</text>
+<text x="601.0" y="633.5" font-size="14" fill="#78350f" text-anchor="middle">政策 / 风险客户</text>
+<rect x="28.0" y="783.0" width="210.0" height="90.0" rx="8" fill="#fff0f3" stroke="#e11d48" stroke-width="1.6"/>
+<text x="133.0" y="814.6" font-size="14" fill="#881337" text-anchor="middle">权限与聚合检查</text>
+<text x="133.0" y="833.0" font-size="14" fill="#881337" text-anchor="middle">本人 / 本店 / 区域聚合</text>
+<text x="133.0" y="851.5" font-size="14" fill="#881337" text-anchor="middle">越权返回空</text>
+<ellipse cx="133.0" cy="1046.0" rx="88.0" ry="45.0" fill="#eff0f5" stroke="#8f959e" stroke-width="1.6"/>
+<text x="133.0" y="1032.6" font-size="14" fill="#1f2329" text-anchor="middle">证据包</text>
+<text x="133.0" y="1051.0" font-size="14" fill="#1f2329" text-anchor="middle">top-k + 来源</text>
+<text x="133.0" y="1069.5" font-size="14" fill="#1f2329" text-anchor="middle">缺口 + 下一步</text>
+<text x="42.0" y="40.0" font-size="20" fill="#1f2329" text-anchor="start">三类角色的记忆投影</text>
+<text x="42.0" y="67.0" font-size="13" fill="#646a73" text-anchor="start">同一份原始记录，按角色、对象与权限组装成不同证据包</text>
+</svg>
