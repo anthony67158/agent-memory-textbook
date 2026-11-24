@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="502" height="2315" viewBox="4.0 -4.0 502.0 2315.0" font-family="PingFang SC, Microsoft YaHei, sans-serif">
+<rect x="4.0" y="-4.0" width="502.0" height="2315.0" fill="#ffffff"/>
+<marker id="m646a73" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#646a73"/></marker>
+<marker id="mdee0e3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#dee0e3"/></marker>
+<marker id="me11d48" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#e11d48"/></marker>
+<marker id="m7c3aed" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#7c3aed"/></marker>
+<marker id="m2e9d5b" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#2e9d5b"/></marker>
+<marker id="mea580c" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#ea580c"/></marker>
+<marker id="md9504f" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#d9504f"/></marker>
+<path d="M 143.5,185.0 L 143.5,313.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 143.5,403.0 L 143.5,531.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 143.5,621.0 L 143.5,749.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 143.5,817.0 L 143.5,945.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 251.0,783.0 L 278.5,783.0 L 278.5,990.0 L 306.0,990.0" fill="none" stroke="#d9504f" stroke-width="1.6" marker-end="url(#md9504f)"/>
+<text x="278.5" y="883.5" font-size="13" fill="#1f2329" text-anchor="middle" stroke="#ffffff" stroke-width="3.5" paint-order="stroke">不通过</text>
+<path d="M 143.5,1035.0 L 143.5,1163.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 144.0,1253.0 L 144.0,1381.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 256.0,1208.0 L 281.0,1208.0 L 281.0,1426.0 L 306.0,1426.0" fill="none" stroke="#d9504f" stroke-width="1.6" marker-end="url(#md9504f)"/>
+<text x="281.0" y="1314.0" font-size="13" fill="#1f2329" text-anchor="middle" stroke="#ffffff" stroke-width="3.5" paint-order="stroke">冲突未决</text>
+<path d="M 143.5,1471.0 L 143.5,1599.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 143.5,1689.0 L 143.5,1817.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 144.0,1885.0 L 144.0,2013.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 143.5,2103.0 L 143.5,2231.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<ellipse cx="143.5" cy="157.0" rx="100.5" ry="28.0" fill="#eff0f5" stroke="#8f959e" stroke-width="1.6"/>
+<text x="143.5" y="162.0" font-size="14" fill="#1f2329" text-anchor="middle">任务结束或关键事件</text>
+<rect x="29.0" y="313.0" width="229.0" height="90.0" rx="8" fill="#e8f3ff" stroke="#4e83fd" stroke-width="1.6"/>
+<text x="143.5" y="344.6" font-size="14" fill="#1f2329" text-anchor="middle">收集原始事件</text>
+<text x="143.5" y="363.0" font-size="14" fill="#1f2329" text-anchor="middle">messages / tool calls /</text>
+<text x="143.5" y="381.5" font-size="14" fill="#1f2329" text-anchor="middle">task state</text>
+<rect x="29.0" y="531.0" width="229.0" height="90.0" rx="8" fill="#e8f3ff" stroke="#4e83fd" stroke-width="1.6"/>
+<text x="143.5" y="562.6" font-size="14" fill="#1f2329" text-anchor="middle">解析身份与主体</text>
+<text x="143.5" y="581.0" font-size="14" fill="#1f2329" text-anchor="middle">tenant / user / agent /</text>
+<text x="143.5" y="599.5" font-size="14" fill="#1f2329" text-anchor="middle">run / entity</text>
+<rect x="36.0" y="749.0" width="215.0" height="68.0" rx="8" fill="#e8f3ff" stroke="#4e83fd" stroke-width="1.6"/>
+<text x="143.5" y="778.8" font-size="14" fill="#1f2329" text-anchor="middle">准入判定</text>
+<text x="143.5" y="797.3" font-size="14" fill="#1f2329" text-anchor="middle">四问检查 + 排除高频变化</text>
+<rect x="29.0" y="945.0" width="229.0" height="90.0" rx="8" fill="#e9fbf3" stroke="#059669" stroke-width="1.6"/>
+<text x="143.5" y="976.6" font-size="14" fill="#064e3b" text-anchor="middle">抽取候选事实</text>
+<text x="143.5" y="995.0" font-size="14" fill="#064e3b" text-anchor="middle">memory_type / predicate</text>
+<text x="143.5" y="1013.5" font-size="14" fill="#064e3b" text-anchor="middle">/ value / evidence</text>
+<rect x="32.0" y="1163.0" width="224.0" height="90.0" rx="8" fill="#e9fbf3" stroke="#059669" stroke-width="1.6"/>
+<text x="144.0" y="1194.6" font-size="14" fill="#064e3b" text-anchor="middle">去重与冲突检测</text>
+<text x="144.0" y="1213.0" font-size="14" fill="#064e3b" text-anchor="middle">memory_id / 语义相似 / </text>
+<text x="144.0" y="1231.5" font-size="14" fill="#064e3b" text-anchor="middle">版本 / occurred_at</text>
+<rect x="29.0" y="1381.0" width="229.0" height="90.0" rx="8" fill="#fff6e5" stroke="#d97706" stroke-width="1.6"/>
+<text x="143.5" y="1412.6" font-size="14" fill="#8a5300" text-anchor="middle">选择写入策略</text>
+<text x="143.5" y="1431.0" font-size="14" fill="#8a5300" text-anchor="middle">Cover / Append / Ignore</text>
+<text x="143.5" y="1449.5" font-size="14" fill="#8a5300" text-anchor="middle">/ RequireMerge</text>
+<rect x="28.0" y="1599.0" width="231.0" height="90.0" rx="8" fill="#e9fbf3" stroke="#059669" stroke-width="1.6"/>
+<text x="143.5" y="1630.6" font-size="14" fill="#064e3b" text-anchor="middle">写 Record 与 Memory</text>
+<text x="143.5" y="1649.0" font-size="14" fill="#064e3b" text-anchor="middle">异步 job / 幂等 source_i</text>
+<text x="143.5" y="1667.5" font-size="14" fill="#064e3b" text-anchor="middle">d</text>
+<rect x="53.0" y="1817.0" width="182.0" height="68.0" rx="8" fill="#e9fbf3" stroke="#059669" stroke-width="1.6"/>
+<text x="144.0" y="1846.8" font-size="14" fill="#064e3b" text-anchor="middle">建立索引</text>
+<text x="144.0" y="1865.3" font-size="14" fill="#064e3b" text-anchor="middle">向量 / 全文 / 图谱</text>
+<rect x="29.0" y="2013.0" width="229.0" height="90.0" rx="8" fill="#fff0f3" stroke="#e11d48" stroke-width="1.6"/>
+<text x="143.5" y="2044.6" font-size="14" fill="#881337" text-anchor="middle">审计与观测</text>
+<text x="143.5" y="2063.0" font-size="14" fill="#881337" text-anchor="middle">who / why / evidence / </text>
+<text x="143.5" y="2081.5" font-size="14" fill="#881337" text-anchor="middle">trace</text>
+<ellipse cx="143.5" cy="2259.0" rx="102.5" ry="28.0" fill="#eff0f5" stroke="#8f959e" stroke-width="1.6"/>
+<text x="143.5" y="2264.0" font-size="14" fill="#1f2329" text-anchor="middle">Active 或 Pending</text>
+<ellipse cx="394.0" cy="990.0" rx="88.0" ry="28.0" fill="#e8ffea" stroke="#34a853" stroke-width="1.6"/>
+<text x="394.0" y="995.0" font-size="14" fill="#1f2329" text-anchor="middle">丢弃，不入库</text>
+<ellipse cx="394.0" cy="1426.0" rx="88.0" ry="28.0" fill="#e8ffea" stroke="#34a853" stroke-width="1.6"/>
+<text x="394.0" y="1431.0" font-size="14" fill="#1f2329" text-anchor="middle">待确认或重试</text>
+<text x="42.0" y="40.0" font-size="20" fill="#1f2329" text-anchor="start">记忆写入链路</text>
+<text x="42.0" y="67.0" font-size="13" fill="#646a73" text-anchor="start">从一次任务结束，到一条可召回的记忆生效</text>
+</svg>

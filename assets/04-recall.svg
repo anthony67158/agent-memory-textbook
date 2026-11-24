@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="453" height="2489" viewBox="4.0 -4.0 453.0 2489.0" font-family="PingFang SC, Microsoft YaHei, sans-serif">
+<rect x="4.0" y="-4.0" width="453.0" height="2489.0" fill="#ffffff"/>
+<marker id="mdee0e3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#dee0e3"/></marker>
+<marker id="m646a73" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#646a73"/></marker>
+<marker id="me11d48" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#e11d48"/></marker>
+<marker id="mea580c" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#ea580c"/></marker>
+<marker id="md9504f" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#d9504f"/></marker>
+<marker id="m2e9d5b" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#2e9d5b"/></marker>
+<marker id="m7c3aed" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#7c3aed"/></marker>
+<path d="M 143.0,185.0 L 143.0,313.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 142.5,403.0 L 142.5,531.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 143.0,621.0 L 143.0,749.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 142.5,817.0 L 142.5,945.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 143.0,1035.0 L 143.0,1163.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 142.5,1253.0 L 142.5,1381.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 142.5,1471.0 L 142.5,1599.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 143.0,1689.0 L 143.0,1817.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 143.0,1885.0 L 143.0,2013.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 143.0,2081.0 L 143.0,2209.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<path d="M 143.0,2277.0 L 143.0,2405.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<ellipse cx="143.0" cy="157.0" rx="88.0" ry="28.0" fill="#eff0f5" stroke="#8f959e" stroke-width="1.6"/>
+<text x="143.0" y="162.0" font-size="14" fill="#1f2329" text-anchor="middle">请求进入</text>
+<rect x="28.0" y="313.0" width="229.0" height="90.0" rx="8" fill="#e8f3ff" stroke="#4e83fd" stroke-width="1.6"/>
+<text x="142.5" y="344.6" font-size="14" fill="#1f2329" text-anchor="middle">构造召回条件</text>
+<text x="142.5" y="363.0" font-size="14" fill="#1f2329" text-anchor="middle">entity / purpose / asOf</text>
+<text x="142.5" y="381.5" font-size="14" fill="#1f2329" text-anchor="middle">/ topK</text>
+<rect x="30.0" y="531.0" width="226.0" height="90.0" rx="8" fill="#e9fbf3" stroke="#059669" stroke-width="1.6"/>
+<text x="143.0" y="562.6" font-size="14" fill="#064e3b" text-anchor="middle">四路并行召回</text>
+<text x="143.0" y="581.0" font-size="14" fill="#064e3b" text-anchor="middle">结构化 / 关键词 / 向量 /</text>
+<text x="143.0" y="599.5" font-size="14" fill="#064e3b" text-anchor="middle">图谱</text>
+<rect x="46.0" y="749.0" width="193.0" height="68.0" rx="8" fill="#e9fbf3" stroke="#059669" stroke-width="1.6"/>
+<text x="142.5" y="778.8" font-size="14" fill="#064e3b" text-anchor="middle">合并去重</text>
+<text x="142.5" y="797.3" font-size="14" fill="#064e3b" text-anchor="middle">按 memory_id 与语义</text>
+<rect x="30.0" y="945.0" width="226.0" height="90.0" rx="8" fill="#e9fbf3" stroke="#059669" stroke-width="1.6"/>
+<text x="143.0" y="976.6" font-size="14" fill="#064e3b" text-anchor="middle">四信号重排</text>
+<text x="143.0" y="995.0" font-size="14" fill="#064e3b" text-anchor="middle">相关度 / 时效 / 重要性 /</text>
+<text x="143.0" y="1013.5" font-size="14" fill="#064e3b" text-anchor="middle">置信</text>
+<rect x="28.0" y="1163.0" width="229.0" height="90.0" rx="8" fill="#fff0f3" stroke="#e11d48" stroke-width="1.6"/>
+<text x="142.5" y="1194.6" font-size="14" fill="#881337" text-anchor="middle">权限与状态过滤</text>
+<text x="142.5" y="1213.0" font-size="14" fill="#881337" text-anchor="middle">tenant / ACL / status /</text>
+<text x="142.5" y="1231.5" font-size="14" fill="#881337" text-anchor="middle">TTL</text>
+<rect x="32.0" y="1381.0" width="221.0" height="90.0" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="1.6"/>
+<text x="142.5" y="1412.6" font-size="14" fill="#0f172a" text-anchor="middle">证据校验</text>
+<text x="142.5" y="1431.0" font-size="14" fill="#0f172a" text-anchor="middle">citations / reasons / </text>
+<text x="142.5" y="1449.5" font-size="14" fill="#0f172a" text-anchor="middle">时间</text>
+<rect x="30.0" y="1599.0" width="226.0" height="90.0" rx="8" fill="#e9fbf3" stroke="#059669" stroke-width="1.6"/>
+<text x="143.0" y="1630.6" font-size="14" fill="#064e3b" text-anchor="middle">组证据包</text>
+<text x="143.0" y="1649.0" font-size="14" fill="#064e3b" text-anchor="middle">top-k 3–5 / token 预算 </text>
+<text x="143.0" y="1667.5" font-size="14" fill="#064e3b" text-anchor="middle">/ 来源</text>
+<rect x="33.0" y="1817.0" width="220.0" height="68.0" rx="8" fill="#e9fbf3" stroke="#059669" stroke-width="1.6"/>
+<text x="143.0" y="1846.8" font-size="14" fill="#064e3b" text-anchor="middle">注入 Prompt</text>
+<text x="143.0" y="1865.3" font-size="14" fill="#064e3b" text-anchor="middle">当前事实优先，记忆作补充</text>
+<rect x="65.0" y="2013.0" width="156.0" height="68.0" rx="8" fill="#e9fbf3" stroke="#059669" stroke-width="1.6"/>
+<text x="143.0" y="2042.8" font-size="14" fill="#064e3b" text-anchor="middle">生成回答</text>
+<text x="143.0" y="2061.3" font-size="14" fill="#064e3b" text-anchor="middle">带来源标签</text>
+<rect x="52.0" y="2209.0" width="182.0" height="68.0" rx="8" fill="#e9fbf3" stroke="#059669" stroke-width="1.6"/>
+<text x="143.0" y="2238.8" font-size="14" fill="#064e3b" text-anchor="middle">异步写回反馈</text>
+<text x="143.0" y="2257.3" font-size="14" fill="#064e3b" text-anchor="middle">采用 / 纠错 / 忽略</text>
+<ellipse cx="143.0" cy="2433.0" rx="88.0" ry="28.0" fill="#eff0f5" stroke="#8f959e" stroke-width="1.6"/>
+<text x="143.0" y="2438.0" font-size="14" fill="#1f2329" text-anchor="middle">返回用户</text>
+<text x="42.0" y="40.0" font-size="20" fill="#1f2329" text-anchor="start">记忆召回与注入链路</text>
+<text x="42.0" y="67.0" font-size="13" fill="#646a73" text-anchor="start">从请求进入，到证据包进入 Prompt；每一步都要能解释为什么用它</text>
+</svg>

@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent 记忆模块：B 端平台落地教材</title>
+<meta name="description" content="从边界、准入、架构、字段模型到写入、召回、治理、接入上线，一步一步教你把 Agent 记忆模块做成 B 端平台能力。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%231E5E4E'/%3E%3Crect x='14' y='14' width='36' height='10' fill='%23F2F3EE'/%3E%3Crect x='14' y='28' width='36' height='6' fill='%23F2F3EE'/%3E%3Crect x='14' y='38' width='22' height='6' fill='%23F2F3EE'/%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#F2F3EE;
+  --paper-2:#E7EAE1;
+  --white:#FCFDF9;
+  --ink:#17211C;
+  --muted:#5D6A62;
+  --green:#1E5E4E;
+  --green-2:#2E7D64;
+  --green-soft:#DCE8DF;
+  --rust:#A9502B;
+  --rust-soft:#EFDDD2;
+  --line:#C8D1C6;
+  --line-strong:#9EAD9F;
+  --mono:"SFMono-Regular","Cascadia Mono","JetBrains Mono",Consolas,"Liberation Mono",monospace;
+  --serif:"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  --maxw:860px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:17px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background-image:
+    linear-gradient(rgba(30,94,78,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(30,94,78,.045) 1px,transparent 1px);
+  background-size:32px 32px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),rgba(0,0,0,.55));
+}
+a{color:var(--green);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{color:var(--rust)}
+::selection{background:var(--green-soft);color:var(--ink)}
+progress{display:none}
+
+.progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--green);z-index:100;transition:width .15s linear}
+.brandbar{
+  position:fixed;top:0;left:0;right:0;z-index:90;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 28px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted);
+  background:linear-gradient(to bottom,rgba(242,243,238,.96),rgba(242,243,238,.82));
+  border-bottom:1px solid rgba(200,209,198,.7);
+  backdrop-filter:blur(8px);
+}
+.brandbar b{color:var(--green);font-weight:600}
+.brandbar .right{display:flex;gap:18px;align-items:center}
+.brandbar .dotline{width:44px;height:1px;background:var(--line-strong);display:inline-block}
+
+.hero{
+  min-height:94vh;
+  display:flex;align-items:center;
+  padding:110px 32px 64px;
+  position:relative;
+  border-bottom:1px solid var(--line);
+  overflow:hidden;
+}
+.hero::after{
+  content:"MEMORY / PLATFORM / GOVERNANCE";
+  position:absolute;
+  right:-42px;bottom:74px;
+  transform:rotate(90deg);
+  transform-origin:right bottom;
+  font-family:var(--mono);font-size:10px;letter-spacing:.24em;
+  color:var(--line-strong);
+  white-space:nowrap;
+}
+.hero-inner{
+  width:min(1240px,100%);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:minmax(0,1.12fr) minmax(340px,.88fr);
+  gap:clamp(36px,5vw,88px);
+  align-items:center;
+}
+.kicker{
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--green);
+  display:flex;align-items:center;gap:12px;
+}
+.kicker::before{content:"";width:34px;height:1px;background:var(--green)}
+h1{
+  font-family:var(--serif);
+  font-size:clamp(3.2rem,6.4vw,6.4rem);
+  line-height:1.02;
+  letter-spacing:-.035em;
+  font-weight:600;
+  margin:20px 0 18px;
+}
+h1 .sub{
+  display:block;
+  font-family:var(--sans);
+  font-size:clamp(1.28rem,2.1vw,1.95rem);
+  line-height:1.35;
+  letter-spacing:.01em;
+  font-weight:500;
+  color:var(--green);
+  margin-top:16px;
+}
+.hero-thesis{
+  max-width:37em;
+  color:var(--muted);
+  font-size:1.03rem;
+  border-left:2px solid var(--green);
+  padding-left:18px;
+}
+.hero-thesis strong{color:var(--ink);font-weight:600}
+.hero-meta{
+  display:flex;flex-wrap:wrap;gap:28px;
+  margin-top:42px;padding-top:18px;border-top:1px solid var(--line);
+}
+.hero-meta div{max-width:250px}
+.hero-meta span{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--green);margin-bottom:4px}
+.hero-meta p{margin:0;font-size:13.5px;line-height:1.6;color:var(--muted)}
+.scroll-cue{
+  position:absolute;left:50%;bottom:24px;transform:translateX(-50%);
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--muted);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.scroll-cue::after{content:"";width:1px;height:30px;background:var(--line-strong);animation:cue 2.4s ease-in-out infinite}
+@keyframes cue{0%,100%{transform:scaleY(.4);transform-origin:top;opacity:.35}50%{transform:scaleY(1);opacity:1}}
+
+.pipeline-panel{
+  border:1px solid var(--line-strong);
+  background:rgba(252,253,249,.86);
+  padding:22px;
+  position:relative;
+}
+.pipeline-panel::before{
+  content:"FIG. 0 / ONE MEMORY LOOP";
+  position:absolute;top:-20px;left:0;
+  font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--muted);
+}
+.pipeline-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:16px}
+.pipeline-head h2{font-family:var(--sans);font-size:15px;margin:0;font-weight:600}
+.pipeline-head span{font-family:var(--mono);font-size:9px;color:var(--green);letter-spacing:.14em}
+.pipe{position:relative;display:flex;flex-direction:column;gap:10px;padding:4px 0}
+.pipe::before{content:"";position:absolute;left:27px;top:26px;bottom:26px;width:2px;background:var(--line)}
+.pipe::after{
+  content:"";position:absolute;left:26px;width:4px;height:4px;border-radius:50%;
+  background:var(--green);box-shadow:0 0 0 5px rgba(30,94,78,.13);
+  animation:travel 7s linear infinite;
+}
+@keyframes travel{0%{top:26px;opacity:0}8%{opacity:1}92%{opacity:1}100%{top:calc(100% - 26px);opacity:0}}
+.pipe-item{display:grid;grid-template-columns:56px 1fr;gap:14px;align-items:center;position:relative;z-index:1;animation:pipeIn .7s ease both}
+.pipe-item:nth-child(2){animation-delay:.15s}
+.pipe-item:nth-child(3){animation-delay:.3s}
+.pipe-item:nth-child(4){animation-delay:.45s}
+.pipe-item:nth-child(5){animation-delay:.6s}
+@keyframes pipeIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.pipe-no{
+  width:56px;height:56px;display:grid;place-items:center;
+  background:var(--white);border:1px solid var(--line-strong);
+  font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--green);
+}
+.pipe-item:nth-child(3) .pipe-no{border-color:var(--green);box-shadow:0 0 0 5px var(--green-soft);animation:storePulse 4s ease-in-out infinite}
+@keyframes storePulse{0%,100%{box-shadow:0 0 0 0 rgba(30,94,78,.22)}50%{box-shadow:0 0 0 9px rgba(30,94,78,0)}}
+.pipe-copy h3{margin:0;font-size:14.5px;font-weight:600}
+.pipe-copy p{margin:2px 0 0;font-size:11.5px;line-height:1.5;color:var(--muted);font-family:var(--mono)}
+.hero-card{
+  margin-top:18px;border-left:3px solid var(--green);
+  background:var(--white);border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:12px 14px;
+  font-family:var(--mono);font-size:11px;line-height:1.75;
+  color:var(--muted);
+}
+.hero-card b{color:var(--ink);font-weight:600}
+.hero-card .key{color:var(--rust)}
+
+.shell{
+  width:min(1240px,100%);
+  margin:0 auto;
+  padding:0 32px;
+  display:grid;
+  grid-template-columns:212px minmax(0,var(--maxw));
+  gap:clamp(30px,5vw,72px);
+  justify-content:center;
+  align-items:start;
+}
+.toc{
+  position:sticky;top:92px;
+  max-height:calc(100vh - 118px);
+  overflow:auto;
+  padding:20px 0 40px;
+  scrollbar-width:thin;
+}
+.toc-title{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--green);margin:0 0 14px;display:flex;justify-content:space-between}
+.toc a{
+  display:grid;grid-template-columns:30px 1fr;gap:8px;
+  padding:9px 0;border-top:1px solid rgba(200,209,198,.7);
+  color:var(--muted);text-decoration:none;font-size:12.5px;line-height:1.45;
+}
+.toc a .n{font-family:var(--mono);font-size:10px;color:var(--line-strong);padding-top:2px}
+.toc a:hover{color:var(--ink)}
+.toc a.active{color:var(--green)}
+.toc a.active .n{color:var(--green)}
+.toc a.active{font-weight:600}
+
+main{min-width:0;padding-bottom:120px}
+.chapter{padding:64px 0 72px;border-top:1px solid var(--line);scroll-margin-top:88px}
+.chapter:first-of-type{border-top:0}
+.chapter-head{display:grid;grid-template-columns:88px minmax(0,1fr);gap:24px;align-items:start;margin-bottom:34px}
+.chapter-no{
+  font-family:var(--serif);font-size:clamp(2.6rem,4.2vw,4rem);line-height:.9;
+  color:var(--green);letter-spacing:-.04em;
+}
+.chapter-no small{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--muted);margin-top:10px}
+h2{
+  font-family:var(--serif);font-size:clamp(1.8rem,3.1vw,2.65rem);
+  line-height:1.2;letter-spacing:-.02em;margin:0 0 10px;font-weight:600;
+}
+.lede{margin:0;color:var(--muted);font-size:14.5px;line-height:1.7;max-width:46em}
+h3{font-family:var(--sans);font-size:1.18rem;line-height:1.4;margin:44px 0 12px;font-weight:600;letter-spacing:-.01em}
+h3 .h3n{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--green);display:block;margin-bottom:5px}
+h4{font-size:14.5px;margin:26px 0 8px;font-weight:600}
+p{margin:0 0 16px}
+ul,ol{margin:0 0 18px;padding-left:1.3em}
+li{margin:6px 0}
+strong{font-weight:600}
+.small{font-size:13px;color:var(--muted)}
+.mono{font-family:var(--mono);font-size:.92em}
+.tag{
+  display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;
+  padding:2px 6px;border:1px solid var(--line-strong);color:var(--green);background:var(--white);
+}
+.note{
+  border-top:2px solid var(--green);
+  background:var(--white);
+  padding:16px 18px;
+  margin:24px 0;
+  font-size:14px;
+}
+.note p:last-child{margin-bottom:0}
+.note .label{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--green);display:block;margin-bottom:6px}
+.warn{border-top-color:var(--rust)}
+.warn .label{color:var(--rust)}
+
+.table-wrap{overflow-x:auto;margin:18px 0 26px;border:1px solid var(--line);background:var(--white)}
+table{border-collapse:collapse;width:100%;table-layout:fixed;font-size:13.5px;line-height:1.6}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{background:var(--green-soft);color:var(--green);font-weight:600;font-size:12px;letter-spacing:.02em}
+tr:last-child td{border-bottom:0}
+td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-2);padding:1px 4px;border-radius:2px}
+.table-caption{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--muted);margin:22px 0 -10px}
+.table-caption::before{content:"TABLE / ";color:var(--green)}
+
+.figure{margin:26px 0 30px}
+.figure-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:10px}
+.figure-head .cap{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--green)}
+.figure-head .src{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.06em}
+.diagram-frame{
+  border:1px solid var(--line);background:var(--white);
+  padding:16px;overflow:auto;
+}
+.diagram-frame img{display:block;width:100%;height:auto;min-width:560px}
+.diagram-frame.tall{max-height:680px;position:relative}
+.diagram-frame.tall::after{
+  content:"";position:sticky;display:block;bottom:0;left:0;right:0;height:58px;margin:-58px -16px -16px;
+  background:linear-gradient(to bottom,rgba(252,253,249,0),rgba(252,253,249,.96));
+  pointer-events:none;
+}
+.figure.expanded .diagram-frame.tall{max-height:none}
+.figure.expanded .diagram-frame.tall::after{display:none}
+.expand-btn{
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  border:1px solid var(--line-strong);background:var(--white);color:var(--green);
+  padding:5px 9px;cursor:pointer;margin-top:8px;
+}
+.expand-btn:hover{background:var(--green);color:var(--white)}
+.figure-note{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.6}
+
+.codeblock{
+  white-space:pre;
+  background:#16231E;color:#E7EEE6;border:1px solid #0D1612;
+  padding:16px 18px;overflow:auto;margin:16px 0 24px;
+  font-family:var(--mono);font-size:12px;line-height:1.7;
+}
+.codeblock .c{color:#8FAE9D}
+.codeblock .k{color:#E2B16E}
+.codeblock .s{color:#B9D8A6}
+
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.card{
+  border:1px solid var(--line);background:var(--white);padding:16px 18px;
+}
+.card h4{margin:0 0 8px;font-size:14px}
+.card p{margin:0;font-size:13px;line-height:1.65;color:var(--muted)}
+.card .num{font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:.14em;display:block;margin-bottom:8px}
+
+/* 准入练习 */
+.quiz{border:1px solid var(--line);background:var(--white);margin:24px 0 30px}
+.quiz-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--paper-2)}
+.quiz-head h4{margin:0;font-size:14px}
+.quiz-score{font-family:var(--mono);font-size:11px;color:var(--green)}
+.quiz-row{display:grid;grid-template-columns:1fr 190px;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);align-items:center}
+.quiz-row:last-child{border-bottom:0}
+.quiz-text{font-size:13.5px;line-height:1.55}
+.quiz-text .idx{font-family:var(--mono);font-size:10px;color:var(--line-strong);margin-right:8px}
+.quiz-btns{display:flex;gap:6px}
+.quiz-btns button{
+  flex:1;border:1px solid var(--line-strong);background:var(--white);color:var(--ink);
+  font-family:var(--sans);font-size:12px;padding:5px 2px;cursor:pointer;
+}
+.quiz-btns button:hover{background:var(--green-soft)}
+.quiz-btns button.good{background:var(--green);color:var(--white);border-color:var(--green)}
+.quiz-btns button.bad{background:var(--rust);color:var(--white);border-color:var(--rust)}
+.quiz-explain{grid-column:1/-1;display:none;border-left:2px solid var(--green);padding:8px 0 2px 12px;font-size:12.5px;color:var(--muted)}
+.quiz-row.revealed .quiz-explain{display:block}
+.quiz-explain b{color:var(--ink)}
+
+/* 步骤探查器 */
+.inspector{border:1px solid var(--line-strong);background:var(--white);margin:26px 0 34px;display:grid;grid-template-columns:248px minmax(0,1fr)}
+.inspector-nav{border-right:1px solid var(--line);background:var(--paper-2)}
+.inspector-nav button{
+  display:grid;grid-template-columns:26px 1fr;gap:8px;width:100%;text-align:left;
+  background:none;border:0;border-bottom:1px solid var(--line);padding:11px 12px;
+  font-family:var(--sans);font-size:12.5px;color:var(--muted);cursor:pointer;line-height:1.4;
+}
+.inspector-nav button:hover{background:var(--white);color:var(--ink)}
+.inspector-nav button.active{background:var(--green);color:var(--white)}
+.inspector-nav button .n{font-family:var(--mono);font-size:10px;opacity:.75}
+.inspector-body{padding:20px 22px}
+.inspector-body h4{margin:0 0 4px;font-size:16px}
+.inspector-body .desc{font-size:13px;color:var(--muted);margin:0 0 16px}
+.field-list{margin:0;padding:0;list-style:none}
+.field-list li{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:6px 0;border-top:1px dotted var(--line);font-size:12.5px;line-height:1.55}
+.field-list li:first-child{border-top:0}
+.field-list code{font-family:var(--mono);font-size:11px;color:var(--green)}
+.field-list span{color:var(--muted)}
+.mini-label{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--rust);display:block;margin:16px 0 4px}
+
+/* 召回权重模拟器 */
+.sim{border:1px solid var(--line-strong);background:var(--white);margin:26px 0 34px;padding:18px 20px}
+.sim-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:14px}
+.sim-head h4{margin:0;font-size:14.5px}
+.sim-head span{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.sim-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px}
+.slider-row{display:grid;grid-template-columns:96px 1fr 38px;gap:10px;align-items:center;margin:8px 0}
+.slider-row label{font-family:var(--mono);font-size:10.5px;color:var(--green)}
+.slider-row input[type=range]{width:100%;accent-color:var(--green)}
+.slider-row output{font-family:var(--mono);font-size:10.5px;text-align:right;color:var(--muted)}
+.sim-list{list-style:none;margin:0;padding:0;border-left:1px solid var(--line)}
+.sim-list li{display:grid;grid-template-columns:22px minmax(0,1fr) 46px;gap:8px;padding:7px 0 7px 12px;border-bottom:1px solid var(--line);font-size:12.5px;line-height:1.5;align-items:center}
+.sim-list li:last-child{border-bottom:0}
+.sim-list .rank{font-family:var(--mono);font-size:10px;color:var(--green)}
+.sim-list .score{font-family:var(--mono);font-size:10.5px;text-align:right;color:var(--muted)}
+.sim-list li.top3{background:linear-gradient(90deg,var(--green-soft),transparent 70%)}
+.sim-note{font-size:11.5px;color:var(--muted);margin:12px 0 0;border-top:1px dotted var(--line);padding-top:10px}
+.sim-note{font-size:11.5px;color:var(--muted);margin:12px 0 0;border-top:1px dotted var(--line);padding-top:10px}
+
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.chapter.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+.chapter.reveal.in{opacity:1;transform:none}
+
+@media (max-width:1120px){
+  .hero-inner{grid-template-columns:1fr;gap:44px}
+  .hero{min-height:auto;padding-top:96px}
+  .pipeline-panel{max-width:520px}
+  .shell{grid-template-columns:1fr;gap:0;padding:0 28px}
+  .toc{
+    position:sticky;top:44px;z-index:60;
+    max-height:none;overflow:visible;
+    margin:0 -28px;padding:10px 28px;
+    background:rgba(242,243,238,.96);
+    border-bottom:1px solid var(--line);
+    backdrop-filter:blur(8px);
+  }
+  .toc-title{display:none}
+  .toc{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+  .toc::-webkit-scrollbar{display:none}
+  .toc a{flex:0 0 auto;display:flex;gap:6px;border-top:0;border:1px solid var(--line);padding:6px 9px;font-size:11.5px;line-height:1.3;white-space:nowrap;background:var(--white)}
+  .toc a span:last-child br{display:none}
+  .toc a.active{background:var(--green);color:var(--white);border-color:var(--green)}
+  .toc a.active .n{color:var(--white)}
+  main{padding-top:22px}
+  .chapter-head{grid-template-columns:64px minmax(0,1fr);gap:14px}
+  .chapter-no{font-size:2.3rem}
+  .chapter{padding:46px 0 56px}
+  .grid2,.grid3{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  body{font-size:16px}
+  .brandbar{padding:11px 18px;font-size:9.5px}
+  .brandbar .right span:last-child{display:none}
+  .hero{padding:84px 20px 52px}
+  h1{font-size:clamp(2.7rem,13vw,4rem)}
+  h1 .sub{font-size:1.15rem}
+  .hero-meta{gap:16px;margin-top:28px}
+  .hero-meta div{max-width:none;width:100%}
+  .shell{padding:0 20px}
+  .toc{margin:0 -20px;padding:9px 20px}
+  .chapter-head{grid-template-columns:1fr;gap:8px}
+  .chapter-no{font-size:2rem;display:flex;align-items:baseline;gap:10px}
+  .chapter-no small{margin-top:0}
+  .chapter{padding:38px 0 48px}
+  h2{font-size:1.75rem}
+  .lede{font-size:13.5px}
+  .quiz-row{grid-template-columns:1fr;gap:8px}
+  .quiz-btns{max-width:280px}
+  .inspector{grid-template-columns:1fr}
+  .inspector-nav{display:flex;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);scrollbar-width:none}
+  .inspector-nav::-webkit-scrollbar{display:none}
+  .inspector-nav button{flex:0 0 150px;border-bottom:0;border-right:1px solid var(--line);font-size:11.5px;grid-template-columns:20px 1fr;padding:9px 10px}
+  .inspector-body{padding:16px}
+  .field-list li{grid-template-columns:120px minmax(0,1fr);font-size:12px}
+  .sim-grid{grid-template-columns:1fr;gap:16px}
+  .diagram-frame{padding:10px}
+  .diagram-frame img{min-width:520px}
+  .diagram-frame.tall{max-height:520px}
+  .table-wrap table{font-size:12.5px}
+  th,td{padding:8px 9px}
+  .codeblock{font-size:11px}
+}
+@media print{
+  body{background:#fff;font-size:11pt}
+  body::before,.brandbar,.toc,.progress,.expand-btn,.scroll-cue{display:none!important}
+  .shell{display:block;padding:0}
+  .hero{min-height:auto;padding:24px 0;border-bottom:1px solid #ccc}
+  .hero-inner{display:block}
+  .pipeline-panel{margin-top:18px;max-width:none}
+  .chapter{page-break-inside:avoid;border-top:1px solid #ccc;padding:20px 0}
+  .chapter.reveal{opacity:1;transform:none}
+  .diagram-frame.tall{max-height:none}
+  .figure.expanded .diagram-frame.tall{max-height:none}
+  a{color:#000;text-decoration:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<header class="brandbar">
+  <div><b>AGENT MEMORY</b> / B-END PLATFORM</div>
+  <div class="right"><span class="dotline"></span><span>2026 · 公开版</span></div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="kicker">从 0 到可治理的平台能力</div>
+      <h1>记忆不是<br>聊天记录
+        <span class="sub">Agent 记忆模块：B 端平台落地教材</span>
+      </h1>
+      <p class="hero-thesis"><strong>记忆是可复用、可追溯、可治理的资产。</strong> 它解决的不是“多存几轮对话”，而是让下一次任务接得上、让不同人用得对、让企业敢把它放进生产。</p>
+      <div class="hero-meta">
+        <div><span>读者</span><p>产品、研发、算法、业务负责人，第一次搭记忆模块的人</p></div>
+        <div><span>读完能做什么</span><p>定边界、定字段、跑通写入与召回、把权限和删除做完整</p></div>
+        <div><span>推进方式</span><p>按 5 个接入阶段和 8 周排期，从试点走到灰度上线</p></div>
+      </div>
+    </div>
+
+    <div class="pipeline-panel">
+      <div class="pipeline-head"><h2>一条记忆的完整回路</h2><span>ONE LOOP</span></div>
+      <div class="pipe">
+        <div class="pipe-item"><div class="pipe-no">01</div><div class="pipe-copy"><h3>事件</h3><p>对话 / 工单 / 工具结果</p></div></div>
+        <div class="pipe-item"><div class="pipe-no">02</div><div class="pipe-copy"><h3>抽取</h3><p>事实 / 偏好 / 经验 / 关系</p></div></div>
+        <div class="pipe-item"><div class="pipe-no">03</div><div class="pipe-copy"><h3>记忆库</h3><p>Record 唯一真源 + 可重建索引</p></div></div>
+        <div class="pipe-item"><div class="pipe-no">04</div><div class="pipe-copy"><h3>召回</h3><p>多路召回 / 重排 / 权限过滤</p></div></div>
+        <div class="pipe-item"><div class="pipe-no">05</div><div class="pipe-copy"><h3>Prompt</h3><p>证据包注入，回答带来源</p></div></div>
+      </div>
+      <div class="hero-card">
+        <b>M-1042</b> · <span class="key">obj</span>: customer/C-2087<br>
+        <span class="key">type</span>: concern · <span class="key">status</span>: active<br>
+        <span class="key">text</span>: 后排坐三个大人偏挤<br>
+        <span class="key">source</span>: 录音 R-215 @ 11/15 14:32<br>
+        <span class="key">evidence</span>: “后面坐三个人有点挤”<br>
+        <span class="key">owner_scope</span>: 负责人 + 协作者
+      </div>
+    </div>
+  </div>
+  <div class="scroll-cue">向下读 / 01—10</div>
+</section>
+
+<div class="shell">
+<aside class="toc" aria-label="目录">
+  <p class="toc-title"><span>CONTENTS</span><span>10 CH.</span></p>
+  <a href="#ch1" class="active"><span class="n">01</span><span>先定边界<br>记忆不是聊天记录</span></a>
+  <a href="#ch2"><span class="n">02</span><span>准入<br>什么该进记忆</span></a>
+  <a href="#ch3"><span class="n">03</span><span>架构<br>六层平台怎么分</span></a>
+  <a href="#ch4"><span class="n">04</span><span>模型<br>Identity / Content / Policy</span></a>
+  <a href="#ch5"><span class="n">05</span><span>写入<br>从事件到可召回</span></a>
+  <a href="#ch6"><span class="n">06</span><span>召回<br>从候选到证据包</span></a>
+  <a href="#ch7"><span class="n">07</span><span>治理<br>B 端的生死线</span></a>
+  <a href="#ch8"><span class="n">08</span><span>接入<br>五阶段上线</span></a>
+  <a href="#ch9"><span class="n">09</span><span>推进<br>团队与 8 周排期</span></a>
+  <a href="#ch10"><span class="n">10</span><span>坑与清单<br>上线前逐项过</span></a>
+</aside>
+
+<main>
+
+<section class="chapter" id="ch1">
+  <div class="chapter-head">
+    <div class="chapter-no">01<small>BOUNDARY</small></div>
+    <div>
+      <h2>先定边界：记忆不是聊天记录</h2>
+      <p class="lede">很多项目一上来就做向量库、接框架、写抽取 Prompt，最后做出来的是一个“更贵的聊天记录”。先把记忆、RAG、上下文三件事分开，后面的字段和权限才有落点。</p>
+    </div>
+  </div>
+
+  <p>给记忆一个可执行的定义：<strong>记忆是可变、按主体组织、有生命周期的条目。</strong> 它服务于下一次任务，不是本次对话的全文备份。RAG 处理的是不可变语料，上下文是模型调用时的临时产物，三者可以共用向量库，但 collection、权限、生命周期必须各自独立。</p>
+
+  <p class="table-caption">记忆、RAG 与上下文的分工</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:18%"><col style="width:27%"><col style="width:27%"><col style="width:28%"></colgroup>
+      <thead><tr><th>维度</th><th>记忆 Memory</th><th>知识库 RAG</th><th>上下文 Context</th></tr></thead>
+      <tbody>
+        <tr><td><strong>存什么</strong></td><td>主体相关的事实、偏好、判断、经验</td><td>文档、FAQ、代码、规范等语料</td><td>本轮 Prompt、工具结果、临时变量</td></tr>
+        <tr><td><strong>是否可变</strong></td><td>会更新、合并、失效、删除</td><td>相对稳定，按版本导入</td><td>随调用产生和消失</td></tr>
+        <tr><td><strong>是否按主体</strong></td><td>必须绑定 tenant / user / object</td><td>通常按知识域或租户</td><td>绑定本次会话与任务</td></tr>
+        <tr><td><strong>生命周期</strong></td><td>有 TTL、复核时间、状态机</td><td>跟随文档版本</td><td>请求级到会话级</td></tr>
+        <tr><td><strong>典型用途</strong></td><td>接续任务、复用经验、个性化</td><td>回答“资料里怎么说”</td><td>完成当前这一步推理</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">1.1</span>B 端和 C 端，差在三件事</h3>
+  <p>C 端记忆可以围绕“这个人喜欢什么”展开；B 端记忆首先要回答“这条记忆属于谁、谁有权看、出问题谁负责”。这不是加一个权限开关，而是会反向改变记忆模型。</p>
+  <div class="grid3">
+    <div class="card"><span class="num">01 / TENANCY</span><h4>多租户与对象归属</h4><p>同一个人可能同时属于多个租户、项目、角色。记忆必须绑定 tenant、project、user、agent、run 和业务对象，不能只按 user_id 混存。</p></div>
+    <div class="card"><span class="num">02 / ASSET</span><h4>个人经验与企业资产</h4><p>个人偏好服务本人；客户历史、项目经验归企业，按业务授权交接。团队经验要审核后才共享，不能把个人记忆直接沉淀成组织结论。</p></div>
+    <div class="card"><span class="num">03 / EVIDENCE</span><h4>证据、审计与删除</h4><p>用于业务结论的每条事实都要有来源、发生时间、版本和可见范围；删除要穿透所有存储，不能留一个向量副本继续被召回。</p></div>
+  </div>
+
+  <h3><span class="h3n">1.2</span>先分清五种记忆，不要混在一个池子里</h3>
+  <p>“短期、长期、经验、组织记忆”不是概念游戏。它们的写入时机、存储介质、衰减策略和权限边界完全不同。混存的直接后果是：检索精度下降，权限说不清，成本失控。</p>
+  <p class="table-caption">五类记忆的工程含义</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:18%"><col style="width:31%"><col style="width:22%"><col style="width:29%"></colgroup>
+      <thead><tr><th>类型</th><th>放什么</th><th>生命周期</th><th>工程落点</th></tr></thead>
+      <tbody>
+        <tr><td><strong>短期工作记忆</strong></td><td>最近几轮消息、当前任务状态、工具结果</td><td>分钟到小时，会话结束即清</td><td>Redis 环形缓冲 / 会话上下文，不进长期库</td></tr>
+        <tr><td><strong>会话摘要</strong></td><td>一场对话结束后的压缩摘要</td><td>几天到几周</td><td>对话结束时写入，可被检索，但不等同长期事实</td></tr>
+        <tr><td><strong>长期事实</strong></td><td>用户偏好、关键事实、对象属性、历史结论</td><td>长期，带复核和失效</td><td>关系库主表 + 向量/全文索引</td></tr>
+        <tr><td><strong>经验与技能</strong></td><td>成功步骤、失败教训、可复用做法</td><td>长期，带版本与适用条件</td><td>经验库 / 技能库，按任务类型索引</td></tr>
+        <tr><td><strong>组织记忆</strong></td><td>多个账号经验按类目、团队、任务类型聚合</td><td>长期，周期性增量加工</td><td>离线聚合任务 + 独立检索空间</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <span class="label">FIRST PRINCIPLE</span>
+    <p><strong>原始记录是唯一事实源，记忆是可以重建的派生物。</strong> 原文、工具回执、录音这类 Record 只追加不改；事实、画像、摘要、图谱都从 Record 派生。换了向量模型可以重建，抽错了可以回放，删除时也能顺着来源穿透。</p>
+  </div>
+
+  <h3><span class="h3n">1.3</span>首期不要做的四件事</h3>
+  <ul>
+    <li><strong>不要一上来做全场景。</strong> 先选 1–2 个任务闭环，例如“客户复盘”“到店准备”，让记忆真正被用起来。</li>
+    <li><strong>不要先上图数据库。</strong> 先用关系库 + 向量 + 关键词跑通，等业务真的出现多跳关系查询，再补图谱。</li>
+    <li><strong>不要先搬完整 Agent Runtime。</strong> 记忆先是服务或包，能嵌进现有 Agent 即可；为了记忆重构整个编排层，收益很低。</li>
+    <li><strong>不要拿“命名空间”当权限。</strong> Mem0、Graphiti 的 namespace 是数据分区，不是企业级鉴权；权限必须在召回前单独做。</li>
+  </ul>
+</section>
+
+<section class="chapter" id="ch2">
+  <div class="chapter-head">
+    <div class="chapter-no">02<small>ADMISSION</small></div>
+    <div>
+      <h2>准入：什么该进记忆</h2>
+      <p class="lede">记忆库不是垃圾场。先过四问，再用一条“24 小时规则”排除高频变化的值。准入做不好，后面的抽取、召回、治理都会为噪声买单。</p>
+    </div>
+  </div>
+
+  <p>一条候选信息要进入记忆，必须同时满足四个条件：<strong>后续任务会复用、主体明确、来源可追溯、生命周期可治理。</strong> 这四问来自记忆平台的接入评估原则，也是 B 端记忆和“聊天记录备份”的分界线。</p>
+
+  <div class="figure">
+    <div class="figure-head"><span class="cap">FIG. 1 / ADMISSION GATE</span><span class="src">原生流程图</span></div>
+    <div class="diagram-frame"><img src="assets/01-admission.svg" alt="记忆准入判定流程图：四问检查、高频变化排除与三类出口"></div>
+    <p class="figure-note">先过四问，再在写入前排除“24 小时内会变”的值。不通过不等于失败：有的该丢弃，有的该补来源，有的该去权威系统查。</p>
+  </div>
+
+  <p class="table-caption">四个准入问题与判定标准</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:19%"><col style="width:39%"><col style="width:42%"></colgroup>
+      <thead><tr><th>问题</th><th>通过标准</th><th>不通过时怎么处理</th></tr></thead>
+      <tbody>
+        <tr><td><strong>会复用吗</strong></td><td>下一次会话、下一个步骤或另一个任务会用到；不是只服务当前这一轮</td><td>丢弃。一次性要求、临时语气、本轮参数不写长期记忆</td></tr>
+        <tr><td><strong>主体明确吗</strong></td><td>能落到 tenant + entity_type + entity_id；同名对象可消歧</td><td>补齐主体后再评；未知对象不自动归档</td></tr>
+        <tr><td><strong>来源可追溯吗</strong></td><td>有 source_type、source_id、原始片段或录音；能回答“凭什么这么说”</td><td>补证据后再评；没有来源的记忆不允许用于业务结论</td></tr>
+        <tr><td><strong>生命周期可治理吗</strong></td><td>能定义 TTL、复核时间、失效条件、删除范围</td><td>不进记忆库，留在日志、知识库或临时上下文</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note warn">
+    <span class="label">24-HOUR RULE</span>
+    <p><strong>这个值会不会在 24 小时内变？会，就查权威系统，不记。</strong> 报价、库存、订单状态、客户归属、业绩数字都属于这一类。记忆里最多存一个“历史引用”，不能把缓存值当成事实反复注入。</p>
+  </div>
+
+  <h3><span class="h3n">2.1</span>一条记忆只说一件事</h3>
+  <p>抽取时不要生成“客户想要一台后排宽敞、预算 30 万、下周提车的 SUV”这种大杂烩。它看起来信息量高，实际无法更新、无法失效、无法审计。正确做法是拆成三条：<span class="mono">concern: 后排空间</span>、<span class="mono">budget: 30 万</span>、<span class="mono">timeline: 下周</span>，各自带来源和有效期。</p>
+
+  <div class="quiz" id="quiz">
+    <div class="quiz-head"><h4>练一下：这 8 条该不该进记忆</h4><span class="quiz-score" id="quiz-score">0 / 8 判断</span></div>
+  </div>
+
+  <h3><span class="h3n">2.2</span>准入结果要落成字段</h3>
+  <p>不要只在脑子里判断。把准入结论写成一条可审计的记录，后面才能解释“为什么这条没进记忆”。</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:24%"><col style="width:18%"><col style="width:58%"></colgroup>
+      <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>candidate_id</code></td><td>string</td><td>候选信息唯一 ID，重试保持稳定</td></tr>
+        <tr><td><code>tenant_id</code> / <code>project_id</code></td><td>string</td><td>这条信息属于哪个租户、项目</td></tr>
+        <tr><td><code>entity_type</code> / <code>entity_id</code></td><td>string</td><td>主体类型与主体 ID；消歧失败时为空并进入待确认</td></tr>
+        <tr><td><code>reuse_scenario</code></td><td>string[]</td><td>预计在哪些任务、哪些步骤复用</td></tr>
+        <tr><td><code>volatility</code></td><td>enum</td><td><span class="mono">stable / daily / realtime</span>；realtime 直接转权威系统</td></tr>
+        <tr><td><code>source_type</code> / <code>source_id</code></td><td>string</td><td>会话、工单、录音、工具回执等来源</td></tr>
+        <tr><td><code>evidence_uri</code></td><td>string</td><td>可回点的原始证据地址或片段 ID</td></tr>
+        <tr><td><code>occurred_at</code></td><td>int64</td><td>事情发生时间，毫秒；不是导入时间</td></tr>
+        <tr><td><code>ttl</code> / <code>review_at</code></td><td>int64</td><td>过期时间与复核时间；复核不等于到期删除</td></tr>
+        <tr><td><code>decision</code></td><td>enum</td><td><span class="mono">accept / reject / pending / query_system</span></td></tr>
+        <tr><td><code>reason</code></td><td>string</td><td>判定理由，必须能被人读懂</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="chapter" id="ch3">
+  <div class="chapter-head">
+    <div class="chapter-no">03<small>ARCHITECTURE</small></div>
+    <div>
+      <h2>架构：六层平台怎么分</h2>
+      <p class="lede">不要把所有逻辑塞进一个“记忆服务”。接入、编排、生产、召回、存储、治理分开，才能让不同团队各自负责，也才能在出问题时定位到哪一层。</p>
+    </div>
+  </div>
+
+  <p>下面这张图是 B 端平台的最小完整形态。它不追求组件最多，而是把“谁接收请求、谁生产记忆、谁负责召回、谁是唯一真源、谁做治理”这五件事分开。</p>
+
+  <div class="figure">
+    <div class="figure-head"><span class="cap">FIG. 2 / PLATFORM LAYERS</span><span class="src">原生流程图</span></div>
+    <div class="diagram-frame"><img src="assets/02-architecture.svg" alt="B 端 Agent 记忆平台分层架构图：接入层、编排层、生产与召回、存储层、治理与观测"></div>
+    <p class="figure-note">Record 主表是唯一事实源；向量、全文、图谱都是可重建的索引。治理层不在主链路里，但决定这条链路能不能上生产。</p>
+  </div>
+
+  <p class="table-caption">每一层负责什么、不负责什么</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:15%"><col style="width:31%"><col style="width:28%"><col style="width:26%"></colgroup>
+      <thead><tr><th>层</th><th>核心职责</th><th>输出物</th><th>不要放在这一层</th></tr></thead>
+      <tbody>
+        <tr><td><strong>接入层</strong></td><td>业务 Agent、管理台、开放 API/SDK；统一入口</td><td>写入/召回请求、注册与管理操作</td><td>抽取 Prompt、权限判断</td></tr>
+        <tr><td><strong>编排层</strong></td><td>记忆网关；身份、租户、ACL 路由；请求校验与限流</td><td>已鉴权的 Generate/Retrieve 调用</td><td>业务事实判断、模型推理</td></tr>
+        <tr><td><strong>生产层</strong></td><td>抽取、去重、冲突合并、异步任务</td><td>候选事实、Memory 记录、job 状态</td><td>最终事实裁决、跨租户写入</td></tr>
+        <tr><td><strong>召回层</strong></td><td>四路召回、融合重排、权限/时效过滤、证据包</td><td>top-k 记忆 + 来源 + 缺口提示</td><td>把整库塞进 Prompt、越权读取</td></tr>
+        <tr><td><strong>存储层</strong></td><td>Record 主表、Native 索引、Graph Memory、原始素材</td><td>可回放的事实源与可重建索引</td><td>把索引当唯一真源</td></tr>
+        <tr><td><strong>治理层</strong></td><td>TTL、状态、删除穿透、审计、Trace、评测</td><td>可解释的变更记录与质量指标</td><td>业务功能逻辑</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">3.1</span>三个架构取舍，先拍板</h3>
+  <div class="grid3">
+    <div class="card"><span class="num">01 / SERVICE</span><h4>先做包，还是先做服务？</h4><p>首期建议做成可嵌入现有 Agent 的包或轻服务；等记忆量、租户数、SLA 真的上来，再拆独立服务。先拆会把复杂度提前引入。</p></div>
+    <div class="card"><span class="num">02 / GRAPH</span><h4>要不要上图数据库？</h4><p>短期不用。向量 + 关键词 + 实体小集合足够；只有出现稳定的多跳关系查询、关系路径追溯，才补 Graph Memory。</p></div>
+    <div class="card"><span class="num">03 / ASYNC</span><h4>写入同步还是异步？</h4><p>抽取必须异步。提交事件成功不等于记忆已生成；业务要处理 PENDING / RUNNING / SUCCEEDED / FAILED，不能把“已提交”当“已生效”。</p></div>
+  </div>
+
+  <div class="note">
+    <span class="label">B-END DIFFERENCE</span>
+    <p>B 端架构里最容易被低估的是<strong>编排层的租户与 ACL 路由</strong>。它不是简单地在请求里带一个 tenant_id，而是把“谁在这个租户下、以什么角色、能看哪个对象”变成召回前的硬过滤。少了这一层，后面所有权限都会变成事后补丁。</p>
+  </div>
+
+  <h3><span class="h3n">3.2</span>存储怎么搭：一主三索引</h3>
+  <ul>
+    <li><strong>一主：</strong>Record 主表放关系库，保存原文、结构化内容、来源、版本、状态、权限范围；只追加，不直接改历史。</li>
+    <li><strong>索引一：</strong>向量索引，负责语义相似召回；换 embedding 模型时可全量重建。</li>
+    <li><strong>索引二：</strong>全文/关键词索引，负责精确术语、人名、产品名、错误码召回。</li>
+    <li><strong>索引三：</strong>图谱索引，负责实体关系、多跳路径、证据链；没有稳定关系模型就先不上。</li>
+  </ul>
+  <p>原始素材（录音、截图、工单附件）放对象存储，记忆记录只存引用和摘要。这样既能回引证据，又不会把大文件塞进向量库。</p>
+</section>
+
+<section class="chapter" id="ch4">
+  <div class="chapter-head">
+    <div class="chapter-no">04<small>MODEL</small></div>
+    <div>
+      <h2>模型：Identity + Content + Policy</h2>
+      <p class="lede">记忆模型只需要回答三个问题：这是谁的、具体记住什么、平台怎么管理和使用它。把这三部分写成字段，后面的接口、权限、评测才有共同语言。</p>
+    </div>
+  </div>
+
+  <p>用一个公式收口：<strong>MemoryModel = Identity + Content + Policy。</strong> 这不是三个表，而是同一条记忆记录的三组字段。Identity 决定“能不能找到、能不能混用”，Content 决定“模型看到什么”，Policy 决定“什么时候能用、什么时候必须删”。</p>
+
+  <h3><span class="h3n">4.1</span>Identity：这是谁的、什么记忆、来自哪里</h3>
+  <p class="table-caption">Identity 字段表</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:22%"><col style="width:12%"><col style="width:66%"></colgroup>
+      <thead><tr><th>字段</th><th>类型</th><th>说明与示例</th></tr></thead>
+      <tbody>
+        <tr><td><code>tenant_id</code></td><td>string</td><td>租户；B 端第一隔离维度。示例：<span class="mono">tenant_pudong</span></td></tr>
+        <tr><td><code>project_id</code></td><td>string</td><td>项目/业务域；不同项目不共享记忆空间</td></tr>
+        <tr><td><code>entity_type</code></td><td>enum</td><td>主体类型：<span class="mono">user / customer / order / shop / product / ticket / session</span></td></tr>
+        <tr><td><code>entity_id</code></td><td>string</td><td>主体唯一 ID；名字只是显示字段，不能当主键</td></tr>
+        <tr><td><code>memory_type</code></td><td>enum</td><td>记忆类型：<span class="mono">preference / fact / concern / experience / procedure / relationship</span></td></tr>
+        <tr><td><code>sub_type</code></td><td>string</td><td>子类型；没有就不传，不要用空字符串占位</td></tr>
+        <tr><td><code>source_from</code></td><td>string</td><td>来源类型：会话、工单、录音、工具回执、人工导入</td></tr>
+        <tr><td><code>source_id</code></td><td>string</td><td>来源实例 ID；重试必须保持稳定，参与 memory_id 生成</td></tr>
+        <tr><td><code>source_session_id</code></td><td>string</td><td>来源会话 ID，用于回放上下文</td></tr>
+        <tr><td><code>source_message_id</code></td><td>string</td><td>来源消息 ID，用于精确回引证据</td></tr>
+        <tr><td><code>user_id</code> / <code>agent_id</code> / <code>run_id</code></td><td>string</td><td>写入者、Agent、运行批次；企业记忆平台 中四者与 strategy 全一致才会合并</td></tr>
+        <tr><td><code>domain</code></td><td>string</td><td>领域记忆的隔离域；共享领域知识必须按业务边界拆 domain</td></tr>
+        <tr><td><code>owner_scope</code></td><td>string / JSON</td><td>可见范围：负责人、协作者、团队、角色；权限变化时重新计算</td></tr>
+        <tr><td><code>visibility</code></td><td>enum</td><td><span class="mono">private / team / tenant / public</span>；不等于最终鉴权</td></tr>
+        <tr><td><code>permission_version</code></td><td>int64</td><td>权限版本；调岗、转交、角色变化时递增，召回要校验版本</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">4.2</span>Content：具体记住什么</h3>
+  <p>Content 不是一段自由文本。至少要同时有“人可读的摘要”和“机器可检索的结构化字段”，否则既无法解释，也无法精确更新。</p>
+  <p class="table-caption">Content 字段表</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:22%"><col style="width:12%"><col style="width:66%"></colgroup>
+      <thead><tr><th>字段</th><th>类型</th><th>说明与示例</th></tr></thead>
+      <tbody>
+        <tr><td><code>memory_id</code></td><td>string</td><td>稳定标识；能定位、能删除、能审计。示例：<span class="mono">M-4471</span></td></tr>
+        <tr><td><code>version</code></td><td>int64</td><td>当前版本；纠错、覆盖、合并都递增</td></tr>
+        <tr><td><code>text</code></td><td>string</td><td>一条只说一件事的自然语言摘要</td></tr>
+        <tr><td><code>predicate</code></td><td>string</td><td>谓词/属性名：<span class="mono">后排空间顾虑 / 预算 / 交付周期</span></td></tr>
+        <tr><td><code>value</code></td><td>string / JSON</td><td>属性值；结构化类型按业务 schema 定义</td></tr>
+        <tr><td><code>structured_content</code></td><td>JSON</td><td>完整结构化内容；不同 memory_type 有自己的 schema</td></tr>
+        <tr><td><code>confidence_level</code></td><td>enum</td><td><span class="mono">customer_quote / sales_relay / system_receipt / inferred</span>；不要用未校准的百分比制造假精确</td></tr>
+        <tr><td><code>importance</code></td><td>float</td><td>0–1，用于重排；可由规则或模型打分，但要可解释</td></tr>
+        <tr><td><code>keywords</code></td><td>string[]</td><td>精确召回用；产品名、错误码、人名、地名</td></tr>
+        <tr><td><code>entities</code></td><td>JSON[]</td><td>实体与类型，用于图谱索引和消歧</td></tr>
+        <tr><td><code>relations</code></td><td>JSON[]</td><td>实体关系：<span class="mono">subject - predicate - object</span></td></tr>
+        <tr><td><code>citations</code></td><td>JSON[]</td><td>来源引用：repo / path / message_id / 录音时间段 / URL</td></tr>
+        <tr><td><code>evidence_quote</code></td><td>string</td><td>原始证据片段，用户点开能核对</td></tr>
+        <tr><td><code>reason</code></td><td>string</td><td>为什么记为这条记忆；给人和模型看的解释</td></tr>
+        <tr><td><code>occurred_at</code></td><td>int64</td><td>事情发生时间；晚到的旧记录不能覆盖新事实</td></tr>
+        <tr><td><code>recorded_at</code></td><td>int64</td><td>写入时间；用于审计，不用于判断新旧</td></tr>
+        <tr><td><code>valid_from</code> / <code>valid_until</code></td><td>int64</td><td>生效区间；没有明确失效时间也要给复核时间</td></tr>
+        <tr><td><code>status</code></td><td>enum</td><td><span class="mono">pending / active / superseded / disputed / archived / deleted / expired</span></td></tr>
+        <tr><td><code>supersedes_id</code></td><td>string</td><td>被这条替代的旧记忆 ID；改主意时能解释变化</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">4.3</span>Policy：平台怎么写入、召回和治理</h3>
+  <p class="table-caption">Policy 字段表</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:24%"><col style="width:14%"><col style="width:62%"></colgroup>
+      <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>write_mode</code></td><td>enum</td><td><span class="mono">direct / producer</span>；已有结构化内容用 Direct，只有原始数据用 Producer</td></tr>
+        <tr><td><code>constraint_type</code></td><td>enum</td><td><span class="mono">cover / append / ignore / require_merge</span>；冲突时怎么处理</td></tr>
+        <tr><td><code>expire_time_ms</code></td><td>int64</td><td>绝对过期时间；0 表示用类型默认策略</td></tr>
+        <tr><td><code>read_tenants</code> / <code>write_tenants</code></td><td>string[]</td><td>读租户与写租户可以不同；同一类型也可为特定租户配专属组件</td></tr>
+        <tr><td><code>ttl_policy</code></td><td>string</td><td>长期 / 短期 / 按事件过期；通过是否跨会话区分</td></tr>
+        <tr><td><code>review_policy</code></td><td>string</td><td>到期复核而不是直接删除；复核后更新、降权或归档</td></tr>
+        <tr><td><code>recall_filters</code></td><td>JSON</td><td>允许按主体、订单、来源、子类型、时间范围过滤</td></tr>
+        <tr><td><code>top_k</code> / <code>token_budget</code></td><td>int</td><td>召回上限与注入预算；top-k 通常 3–5，过大反而污染上下文</td></tr>
+        <tr><td><code>permission_model</code></td><td>string</td><td>租户 + 角色 + 对象 ACL；召回前过滤，不做事后遮盖</td></tr>
+        <tr><td><code>audit_level</code></td><td>enum</td><td><span class="mono">basic / full</span>；写入、召回、删除、纠错是否留痕</td></tr>
+        <tr><td><code>evaluation_rule</code></td><td>string</td><td>生产准召、召回命中、陈旧率、采纳率等评测口径</td></tr>
+        <tr><td><code>deletion_policy</code></td><td>string</td><td>软删、硬删、穿透范围、派生摘要重算规则</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">4.4</span>MVP 最小字段集：先这 11 个，别一上来铺满</h3>
+  <p>字段表很长，但首期不需要全部实现。下面这组是“能定位、能解释、能删除”的最小闭环；可以合并实现，语义不能丢。</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:26%"><col style="width:74%"></colgroup>
+      <thead><tr><th>最小字段</th><th>为什么必须有</th></tr></thead>
+      <tbody>
+        <tr><td><code>memory_id</code></td><td>能定位、能删除、能审计</td></tr>
+        <tr><td><code>tenant_id</code> / <code>subject</code></td><td>先分清属于谁，再谈记什么</td></tr>
+        <tr><td><code>type</code> / <code>text</code></td><td>一条只说一件事，能被检索</td></tr>
+        <tr><td><code>source</code> / <code>evidence</code></td><td>没有来源的记忆不允许用于结论</td></tr>
+        <tr><td><code>occurred_at</code> / <code>recorded_at</code></td><td>晚到的旧记录不能覆盖新事实</td></tr>
+        <tr><td><code>status</code></td><td>候选、有效、失效、删除各有含义</td></tr>
+        <tr><td><code>owner_scope</code></td><td>权限变化时能重新计算可见性</td></tr>
+        <tr><td><code>review_at</code></td><td>不是到期删除，是到期复核</td></tr>
+        <tr><td><code>supersedes_id</code></td><td>改主意时能解释变化</td></tr>
+        <tr><td><code>confidence_level</code></td><td>客户原话、销售转述、系统回执，可信度不同</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">4.5</span>一条完整记录长什么样</h3>
+  <pre class="codeblock"><span class="c">// 一条 B 端客户记忆的最小可用形态</span>
+{
+  <span class="k">"memory_id"</span>: <span class="s">"M-4471"</span>,
+  <span class="k">"tenant_id"</span>: <span class="s">"tenant_pudong"</span>,
+  <span class="k">"project_id"</span>: <span class="s">"crm_sales"</span>,
+  <span class="k">"entity_type"</span>: <span class="s">"customer"</span>,
+  <span class="k">"entity_id"</span>: <span class="s">"C-2087"</span>,
+  <span class="k">"memory_type"</span>: <span class="s">"concern"</span>,
+  <span class="k">"sub_type"</span>: <span class="s">"space"</span>,
+  <span class="k">"text"</span>: <span class="s">"后排空间小，坐三个大人偏挤"</span>,
+  <span class="k">"predicate"</span>: <span class="s">"后排空间顾虑"</span>,
+  <span class="k">"value"</span>: <span class="s">"坐三个大人偏挤"</span>,
+  <span class="k">"confidence_level"</span>: <span class="s">"customer_quote"</span>,
+  <span class="k">"source"</span>: <span class="s">"录音 R-215 @ 2026-11-15 14:32"</span>,
+  <span class="k">"evidence_quote"</span>: <span class="s">"后面坐三个人有点挤，我爸妈年纪大了"</span>,
+  <span class="k">"occurred_at"</span>: 1763188320000,
+  <span class="k">"recorded_at"</span>: 1763188800000,
+  <span class="k">"status"</span>: <span class="s">"active"</span>,
+  <span class="k">"owner_scope"</span>: [<span class="s">"owner"</span>, <span class="s">"collaborator"</span>],
+  <span class="k">"review_at"</span>: 1794724800000,
+  <span class="k">"supersedes_id"</span>: null,
+  <span class="k">"version"</span>: 1
+}</pre>
+  <p class="small">注意：<span class="mono">occurred_at</span> 是事情发生时间，<span class="mono">recorded_at</span> 是写入时间；<span class="mono">review_at</span> 是复核时间，不是过期删除时间；<span class="mono">confidence_level</span> 用可解释的枚举，不用假精确的小数。</p>
+
+  <h3><span class="h3n">4.6</span>记忆类型注册表：平台化的第一步</h3>
+  <p>B 端平台不能允许每个业务随便写一个自由 schema。先把“记忆类型”注册成平台资产：谁负责、属于什么主体、生命周期多久、读写租户是谁、怎么查。</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:24%"><col style="width:76%"></colgroup>
+      <thead><tr><th>注册字段</th><th>填写要求</th></tr></thead>
+      <tbody>
+        <tr><td><code>memory_name</code></td><td>业务能读懂的名称，例如“客户顾虑记忆”</td></tr>
+        <tr><td><code>entity_type</code></td><td>用户、店铺、商品、订单、会话、客户之一；不允许模糊主体</td></tr>
+        <tr><td><code>lifecycle</code></td><td>长期 / 短期；是否跨会话是唯一判定标准</td></tr>
+        <tr><td><code>default_ttl</code></td><td>默认有效期；没有明确 TTL 的类型不允许上线</td></tr>
+        <tr><td><code>read_tenant</code> / <code>write_tenant</code></td><td>读租户与写租户可以不同；必须显式声明</td></tr>
+        <tr><td><code>content_schema</code></td><td>结构化内容字段、必填项、枚举值</td></tr>
+        <tr><td><code>write_policy</code></td><td>Direct/Producer、冲突策略、幂等键</td></tr>
+        <tr><td><code>recall_policy</code></td><td>查询条件、top-k、过滤字段、证据要求</td></tr>
+        <tr><td><code>owner</code> / <code>scene</code></td><td>业务负责人、调用场景、观测口径</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="chapter" id="ch5">
+  <div class="chapter-head">
+    <div class="chapter-no">05<small>WRITE PATH</small></div>
+    <div>
+      <h2>写入：从事件到可召回</h2>
+      <p class="lede">写入不是“把对话存下来”，而是一条有准入、有抽取、有冲突裁决、有异步状态、有审计的流水线。下面逐步拆开，每一步都给出输入输出字段。</p>
+    </div>
+  </div>
+
+  <p>先记住一条主线：<strong>原始事件 → 身份与主体 → 准入 → 候选事实 → 冲突检测 → 写入策略 → Record + Memory → 索引 → 审计。</strong> 这条链路允许异步，但不允许“提交成功就算记住”。业务必须能查到 job 状态，召回必须能感知“还没生效”。</p>
+
+  <div class="figure" data-figure="write">
+    <div class="figure-head"><span class="cap">FIG. 3 / WRITE PIPELINE</span><span class="src">原生流程图</span></div>
+    <div class="diagram-frame"><img src="assets/03-write.svg" alt="记忆写入链路流程图：收集事件、解析身份、准入、抽取、冲突检测、写入策略、落库、建索引、审计"></div>
+    <p class="figure-note">图中两条红色异常路径不是“失败”，而是必须被产品化的分支：不通过就丢弃，冲突未决就待确认，不能静默覆盖。</p>
+  </div>
+
+  <h3><span class="h3n">5.1</span>九步逐项拆解</h3>
+  <p>点击左侧任一步，右侧会给出这一步的输入字段、输出字段和失败处理。写研发方案时，这张表可以直接变成接口定义和任务拆解。</p>
+
+  <div class="inspector" id="inspector">
+    <div class="inspector-nav" id="inspector-nav"></div>
+    <div class="inspector-body" id="inspector-body">
+      <h4>01 · 收集原始事件</h4>
+      <p class="desc">把一次任务结束、关键对话、工具回执或人工操作，收成一条可回放的原始记录。</p>
+      <span class="mini-label">INPUT</span>
+      <ul class="field-list">
+        <li><code>event_id</code><span>事件唯一 ID，重试保持稳定</span></li>
+        <li><code>tenant_id / project_id</code><span>租户与项目，决定后续隔离</span></li>
+        <li><code>occurred_at</code><span>事情发生时间，毫秒</span></li>
+        <li><code>messages</code><span>本轮消息、角色、时间戳</span></li>
+        <li><code>tool_calls</code><span>工具名、参数、回执、耗时</span></li>
+        <li><code>task_state</code><span>任务目标、步骤、结果、异常</span></li>
+        <li><code>attachments</code><span>录音、截图、附件的引用，不直接存大文件</span></li>
+      </ul>
+      <span class="mini-label">OUTPUT</span>
+      <ul class="field-list">
+        <li><code>raw_record_id</code><span>原始记录 ID，只追加不改</span></li>
+        <li><code>source_ref</code><span>可回点的来源引用</span></li>
+        <li><code>subject_hints</code><span>候选主体线索，交给下一步消歧</span></li>
+      </ul>
+      <span class="mini-label">FAILURE</span>
+      <p class="small">上下文缺失：标记 <span class="mono">incomplete</span>，不进入抽取；附件只存对象存储引用，避免把大文件塞进记忆库。</p>
+    </div>
+  </div>
+
+  <p class="table-caption">Direct 与 Producer 两种写入模式</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:18%"><col style="width:30%"><col style="width:26%"><col style="width:26%"></colgroup>
+      <thead><tr><th>模式</th><th>调用方给什么</th><th>平台做什么</th><th>适用场景</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Direct</strong></td><td>已经结构化好的 <span class="mono">MemoryContent</span></td><td>校验、去重、落库、建索引</td><td>业务已有抽取逻辑，平台只做存储与治理</td></tr>
+        <tr><td><strong>Producer</strong></td><td>原始数据与 <span class="mono">RawSourceDataParams</span></td><td>跑抽取 Prompt、生成候选事实、再落库</td><td>平台统一维护抽取 schema 与模型版本</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>两种模式共用同一套身份、来源、幂等和审计字段。<strong>不要因为模式不同就换一套 ID 规则</strong>，否则同一条事实会出现两个版本、两次召回。</p>
+
+  <h3><span class="h3n">5.2</span>冲突只有五类，处理方式要写死</h3>
+  <p>冲突检测不是“相似度超过 0.9 就覆盖”。先判冲突类型，再选策略；否则会把客户改主意、销售转述、系统回执混成一团。</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:15%"><col style="width:39%"><col style="width:46%"></colgroup>
+      <thead><tr><th>冲突类型</th><th>识别信号</th><th>处理动作</th></tr></thead>
+      <tbody>
+        <tr><td><strong>重复</strong></td><td>同主体、同 predicate、同 value，来源相同或高度相似</td><td>合并证据，保留一个 memory_id；不新增版本</td></tr>
+        <tr><td><strong>更新</strong></td><td>同主体、同 predicate，新值；<span class="mono">occurred_at</span> 更新，置信不低</td><td>Cover：新记录生效，旧记录置 <span class="mono">superseded</span>，写 <span class="mono">supersedes_id</span></td></tr>
+        <tr><td><strong>矛盾</strong></td><td>同主体、同 predicate，值不同，发生时间接近，来源都可信</td><td>RequireMerge：进入待确认或人工复核；不要自动选一个</td></tr>
+        <tr><td><strong>晚到</strong></td><td>新写入的记录 <span class="mono">occurred_at</span> 早于已有记录</td><td>作为历史保留，不覆盖新事实；召回默认取最新</td></tr>
+        <tr><td><strong>否认</strong></td><td>用户明确否认此前记忆，或要求更正</td><td>置 <span class="mono">disputed</span>，保留原证据与更正记录；核实后再改状态</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note warn">
+    <span class="label">ORDERING RULE</span>
+    <p><strong>先比发生时间，再比置信度，最后比写入时间。</strong> 一条今天才导入的旧录音，不应该覆盖昨天客户刚确认的新预算。写入时间只用于审计，不用于判断事实新旧。</p>
+  </div>
+
+  <h3><span class="h3n">5.3</span>异步状态与幂等</h3>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:16%"><col style="width:44%"><col style="width:40%"></colgroup>
+      <thead><tr><th>状态</th><th>含义</th><th>业务侧动作</th></tr></thead>
+      <tbody>
+        <tr><td><code>PENDING</code></td><td>已接收，尚未开始抽取</td><td>可展示“正在整理”，不要展示“已记住”</td></tr>
+        <tr><td><code>RUNNING</code></td><td>抽取/冲突检测进行中</td><td>可轮询或等回调；设置超时</td></tr>
+        <tr><td><code>SUCCEEDED</code></td><td>记忆已生效并可召回</td><td>更新 UI 状态；触发一次召回验证</td></tr>
+        <tr><td><code>PARTIAL</code></td><td>部分事实成功，部分失败</td><td>展示成功部分，失败部分可重试；不要整条回滚</td></tr>
+        <tr><td><code>FAILED</code></td><td>抽取或落库失败</td><td>按同一 <span class="mono">idempotency_key</span> 重试，避免重复记忆</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>幂等键建议由 <span class="mono">tenant_id + source_from + source_id + entity_id + predicate + occurred_at</span> 组成。同一来源重试必须得到同一个 <span class="mono">memory_id</span>；如果做不到，先别上线。</p>
+
+  <h3><span class="h3n">5.4</span>写入验收的五条硬标准</h3>
+  <ul>
+    <li><strong>可回放：</strong>任取一条记忆，能回到原始记录和证据片段。</li>
+    <li><strong>可重试：</strong>同一来源重试不产生重复记忆，<span class="mono">memory_id</span> 不变。</li>
+    <li><strong>不乱序：</strong>晚到的旧记录不覆盖新事实，冲突未决不自动生效。</li>
+    <li><strong>可见：</strong>索引失败、抽取失败、部分成功都有状态，不静默。</li>
+    <li><strong>可删：</strong>删除一条记忆，原始记录、派生摘要、索引、缓存都能被穿透。</li>
+  </ul>
+</section>
+
+<section class="chapter" id="ch6">
+  <div class="chapter-head">
+    <div class="chapter-no">06<small>RECALL PATH</small></div>
+    <div>
+      <h2>召回：从候选到证据包</h2>
+      <p class="lede">召回的目标不是“把相关记忆都找出来”，而是“用最少的 token，给出当前任务真正需要、且有权使用的那几条”。</p>
+    </div>
+  </div>
+
+  <p>一条记忆被写入，不等于它会被正确使用。召回要同时解决四件事：找得到、排得对、有权限、能解释。少了任何一件，模型都会把“看起来相关”当成“事实”。</p>
+
+  <div class="figure" data-figure="recall">
+    <div class="figure-head"><span class="cap">FIG. 4 / RECALL PIPELINE</span><span class="src">原生流程图</span></div>
+    <div class="diagram-frame"><img src="assets/04-recall.svg" alt="记忆召回与注入链路流程图：构造条件、四路召回、合并去重、重排、权限过滤、证据校验、组包、注入、生成、反馈"></div>
+    <p class="figure-note">四路召回不是四套系统，而是四种检索信号；最终只输出一个证据包，避免模型收到互相矛盾的多份上下文。</p>
+  </div>
+
+  <p class="table-caption">召回七步的字段与失败处理</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:15%"><col style="width:29%"><col style="width:29%"><col style="width:27%"></colgroup>
+      <thead><tr><th>步骤</th><th>关键输入</th><th>关键输出</th><th>失败/缺口</th></tr></thead>
+      <tbody>
+        <tr><td><strong>构造条件</strong></td><td><span class="mono">task_type, entity_refs, purpose, as_of, top_k, token_budget</span></td><td><span class="mono">recall_plan</span>：四路各自的条件</td><td>主体不清：先消歧，不召回整库</td></tr>
+        <tr><td><strong>四路召回</strong></td><td>结构化 predicate/value/time；关键词 terms；向量 embedding；图谱 entity/relation/depth</td><td>四组候选，各自带 <span class="mono">route_score</span></td><td>单路超时：保留其他路，标记降级</td></tr>
+        <tr><td><strong>合并去重</strong></td><td><span class="mono">memory_id, dedupe_key, route, raw_score</span></td><td>去重后的候选池</td><td>同 ID 不同版本：保留 active，旧版进对比</td></tr>
+        <tr><td><strong>四信号重排</strong></td><td><span class="mono">relevance, recency, importance, confidence</span> 与权重</td><td><span class="mono">final_score</span>、排序</td><td>分数不可解释：回退规则排序</td></tr>
+        <tr><td><strong>权限/状态过滤</strong></td><td><span class="mono">tenant_id, ACL, owner_scope, status, valid_until, permission_version</span></td><td>允许集合 + 拒绝原因</td><td>权限不足：返回明确语义，不返回空数组</td></tr>
+        <tr><td><strong>证据校验</strong></td><td><span class="mono">citations, evidence_quote, occurred_at, source_status</span></td><td><span class="mono">verified / degraded / rejected</span></td><td>来源失效：降权或标注，不静默使用</td></tr>
+        <tr><td><strong>组包注入</strong></td><td><span class="mono">top_k, token_count, citation_tags, as_of</span></td><td><span class="mono">evidence_pack</span> 进入 Prompt</td><td>超预算：按分数截断，保留来源标签</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">6.1</span>重排不是玄学：四个信号，各有各的活</h3>
+  <ul>
+    <li><strong>相关性 relevance：</strong>语义、关键词、结构化匹配的综合分；决定“是不是在说这件事”。</li>
+    <li><strong>时效性 recency：</strong>按 <span class="mono">occurred_at</span> 衰减；决定“现在还算不算数”。</li>
+    <li><strong>重要性 importance：</strong>业务规则或模型打分；决定“值不值得占 token”。</li>
+    <li><strong>置信度 confidence：</strong>客户原话、销售转述、系统回执不同；决定“能不能当结论”。</li>
+  </ul>
+  <p>一个可用的起点是 <span class="mono">score = 0.45 × relevance + 0.20 × recency + 0.20 × importance + 0.15 × confidence</span>，再按业务调。不要让某个信号压过一切：只看相关性会把三年前的旧报价拉上来，只看时效会把真正重要的长期偏好挤掉。</p>
+
+  <div class="sim" id="sim">
+    <div class="sim-head"><h4>调一下权重，看排序怎么变</h4><span>TOPK 3–5 / 可解释重排</span></div>
+    <div class="sim-grid">
+      <div>
+        <div class="slider-row"><label for="w-rel">相关性</label><input id="w-rel" type="range" min="0" max="1" step="0.05" value="0.45"><output id="o-rel">0.45</output></div>
+        <div class="slider-row"><label for="w-rec">时效性</label><input id="w-rec" type="range" min="0" max="1" step="0.05" value="0.20"><output id="o-rec">0.20</output></div>
+        <div class="slider-row"><label for="w-imp">重要性</label><input id="w-imp" type="range" min="0" max="1" step="0.05" value="0.20"><output id="o-imp">0.20</output></div>
+        <div class="slider-row"><label for="w-con">置信度</label><input id="w-con" type="range" min="0" max="1" step="0.05" value="0.15"><output id="o-con">0.15</output></div>
+        <p class="sim-note">这里按权重和做归一化，方便横向比较；生产环境把权重版本写进召回日志，方便回溯“为什么这条排第一”。</p>
+      </div>
+      <ul class="sim-list" id="sim-list"></ul>
+    </div>
+  </div>
+
+  <h3><span class="h3n">6.2</span>注入 Prompt 的样子</h3>
+  <p>证据包要短、要带标签、要能核对。不要把整段对话塞进去，也不要把记忆写成“系统真理”。</p>
+  <pre class="codeblock"><span class="c">// 推荐：一条记忆一个块，标签在前，证据在后</span>
+[记忆 M-4471 | 客户顾虑 | 2026-11-15 | 客户原话 | active]
+后排空间：坐三个大人偏挤
+证据：录音 R-215 14:32 “后面坐三个人有点挤”
+
+[记忆 M-4480 | 客户偏好 | 2026-11-20 | 客户原话 | active]
+沟通方式：先给结论，再展开细节
+证据：会话 S-332 “您直接说重点就行”</pre>
+  <p>注入时明确告诉模型：<strong>记忆是历史证据，不是当前事实。</strong> 报价、库存、订单状态这类值，必须再查权威系统；记忆只能提示“曾经是多少”，不能替代现在是多少。</p>
+
+  <h3><span class="h3n">6.3</span>五种结果必须能被区分</h3>
+  <p>很多系统把所有异常都返回空数组，结果模型以为“没有记忆”，用户以为“系统不知道”。B 端必须把语义拆开。</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:22%"><col style="width:36%"><col style="width:42%"></colgroup>
+      <thead><tr><th>结果</th><th>含义</th><th>产品侧应怎么表现</th></tr></thead>
+      <tbody>
+        <tr><td><code>no_memory</code></td><td>确实没有相关记忆</td><td>正常回答，不编造；可提示“没有历史记录”</td></tr>
+        <tr><td><code>permission_denied</code></td><td>有记忆，但当前用户无权看</td><td>说明权限不足，不泄露内容；给申请入口</td></tr>
+        <tr><td><code>disputed</code></td><td>记录存在争议，尚未核实</td><td>展示“待确认”，不要当事实；允许纠错</td></tr>
+        <tr><td><code>index_lag</code></td><td>已写入，索引尚未同步</td><td>提示“正在整理”，稍后重试；不要当没有</td></tr>
+        <tr><td><code>service_unavailable</code></td><td>记忆服务不可用</td><td>降级到无记忆回答，并显式标注降级</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">6.4</span>召回看什么指标</h3>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:22%"><col style="width:44%"><col style="width:34%"></colgroup>
+      <thead><tr><th>指标</th><th>定义</th><th>参考目标</th></tr></thead>
+      <tbody>
+        <tr><td>召回命中率</td><td>需要记忆的任务中，至少召回一条有用记忆的比例</td><td>首期先看趋势，不设拍脑袋高线</td></tr>
+        <tr><td>Precision@3</td><td>前 3 条里真正被采纳的比例</td><td>越高越好；低于 50% 先查抽取质量</td></tr>
+        <tr><td>陈旧率</td><td>召回结果中已过期/被替代仍被使用的比例</td><td>目标接近 0；靠状态过滤和时效重排</td></tr>
+        <tr><td>采纳率</td><td>注入后被模型/用户实际采用的比例</td><td>反映记忆是否真的有用</td></tr>
+        <tr><td>P95 延迟</td><td>端到端召回耗时</td><td>参考硬指标 ≤ 300ms</td></tr>
+        <tr><td>Token 成本</td><td>每次注入的记忆 token 数</td><td>top-k 3–5，按预算截断</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="chapter" id="ch7">
+  <div class="chapter-head">
+    <div class="chapter-no">07<small>GOVERNANCE</small></div>
+    <div>
+      <h2>治理：B 端的生死线</h2>
+      <p class="lede">记忆一旦进入业务流程，它就不再是“模型上下文”，而是数据资产。多租户、对象权限、生命周期、删除、审计，任何一项缺失都可能让项目停在试点。</p>
+    </div>
+  </div>
+
+  <h3><span class="h3n">7.1</span>五级隔离，先分清“分区”和“鉴权”</h3>
+  <p class="table-caption">隔离维度</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:15%"><col style="width:41%"><col style="width:44%"></colgroup>
+      <thead><tr><th>层级</th><th>隔离什么</th><th>典型错误</th></tr></thead>
+      <tbody>
+        <tr><td><code>tenant</code></td><td>不同企业/租户的数据、索引、配额</td><td>只在一个 collection 里加 tenant 字段，查询忘了过滤</td></tr>
+        <tr><td><code>project</code></td><td>同一租户下不同业务域</td><td>CRM 记忆被客服项目召回</td></tr>
+        <tr><td><code>user</code></td><td>个人偏好与个人经验</td><td>把个人记忆当团队经验共享</td></tr>
+        <tr><td><code>agent</code></td><td>不同 Agent 的职责边界</td><td>销售 Agent 读到法务 Agent 的内部判断</td></tr>
+        <tr><td><code>run</code></td><td>一次任务执行的临时状态</td><td>把 run 级上下文写进长期记忆</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note warn">
+    <span class="label">NAMESPACE ≠ AUTHZ</span>
+    <p><strong>Mem0 的 namespace、Graphiti 的 graph_id 是数据分区，不是企业级鉴权。</strong> 真正的权限要在召回前做：租户校验 → 角色/对象 ACL → 状态/时效 → 证据可见性。顺序不能反，否则会把“无权看”变成“看不到”。</p>
+  </div>
+
+  <h3><span class="h3n">7.2</span>权限交接：最容易漏的不是主表</h3>
+  <p>调岗、客户转交、离职时，记忆主表的 owner 改了，但会话缓存、历史分享链接、已建待办还在旧人名下。用户看到的是“怎么还能看到”，而不是“主表没改”。</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:16%"><col style="width:28%"><col style="width:28%"><col style="width:28%"></colgroup>
+      <thead><tr><th>时点</th><th>记忆主表</th><th>会话与缓存</th><th>外部分享与待办</th></tr></thead>
+      <tbody>
+        <tr><td><strong>调岗前</strong></td><td>owner_scope 含原负责人</td><td>缓存键含 user_id / role_version</td><td>分享链接、待办指向原负责人</td></tr>
+        <tr><td><strong>调岗当天</strong></td><td>递增 <span class="mono">permission_version</span>，重算可见范围</td><td>清空该用户相关会话缓存</td><td>撤销旧链接，转移未完成待办</td></tr>
+        <tr><td><strong>24 小时内</strong></td><td>校验新负责人是否能看历史证据</td><td>确认无旧缓存回填</td><td>确认旧链接失效、待办已交接</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>做法：把权限当成一条带版本的记录，而不是一次性的布尔值。每次角色、组织、客户归属变化，递增版本；召回时校验版本，版本不匹配就拒绝或降级。</p>
+
+  <h3><span class="h3n">7.3</span>生命周期：七个状态，各有各的召回行为</h3>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:18%"><col style="width:44%"><col style="width:38%"></colgroup>
+      <thead><tr><th>状态</th><th>含义</th><th>召回行为</th></tr></thead>
+      <tbody>
+        <tr><td><code>pending</code></td><td>候选，尚未确认</td><td>默认不召回；管理台可见</td></tr>
+        <tr><td><code>active</code></td><td>已生效</td><td>可召回，按权限与时效过滤</td></tr>
+        <tr><td><code>superseded</code></td><td>被新版本替代</td><td>默认不召回；需要历史对比时显式查</td></tr>
+        <tr><td><code>disputed</code></td><td>有争议，待核实</td><td>可召回但必须标注“待确认”</td></tr>
+        <tr><td><code>archived</code></td><td>归档，保留但不常用</td><td>默认不召回；可按时间范围查</td></tr>
+        <tr><td><code>expired</code></td><td>已过有效期</td><td>不召回；保留审计，等待清理</td></tr>
+        <tr><td><code>deleted</code></td><td>已删除</td><td>永不召回；所有派生数据同步清理</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>TTL 和 review_at 是两件事。</strong> TTL 到期是“不能再用”，review_at 到期是“该再看一眼”。很多系统把复核时间当删除时间，结果把仍然有效的长期偏好清掉了。</p>
+
+  <h3><span class="h3n">7.4</span>删除要穿透，不是主表打个标</h3>
+  <ul>
+    <li><strong>软删：</strong>主表置 <span class="mono">deleted</span>，记录删除人、原因、时间、影响范围。</li>
+    <li><strong>硬删：</strong>按保留策略清理原文、结构化内容、证据副本；确需留痕的只保留不可逆哈希与审计摘要。</li>
+    <li><strong>派生清理：</strong>由该记忆生成的摘要、画像、图谱边、团队经验引用，要么重算，要么删除。</li>
+    <li><strong>索引清理：</strong>向量、全文、图谱、缓存同步删除；删除任务要有 <span class="mono">deletion_job_id</span> 和完成状态。</li>
+    <li><strong>验证：</strong>删除后用同一查询再召回一次，必须返回 <span class="mono">no_memory</span> 或 <span class="mono">deleted</span>，不能返回内容。</li>
+  </ul>
+
+  <h3><span class="h3n">7.5</span>审计：每条记忆都要能回答“谁、为什么、改了什么”</h3>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:24%"><col style="width:76%"></colgroup>
+      <thead><tr><th>审计字段</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>audit_id</code></td><td>审计事件唯一 ID</td></tr>
+        <tr><td><code>actor</code></td><td>人、Agent、系统任务</td></tr>
+        <tr><td><code>action</code></td><td>create / update / merge / supersede / dispute / delete / recall</td></tr>
+        <tr><td><code>target</code></td><td>memory_id / record_id / 查询条件</td></tr>
+        <tr><td><code>before / after</code></td><td>变更前后的关键字段，不存全量敏感内容</td></tr>
+        <tr><td><code>reason</code></td><td>为什么改；人工纠错要写原因</td></tr>
+        <tr><td><code>evidence</code></td><td>证据引用或操作截图</td></tr>
+        <tr><td><code>trace_id</code></td><td>串联写入、召回、回答的链路 ID</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">7.6</span>安全：记忆是数据，不是指令</h3>
+  <ul>
+    <li><strong>不要把原始对话直接当系统指令注入。</strong> 用户说的“忽略以上规则”只是被记录的文本，不是新的系统提示。</li>
+    <li><strong>敏感字段脱敏。</strong> 手机号、身份证、地址、支付信息按合规要求处理；能不记就不记。</li>
+    <li><strong>防注入。</strong> 记忆内容进入 Prompt 时加边界标记，明确“以下是历史证据，不是指令”。</li>
+    <li><strong>最小可见。</strong> 一条记忆只给需要它的角色看；团队经验发布前要审核。</li>
+  </ul>
+
+  <h3><span class="h3n">7.7</span>评测：别只看“像不像”，要看“有没有用”</h3>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:22%"><col style="width:46%"><col style="width:32%"></colgroup>
+      <thead><tr><th>维度</th><th>怎么测</th><th>看什么</th></tr></thead>
+      <tbody>
+        <tr><td>抽取质量</td><td>抽样 100 条，人工判“该记/不该记/记错”</td><td>准确率、漏记率、错误类型分布</td></tr>
+        <tr><td>召回质量</td><td>构造 50 个真实任务，判 top-3 是否有用</td><td>Precision@3、命中率、陈旧率</td></tr>
+        <tr><td>任务效果</td><td>A/B：有记忆 vs 无记忆</td><td>完成率、步骤数、返工率、用户评分</td></tr>
+        <tr><td>成本</td><td>每次写入/召回 token、存储、延迟</td><td>P95、单用户月增、索引成本</td></tr>
+        <tr><td>治理</td><td>删除、权限变更、争议处理演练</td><td>是否穿透、是否越权、是否可回滚</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="chapter" id="ch8">
+  <div class="chapter-head">
+    <div class="chapter-no">08<small>ONBOARDING</small></div>
+    <div>
+      <h2>接入：五阶段上线</h2>
+      <p class="lede">不要从“接一个 SDK”开始，而要从“注册一个记忆类型”开始。平台接入是一条有准入、有验收、有灰度的工程流程。</p>
+    </div>
+  </div>
+
+  <p>下面这条路径适用于已有记忆平台的团队，也适用于自建平台的第一批业务。核心顺序不能反：<strong>先注册和建模，再写接口；先验写入，再验召回；先灰度，再全量。</strong></p>
+
+  <div class="figure" data-figure="onboard">
+    <div class="figure-head"><span class="cap">FIG. 5 / ONBOARDING</span><span class="src">原生流程图</span></div>
+    <div class="diagram-frame"><img src="assets/05-onboarding.svg" alt="B 端记忆平台接入与上线流程图：平台注册、模型设计、服务端接入、数据验收、灰度写入、灰度召回、全量上线"></div>
+    <p class="figure-note">五阶段不是五个会议，而是五个有退出标准的交付节点；每个节点都要有可验收的产物。</p>
+  </div>
+
+  <p class="table-caption">五阶段的任务与退出标准</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:15%"><col style="width:47%"><col style="width:38%"></colgroup>
+      <thead><tr><th>阶段</th><th>要做什么</th><th>退出标准</th></tr></thead>
+      <tbody>
+        <tr><td><strong>平台注册</strong></td><td>登记记忆名称、主体类型、生命周期、读写租户、描述、负责人</td><td>注册信息完整，主体和 TTL 无歧义</td></tr>
+        <tr><td><strong>模型设计</strong></td><td>定 Identity / Content / Policy，定 memory_type 与 schema</td><td>字段表评审通过，样例记录能落库</td></tr>
+        <tr><td><strong>服务端接入</strong></td><td>接 Generate/Retrieve，处理异步状态、幂等、错误码</td><td>同一来源重试不重复，异常可区分</td></tr>
+        <tr><td><strong>数据验收</strong></td><td>生产事件、召回事件、评测集、监控看板</td><td>抽样准确率达标，指标可观测</td></tr>
+        <tr><td><strong>灰度上线</strong></td><td>先灰度写入，再灰度召回，按租户/场景放量</td><td>无越权、无陈旧污染、可回滚</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">8.1</span>注册时就要填的字段</h3>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:26%"><col style="width:74%"></colgroup>
+      <thead><tr><th>字段</th><th>填写说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>memory_name</code></td><td>业务可读名称，避免“test_memory_2”这类命名</td></tr>
+        <tr><td><code>entity_type</code></td><td>用户、店铺、商品、订单、会话等；必须能唯一定位</td></tr>
+        <tr><td><code>lifecycle</code></td><td>长期/短期；是否跨会话是判定标准</td></tr>
+        <tr><td><code>default_ttl</code></td><td>默认有效期；没有 TTL 的类型不允许上线</td></tr>
+        <tr><td><code>read_tenant</code> / <code>write_tenant</code></td><td>读租户与写租户，允许不同；必须显式声明</td></tr>
+        <tr><td><code>description</code></td><td>这条记忆解决什么任务，不解决什么</td></tr>
+        <tr><td><code>owner</code> / <code>scene</code></td><td>业务负责人、调用场景、告警联系人</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">8.2</span>GenerateMemory 的关键字段</h3>
+  <p>不同平台字段名会变，语义不变。下面这组可以直接作为接口评审清单。</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:27%"><col style="width:73%"></colgroup>
+      <thead><tr><th>字段</th><th>作用</th></tr></thead>
+      <tbody>
+        <tr><td><code>Tenant</code> / <code>Scene</code></td><td>租户与场景；决定隔离和读写路由</td></tr>
+        <tr><td><code>EntityType</code> / <code>EntityID</code></td><td>主体类型与 ID；不能只传名字</td></tr>
+        <tr><td><code>MemoryType</code> / <code>SubType</code></td><td>记忆类型与子类型；对应注册表</td></tr>
+        <tr><td><code>MemoryContent</code></td><td>结构化内容；Direct 模式必填</td></tr>
+        <tr><td><code>DataSourceFrom</code></td><td>来源类型：会话、工单、录音、系统回执</td></tr>
+        <tr><td><code>DataContent</code> / <code>DataParams</code></td><td>原始内容与参数；Producer 模式使用</td></tr>
+        <tr><td><code>SourceSessionID</code> / <code>SourceMessageID</code></td><td>回放与证据定位</td></tr>
+        <tr><td><code>SourceID</code></td><td>来源实例 ID；参与幂等，重试必须稳定</td></tr>
+        <tr><td><code>ConfidenceScore</code></td><td>置信度；没有校准时用枚举级别，不硬造小数</td></tr>
+        <tr><td><code>NeedProcessRawInfo</code></td><td>false=Direct，true=Producer；决定平台是否跑抽取</td></tr>
+        <tr><td><code>MemoryConstraintType</code></td><td>0 Unknown / 1 Cover / 2 Append / 3 Ignore / 4 RequireMerge</td></tr>
+        <tr><td><code>MemoryExpireTimeMs</code></td><td>绝对过期时间；0 表示用类型默认策略</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">8.3</span>RetrieveMemory 的关键字段</h3>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:27%"><col style="width:73%"></colgroup>
+      <thead><tr><th>字段</th><th>作用</th></tr></thead>
+      <tbody>
+        <tr><td><code>Tenant</code> / <code>Scene</code></td><td>与写入一致；跨场景召回要显式授权</td></tr>
+        <tr><td><code>RetrieveRoutes</code></td><td>一条或多条召回路由；每条含类型、主体、条件</td></tr>
+        <tr><td><code>MemoryType</code> / <code>EntityType</code></td><td>要找哪类记忆、哪类主体</td></tr>
+        <tr><td><code>EntityIDs</code></td><td>主体 ID 列表；不要用模糊名称代替</td></tr>
+        <tr><td><code>Constraint.TopK</code></td><td>每路返回上限；融合后再截断</td></tr>
+        <tr><td><code>Constraint.Query</code> / <code>Embedding</code></td><td>文本查询或预计算向量；二选一或组合</td></tr>
+        <tr><td><code>Constraint.CommonQueryDst</code></td><td>业务过滤：订单、商品、子类型、来源、会话等</td></tr>
+        <tr><td><code>UnifiedRetrieveConstraintOption</code></td><td>多路统一约束；用于融合与预算控制</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">8.4</span>灰度顺序：先写，再读，最后放量</h3>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:16%"><col style="width:44%"><col style="width:40%"></colgroup>
+      <thead><tr><th>阶段</th><th>开关</th><th>观察</th></tr></thead>
+      <tbody>
+        <tr><td><strong>灰度写入</strong></td><td>按租户/场景打开写入，召回仍关闭</td><td>抽取准确率、重复率、失败率、存储增长</td></tr>
+        <tr><td><strong>影子召回</strong></td><td>召回开启但不注入，只记录结果</td><td>命中率、越权数、陈旧率、延迟</td></tr>
+        <tr><td><strong>小流量注入</strong></td><td>5%–10% 流量注入，保留一键关闭</td><td>采纳率、任务完成率、用户反馈</td></tr>
+        <tr><td><strong>全量</strong></td><td>按业务域逐步放开</td><td>稳定性、成本、告警、回滚演练</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">8.5</span>上线前检查单</h3>
+  <div class="quiz" style="padding:0">
+    <div class="quiz-head"><h4>9 项必须全部打勾</h4><span class="quiz-score">READY / NOT YET</span></div>
+    <div style="padding:10px 16px">
+      <label style="display:block;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px"><input type="checkbox" style="accent-color:var(--green);margin-right:8px">同一来源重试，<span class="mono">memory_id</span> 不变</label>
+      <label style="display:block;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px"><input type="checkbox" style="accent-color:var(--green);margin-right:8px">晚到的旧记录不会覆盖新事实</label>
+      <label style="display:block;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px"><input type="checkbox" style="accent-color:var(--green);margin-right:8px">冲突未决进入 <span class="mono">disputed</span>，不自动生效</label>
+      <label style="display:block;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px"><input type="checkbox" style="accent-color:var(--green);margin-right:8px">召回前做租户、角色、对象 ACL 过滤</label>
+      <label style="display:block;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px"><input type="checkbox" style="accent-color:var(--green);margin-right:8px">五种召回结果能被产品区分</label>
+      <label style="display:block;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px"><input type="checkbox" style="accent-color:var(--green);margin-right:8px">删除穿透主表、索引、缓存、派生摘要</label>
+      <label style="display:block;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px"><input type="checkbox" style="accent-color:var(--green);margin-right:8px">写入、召回、删除都有 Trace 与审计</label>
+      <label style="display:block;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px"><input type="checkbox" style="accent-color:var(--green);margin-right:8px">有降级方案：记忆服务挂了仍能回答</label>
+      <label style="display:block;padding:8px 0;font-size:13.5px"><input type="checkbox" style="accent-color:var(--green);margin-right:8px">有一次真实回滚演练，记录耗时与影响面</label>
+    </div>
+  </div>
+</section>
+
+<section class="chapter" id="ch9">
+  <div class="chapter-head">
+    <div class="chapter-no">09<small>DELIVERY</small></div>
+    <div>
+      <h2>推进：团队与 8 周排期</h2>
+      <p class="lede">记忆模块最容易死在“大家都知道要做，但没人对结果负责”。先把角色、决策点和首期闭环定下来，再谈技术选型。</p>
+    </div>
+  </div>
+
+  <h3><span class="h3n">9.1</span>谁对什么负责</h3>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:18%"><col style="width:42%"><col style="width:40%"></colgroup>
+      <thead><tr><th>角色</th><th>负责</th><th>交付物</th></tr></thead>
+      <tbody>
+        <tr><td><strong>业务负责人</strong></td><td>定义首期闭环、验收业务效果、决定优先级</td><td>场景说明、验收标准、上线授权</td></tr>
+        <tr><td><strong>记忆产品/策略</strong></td><td>准入规则、记忆类型、字段模型、评测口径</td><td>注册表、字段表、评测集</td></tr>
+        <tr><td><strong>平台研发</strong></td><td>网关、写入、召回、存储、权限、删除</td><td>接口、服务、监控、回滚方案</td></tr>
+        <tr><td><strong>算法</strong></td><td>抽取 Prompt、重排、置信度、图谱（如需要）</td><td>Prompt 版本、模型版本、效果报告</td></tr>
+        <tr><td><strong>治理/合规</strong></td><td>敏感字段、保留策略、删除审计、权限模型</td><td>合规评估、审计清单</td></tr>
+        <tr><td><strong>评测/运营</strong></td><td>抽样、标注、Badcase 归因、灰度观察</td><td>周报、问题清单、上线建议</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">9.2</span>8 周排期：先跑通一个闭环</h3>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:12%"><col style="width:48%"><col style="width:40%"></colgroup>
+      <thead><tr><th>周</th><th>做什么</th><th>周末产物</th></tr></thead>
+      <tbody>
+        <tr><td>W1</td><td>定场景、定边界、访谈 5 个真实用户</td><td>一页场景说明 + 反例清单</td></tr>
+        <tr><td>W2</td><td>定记忆类型、字段模型、准入规则</td><td>注册表 + 字段表 + 样例记录</td></tr>
+        <tr><td>W3</td><td>搭写入链路：收集、抽取、落库、状态</td><td>可写入 20 条真实事件</td></tr>
+        <tr><td>W4</td><td>搭召回链路：结构化 + 向量 + 关键词</td><td>可召回 top-3，带来源</td></tr>
+        <tr><td>W5</td><td>权限、状态、删除、审计最小闭环</td><td>越权与删除演练通过</td></tr>
+        <tr><td>W6</td><td>评测集与 Badcase 归因</td><td>抽取/召回报告 + 修复清单</td></tr>
+        <tr><td>W7</td><td>灰度写入 + 影子召回</td><td>指标看板 + 告警</td></tr>
+        <tr><td>W8</td><td>小流量注入、复盘、决定是否扩场景</td><td>上线结论 + 下一阶段计划</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">9.3</span>开工前必须拍板的六件事</h3>
+  <ol>
+    <li><strong>首期只做哪个闭环？</strong> 没有业务闭环，记忆无法证明价值。</li>
+    <li><strong>记忆属于谁？</strong> 个人、团队、租户，还是业务对象？</li>
+    <li><strong>哪些值绝不进记忆？</strong> 报价、库存、订单状态等高频变化值，写进“禁止清单”。</li>
+    <li><strong>谁来确认争议？</strong> 没有裁决人，<span class="mono">disputed</span> 会永远挂着。</li>
+    <li><strong>删除的保留策略是什么？</strong> 哪些必须硬删，哪些可留审计摘要。</li>
+    <li><strong>什么情况下回滚？</strong> 越权、陈旧污染、延迟超标，分别对应什么动作。</li>
+  </ol>
+
+  <h3><span class="h3n">9.4</span>向老板汇报：六页就够</h3>
+  <div class="grid3">
+    <div class="card"><span class="num">P1</span><h4>痛点</h4><p>一次真实任务里，因为接不上历史，重复问了几次、错了哪一步。</p></div>
+    <div class="card"><span class="num">P2</span><h4>方向</h4><p>只做一条闭环，不做全场景；先证明“少问一次、少错一步”。</p></div>
+    <div class="card"><span class="num">P3</span><h4>方案</h4><p>一张架构图 + 一条记忆记录样例 + 写入/召回两条链路。</p></div>
+    <div class="card"><span class="num">P4</span><h4>首期</h4><p>范围、不做什么、8 周里程碑、验收标准。</p></div>
+    <div class="card"><span class="num">P5</span><h4>证据</h4><p>抽样准确率、召回命中、任务效率、Token 成本。</p></div>
+    <div class="card"><span class="num">P6</span><h4>投入</h4><p>人力、存储、模型调用、治理成本，以及不做的风险。</p></div>
+  </div>
+
+  <h3><span class="h3n">9.5</span>首期 P0 清单</h3>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:12%"><col style="width:38%"><col style="width:50%"></colgroup>
+      <thead><tr><th>编号</th><th>能力</th><th>验收口径</th></tr></thead>
+      <tbody>
+        <tr><td>M01</td><td>记忆类型注册</td><td>主体、生命周期、读写租户完整</td></tr>
+        <tr><td>M02</td><td>事件接入与原始记录</td><td>可回放，来源可点</td></tr>
+        <tr><td>M03</td><td>抽取与准入</td><td>该记的记住，不该记的不进库</td></tr>
+        <tr><td>M04</td><td>冲突与版本</td><td>更新可追溯，争议不自动生效</td></tr>
+        <tr><td>M05</td><td>多路召回与重排</td><td>top-3 可用，带来源</td></tr>
+        <tr><td>M06</td><td>权限与状态过滤</td><td>越权为 0，五种结果可区分</td></tr>
+        <tr><td>M07</td><td>删除与审计</td><td>删除穿透，操作留痕</td></tr>
+        <tr><td>M08</td><td>监控与评测</td><td>指标可观测，有 Badcase 归因</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="chapter" id="ch10">
+  <div class="chapter-head">
+    <div class="chapter-no">10<small>PITFALLS</small></div>
+    <div>
+      <h2>坑与清单：上线前逐项过</h2>
+      <p class="lede">最后一部分不讲新概念，只把最常见、最贵的坑列出来。每一条都对应一个可执行的检查动作。</p>
+    </div>
+  </div>
+
+  <h3><span class="h3n">10.1</span>十二个反模式</h3>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:34%"><col style="width:32%"><col style="width:34%"></colgroup>
+      <thead><tr><th>反模式</th><th>后果</th><th>改法</th></tr></thead>
+      <tbody>
+        <tr><td>把整段对话当记忆</td><td>噪声高、token 贵、无法更新</td><td>先抽取“一条一件事”的事实</td></tr>
+        <tr><td>用 namespace 当权限</td><td>越权、审计说不清</td><td>召回前做租户 + ACL + 状态过滤</td></tr>
+        <tr><td>只做向量召回</td><td>精确术语、订单号召回不到</td><td>结构化 + 关键词 + 向量，必要时图谱</td></tr>
+        <tr><td>top-k 越大越好</td><td>上下文污染、成本上升</td><td>3–5 条，按预算截断</td></tr>
+        <tr><td>没有证据字段</td><td>无法核对，出错无法追</td><td>citations + evidence_quote + occurred_at</td></tr>
+        <tr><td>没有删除穿透</td><td>用户要求删除后仍被召回</td><td>主表、索引、缓存、派生一起清</td></tr>
+        <tr><td>抽取 Prompt 长期不评估</td><td>错误累积，越记越脏</td><td>Prompt 版本 + 抽样评测 + Badcase 归因</td></tr>
+        <tr><td>把索引当唯一真源</td><td>换模型/重建后数据丢失</td><td>Record 主表为准，索引可重建</td></tr>
+        <tr><td>跨租户共享向量库</td><td>数据泄露，合规风险</td><td>物理/逻辑隔离 + 查询强制过滤</td></tr>
+        <tr><td>把记忆当当前事实</td><td>报价、库存、订单状态答错</td><td>当前值查权威系统，记忆只作历史</td></tr>
+        <tr><td>异常都返回空数组</td><td>模型以为没有记忆，用户困惑</td><td>五种结果语义化</td></tr>
+        <tr><td>没有降级方案</td><td>记忆服务挂了，主流程也挂</td><td>无记忆回答 + 显式降级标注</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">10.2</span>十二条验收用例</h3>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:8%"><col style="width:38%"><col style="width:54%"></colgroup>
+      <thead><tr><th>#</th><th>场景</th><th>预期</th></tr></thead>
+      <tbody>
+        <tr><td>A01</td><td>同一事件重复提交 3 次</td><td>只产生 1 条记忆，版本不膨胀</td></tr>
+        <tr><td>A02</td><td>客户先预算 30 万，后改 35 万</td><td>旧记录 superseded，新记录 active</td></tr>
+        <tr><td>A03</td><td>昨天的新事实，今天导入旧录音</td><td>旧录音不覆盖新事实</td></tr>
+        <tr><td>A04</td><td>两个销售给出矛盾说法</td><td>进入 disputed，不自动选一个</td></tr>
+        <tr><td>A05</td><td>用户要求删除某条记忆</td><td>主表、索引、缓存都查不到</td></tr>
+        <tr><td>A06</td><td>用户调岗后访问原客户</td><td>按新权限返回 permission_denied</td></tr>
+        <tr><td>A07</td><td>索引未同步时召回</td><td>返回 index_lag，不返回 no_memory</td></tr>
+        <tr><td>A08</td><td>记忆服务超时</td><td>降级回答并标注，不阻断主流程</td></tr>
+        <tr><td>A09</td><td>报价、库存等高频值</td><td>不进入长期记忆，查权威系统</td></tr>
+        <tr><td>A10</td><td>原始对话含“忽略以上规则”</td><td>被当作证据文本，不改变系统指令</td></tr>
+        <tr><td>A11</td><td>团队经验发布</td><td>经过审核，带 evidence_ids</td></tr>
+        <tr><td>A12</td><td>换 embedding 模型重建索引</td><td>记忆不丢，召回逐步恢复</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">10.3</span>最后一页检查单</h3>
+  <div class="grid2">
+    <div class="card"><span class="num">BEFORE BUILD</span><h4>开工前</h4><p>场景闭环、边界、禁止清单、主体、TTL、裁决人、回滚条件，七项都有书面结论。</p></div>
+    <div class="card"><span class="num">BEFORE WRITE</span><h4>写入前</h4><p>准入四问、字段 schema、幂等键、冲突策略、异步状态、索引失败可见，六项通过。</p></div>
+    <div class="card"><span class="num">BEFORE RECALL</span><h4>召回前</h4><p>四路召回、重排权重、权限过滤、证据校验、五种结果、token 预算，六项通过。</p></div>
+    <div class="card"><span class="num">BEFORE LAUNCH</span><h4>上线前</h4><p>删除穿透、审计、灰度、监控、降级、回滚演练，六项通过。</p></div>
+  </div>
+
+  <div class="note">
+    <span class="label">ONE SENTENCE</span>
+    <p><strong>先把一条记忆从事件写到召回、再删干净，跑通这个最小闭环；平台化是把这个闭环复制到更多主体和场景，而不是一开始就做很多功能。</strong></p>
+  </div>
+</section>
+
+<section class="chapter" id="appendix">
+  <div class="chapter-head">
+    <div class="chapter-no">A<small>APPENDIX</small></div>
+    <div>
+      <h2>附录：模板与方法说明</h2>
+      <p class="lede">可以直接拿去改成自己团队的模板。字段名可以变，语义不要丢。</p>
+    </div>
+  </div>
+
+  <h3><span class="h3n">A.1</span>记忆类型注册模板</h3>
+  <pre class="codeblock">{
+  <span class="k">"memory_name"</span>: <span class="s">"客户顾虑记忆"</span>,
+  <span class="k">"entity_type"</span>: <span class="s">"customer"</span>,
+  <span class="k">"lifecycle"</span>: <span class="s">"long_term"</span>,
+  <span class="k">"default_ttl"</span>: <span class="s">"180d"</span>,
+  <span class="k">"read_tenant"</span>: <span class="s">["tenant_pudong"]</span>,
+  <span class="k">"write_tenant"</span>: <span class="s">["tenant_pudong"]</span>,
+  <span class="k">"content_schema"</span>: {
+    <span class="k">"predicate"</span>: <span class="s">"string"</span>,
+    <span class="k">"value"</span>: <span class="s">"string"</span>,
+    <span class="k">"evidence_quote"</span>: <span class="s">"string"</span>
+  },
+  <span class="k">"write_policy"</span>: <span class="s">"producer + require_merge"</span>,
+  <span class="k">"recall_policy"</span>: <span class="s">"entity + predicate + top_k=3"</span>,
+  <span class="k">"owner"</span>: <span class="s">"crm-product"</span>
+}</pre>
+
+  <h3><span class="h3n">A.2</span>抽取 Prompt 的输出模板</h3>
+  <pre class="codeblock">{
+  <span class="k">"should_remember"</span>: true,
+  <span class="k">"reason"</span>: <span class="s">"客户明确表达，将在下次到店复用"</span>,
+  <span class="k">"memory_type"</span>: <span class="s">"concern"</span>,
+  <span class="k">"sub_type"</span>: <span class="s">"space"</span>,
+  <span class="k">"predicate"</span>: <span class="s">"后排空间顾虑"</span>,
+  <span class="k">"value"</span>: <span class="s">"坐三个大人偏挤"</span>,
+  <span class="k">"text"</span>: <span class="s">"后排空间小，坐三个大人偏挤"</span>,
+  <span class="k">"confidence_level"</span>: <span class="s">"customer_quote"</span>,
+  <span class="k">"importance"</span>: 0.7,
+  <span class="k">"evidence_quote"</span>: <span class="s">"后面坐三个人有点挤"</span>,
+  <span class="k">"occurred_at"</span>: 1763188320000,
+  <span class="k">"valid_until"</span>: null
+}</pre>
+
+  <h3><span class="h3n">A.3</span>召回评测表模板</h3>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:12%"><col style="width:34%"><col style="width:26%"><col style="width:28%"></colgroup>
+      <thead><tr><th>用例</th><th>任务问题</th><th>召回结果</th><th>判定</th></tr></thead>
+      <tbody>
+        <tr><td>R01</td><td>客户二次到店，销售该先说什么</td><td>M-4471 / M-4480</td><td>命中，且带来源</td></tr>
+        <tr><td>R02</td><td>客户问现在报价</td><td>无记忆，转权威系统</td><td>正确拒绝</td></tr>
+        <tr><td>R03</td><td>新同事接手客户</td><td>无权限，返回 permission_denied</td><td>越权为 0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3><span class="h3n">A.4</span>方法来源说明</h3>
+  <div class="note"><span class="label">PUBLIC EDITION</span><p>本公开版基于企业内部的记忆平台实践整理，已移除内部文档链接、内部产品名称与内部指标。文中的字段名、接口名与示例均为教学化、通用化表述，不代表任何具体平台的最终接口；落地时请以你所在团队的实际规范为准。</p></div>
+
+  <p class="small" style="margin-top:36px;border-top:1px solid var(--line);padding-top:16px">本教材中的流程图与架构图使用原生流程图生成；页面为单文件 HTML，图形资源位于 <span class="mono">assets/</span>。</p>
+</section>
+</main>
+</div>
+<script>
+(function(){
+  const $ = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+
+  // 阅读进度
+  const bar = $('#progress');
+  const sections = $$('main section.chapter[id]');
+  const tocLinks = $$('.toc a');
+  function onScroll(){
+    const st = window.scrollY || document.documentElement.scrollTop;
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, st / h * 100) : 0) + '%';
+    let current = sections[0];
+    for (const s of sections){
+      if (s.offsetTop - 130 <= st) current = s;
+    }
+    const id = current && current.id === 'appendix' ? 'ch10' : (current ? current.id : 'ch1');
+    tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  onScroll();
+
+  // 章节渐入
+  if ('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+    }, {threshold:.08, rootMargin:'0px 0px -6% 0px'});
+    sections.forEach((s, i) => {
+      s.classList.add('reveal');
+      if (i === 0) s.classList.add('in');
+      io.observe(s);
+    });
+  }
+
+  // 展开长图
+  $$('[data-expand]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fig = btn.closest('.figure');
+      fig.classList.toggle('expanded');
+      btn.textContent = fig.classList.contains('expanded') ? '收起 ↑' : '展开全图 ↓';
+    });
+  });
+
+  // 准入练习
+  const quizItems = [
+    {t:'客户说：“后面坐三个人有点挤，我爸妈年纪大了。”', a:'记', why:'客户原话，是稳定的顾虑，下次到店和推荐车型都会用到；来源、时间、主体都清楚。'},
+    {t:'销售在会话里说：“这车现在报价 30 万。”', a:'不记', why:'报价 24 小时内就会变，属于高频变化值；记忆里最多存“曾咨询过报价”，当前值必须查报价系统。'},
+    {t:'系统显示：“浦东店还有 3 台现车。”', a:'不记', why:'库存是实时值，应该查库存系统；把库存写进记忆，第二天就会答错。'},
+    {t:'客户归属：“这个客户归浦东直营店。”', a:'不记', why:'客户归属是权威系统里的组织事实，不是记忆要缓存的内容；权限交接时反而容易出错。'},
+    {t:'客户说：“以后技术方案先给结论，再展开细节。”', a:'记', why:'这是稳定的沟通偏好，跨会话可复用；带上来源和置信度即可。'},
+    {t:'客户说：“这次你讲详细一点。”', a:'不记', why:'这是一次性要求，只服务当前这一轮；写进长期记忆会污染以后的回答风格。'},
+    {t:'客户否认：“我没说过预算 25 万。”', a:'待确认', why:'这是争议，不是简单覆盖；保留原证据和否认记录，置 disputed，核实后再改状态。'},
+    {t:'今天导入一条 11/14 的旧录音，里面说客户只想买 A 款。', a:'待确认', why:'晚到的旧记录不能覆盖新事实；按 occurred_at 判断，作为历史保留，默认取最新。'}
+  ];
+  const quiz = $('#quiz');
+  const scoreEl = $('#quiz-score');
+  let answered = 0, correct = 0;
+  quizItems.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'quiz-row';
+    row.innerHTML = '<div class="quiz-text"><span class="idx">' + String(i+1).padStart(2,'0') + '</span>' + item.t + '</div>' +
+      '<div class="quiz-btns"><button data-a="记">记</button><button data-a="不记">不记</button><button data-a="待确认">待确认</button></div>' +
+      '<div class="quiz-explain"></div>';
+    quiz.appendChild(row);
+    row.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (row.dataset.done) return;
+        row.dataset.done = '1';
+        answered++;
+        const pick = btn.dataset.a;
+        const ok = pick === item.a;
+        if (ok) correct++;
+        row.classList.add('revealed');
+        row.querySelectorAll('button').forEach(b => {
+          if (b.dataset.a === item.a) b.classList.add('good');
+          else if (b === btn) b.classList.add('bad');
+          b.disabled = true;
+        });
+        row.querySelector('.quiz-explain').innerHTML = '<b>' + (ok ? '判断正确' : '再想一步') + '：' + item.a + '。</b> ' + item.why;
+        scoreEl.textContent = answered + ' / ' + quizItems.length + ' 判断 · ' + correct + ' 正确';
+      });
+    });
+  });
+
+  // 写入九步探查器
+  const steps = [
+    {n:'01', title:'收集原始事件', desc:'把一次任务结束、关键对话、工具回执或人工操作，收成一条可回放的原始记录。',
+     input:[['event_id','事件唯一 ID，重试保持稳定'],['tenant_id / project_id','租户与项目，决定后续隔离'],['occurred_at','事情发生时间，毫秒'],['messages','本轮消息、角色、时间戳'],['tool_calls','工具名、参数、回执、耗时'],['task_state','任务目标、步骤、结果、异常'],['attachments','录音、截图、附件的引用，不直接存大文件']],
+     output:[['raw_record_id','原始记录 ID，只追加不改'],['source_ref','可回点的来源引用'],['subject_hints','候选主体线索，交给下一步消歧']],
+     fail:'上下文缺失：标记 incomplete，不进入抽取；附件只存对象存储引用，避免把大文件塞进记忆库。'},
+    {n:'02', title:'解析身份与主体', desc:'把“谁、在哪个租户、以什么角色、对哪个业务对象”解析成稳定 ID，而不是靠名字猜。',
+     input:[['tenant_id / project_id','隔离维度，必须来自鉴权后的上下文'],['user_id / agent_id / run_id','写入者、Agent、运行批次'],['entity_hints','客户名、订单号、商品名等候选线索'],['permission_version','当前权限版本，调岗/转交后递增']],
+     output:[['entity_type / entity_id','主体类型与唯一 ID'],['owner_scope','负责人、协作者、团队、角色'],['visibility','private / team / tenant / public'],['identity_confidence','消歧置信度；低置信进待确认']],
+     fail:'消歧失败：进入 pending_identity，人工确认；跨租户或主体冲突：直接拒绝，不能“先写后修”。'},
+    {n:'03', title:'准入判定', desc:'用四问和 24 小时规则，决定这条候选信息是接受、拒绝、待确认，还是转权威系统。',
+     input:[['reuse_scenario','预计在哪些任务、哪些步骤复用'],['volatility','stable / daily / realtime'],['source_type / source_id','会话、工单、录音、工具回执'],['evidence_uri','可回点的证据地址或片段 ID'],['ttl / review_at','有效期与复核时间']],
+     output:[['decision','accept / reject / pending / query_system'],['reason','人可读的判定理由'],['candidate_id','候选唯一 ID，便于追踪']],
+     fail:'无法判定：默认 pending，不默认 accept；realtime 值：直接 query_system，不进入抽取。'},
+    {n:'04', title:'抽取候选事实', desc:'把原始事件抽成“一条一件事”的候选事实，带谓词、值、证据、时间和置信级别。',
+     input:[['raw_record','上一步的原始记录'],['content_schema','该记忆类型的字段与枚举'],['prompt_version / model_version','抽取版本，便于回滚和对比'],['locale / domain','语言与领域，影响措辞和实体识别']],
+     output:[['memory_type / sub_type','记忆类型与子类型'],['predicate / value','谓词与值；一条只说一件事'],['text','人可读摘要'],['confidence_level','customer_quote / sales_relay / system_receipt / inferred'],['importance','0–1，用于重排'],['evidence_quote','原始证据片段'],['occurred_at / valid_from / valid_until','发生时间与生效区间'],['dedupe_key','去重键']],
+     fail:'抽取失败：job failed，可重试；低置信：进 pending，不直接 active；一条抽出多个事实：拆成多条候选，不合并成一段话。'},
+    {n:'05', title:'去重与冲突检测', desc:'判断这是重复、更新、矛盾、晚到还是否认，再决定是否覆盖、合并或挂起。',
+     input:[['dedupe_key','主体 + 谓词 + 值的稳定键'],['candidate','本条候选事实'],['existing_memories','同主体、同谓词的现有记忆'],['similarity_threshold','语义相似阈值，按类型配置']],
+     output:[['conflict_type','duplicate / update / contradiction / late / denial'],['matched_memory_id','命中的现有记忆'],['supersedes_id','被替代的旧记忆 ID'],['resolution','merge / cover / append / dispute / ignore']],
+     fail:'无法判定：置 disputed 或 pending；绝不自动覆盖；同分冲突：交人工复核，保留双方证据。'},
+    {n:'06', title:'选择写入策略', desc:'把冲突结论翻译成平台能执行的写入动作，并确定版本、过期时间和幂等键。',
+     input:[['conflict_type','上一步的冲突类型'],['constraint_type','cover / append / ignore / require_merge'],['source_id','来源实例 ID，参与幂等'],['expire_time_ms','绝对过期时间；0 用默认策略']],
+     output:[['write_action','insert / update / merge / ignore / hold'],['target_memory_id','写入目标'],['new_version','新版本号'],['expire_time','最终过期时间']],
+     fail:'require_merge 未满足：挂起并通知；ignore：记录原因，不能静默丢；cover 缺旧版本：先读后写，避免丢历史。'},
+    {n:'07', title:'写 Record 与 Memory', desc:'原始记录只追加；记忆记录按策略写入，异步 job 推进状态，失败可重试。',
+     input:[['record_payload','原文、来源、主体、时间'],['memory_payload','Identity + Content + Policy'],['idempotency_key','tenant + source + entity + predicate + occurred_at'],['job_id','异步任务 ID']],
+     output:[['record_id','原始记录 ID'],['memory_id','记忆 ID'],['job_status','PENDING / RUNNING / SUCCEEDED / PARTIAL / FAILED'],['retry_count','重试次数']],
+     fail:'超时/失败：用同一幂等键重试；部分成功：标 PARTIAL，成功的先生效；不能把“已提交”当“已生效”。'},
+    {n:'08', title:'建立索引', desc:'把记忆写进向量、全文、图谱索引；索引是可重建派生物，不是唯一真源。',
+     input:[['memory_id / text','要索引的记忆与文本'],['embedding_model','向量模型版本'],['keywords','精确召回词'],['entities / relations','图谱节点与边']],
+     output:[['vector_id','向量索引 ID'],['keyword_doc_id','全文索引 ID'],['graph_node_id / graph_edge_id','图谱节点与边 ID'],['index_watermark','索引同步位点']],
+     fail:'索引失败：记忆仍 active 但 recallable=false，必须可见；换模型：全量重建，不丢主表；图谱失败：不影响向量召回。'},
+    {n:'09', title:'审计与观测', desc:'记录谁在什么时候、因为什么、改了什么；把写入质量变成可观测指标。',
+     input:[['actor','人、Agent、系统任务'],['action','create / update / merge / supersede / dispute / delete'],['before / after','关键字段变更，不存全量敏感内容'],['reason / evidence','原因与证据'],['trace_id','串联写入、召回、回答']],
+     output:[['audit_id','审计事件 ID'],['metric_event','抽取成功率、重复率、失败率'],['alert','异常告警']],
+     fail:'审计写入失败：阻断删除、权限变更等高风险操作；指标缺失：先补埋点，再谈灰度扩量。'}
+  ];
+  const nav = $('#inspector-nav');
+  const body = $('#inspector-body');
+  function renderStep(i){
+    const s = steps[i];
+    $$('#inspector-nav button').forEach((b, idx) => b.classList.toggle('active', idx === i));
+    body.innerHTML = '<h4>' + s.n + ' · ' + s.title + '</h4><p class="desc">' + s.desc + '</p>' +
+      '<span class="mini-label">INPUT</span><ul class="field-list">' + s.input.map(([k,v]) => '<li><code>' + k + '</code><span>' + v + '</span></li>').join('') + '</ul>' +
+      '<span class="mini-label">OUTPUT</span><ul class="field-list">' + s.output.map(([k,v]) => '<li><code>' + k + '</code><span>' + v + '</span></li>').join('') + '</ul>' +
+      '<span class="mini-label">FAILURE</span><p class="small">' + s.fail + '</p>';
+  }
+  steps.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = '<span class="n">' + s.n + '</span><span>' + s.title + '</span>';
+    b.addEventListener('click', () => renderStep(i));
+    nav.appendChild(b);
+  });
+  renderStep(0);
+
+  // 召回权重重排模拟
+  const memories = [
+    {name:'M-4471 客户后排空间顾虑', rel:.82, rec:.55, imp:.72, con:.90},
+    {name:'M-4510 客户新预算 35 万', rel:.78, rec:.92, imp:.68, con:.88},
+    {name:'M-4480 客户偏好：先给结论', rel:.48, rec:.80, imp:.60, con:.95},
+    {name:'M-4390 客户对交付周期敏感', rel:.70, rec:.62, imp:.66, con:.72},
+    {name:'M-3120 三年前报价 30 万', rel:.76, rec:.05, imp:.35, con:.45}
+  ];
+  const weights = {rel:$('#w-rel'), rec:$('#w-rec'), imp:$('#w-imp'), con:$('#w-con')};
+  const outs = {rel:$('#o-rel'), rec:$('#o-rec'), imp:$('#o-imp'), con:$('#o-con')};
+  const simList = $('#sim-list');
+  function fmt(v){ return v.toFixed(2).replace(/0$/,'').replace(/\.$/,''); }
+  function renderSim(){
+    const w = {rel:+weights.rel.value, rec:+weights.rec.value, imp:+weights.imp.value, con:+weights.con.value};
+    Object.keys(w).forEach(k => outs[k].textContent = w[k].toFixed(2));
+    const sum = w.rel + w.rec + w.imp + w.con || 1;
+    const ranked = memories.map(m => ({...m, score:(m.rel*w.rel + m.rec*w.rec + m.imp*w.imp + m.con*w.con)/sum}))
+      .sort((a,b) => b.score - a.score);
+    simList.innerHTML = ranked.map((m, i) =>
+      '<li class="' + (i < 3 ? 'top3' : '') + '"><span class="rank">' + String(i+1).padStart(2,'0') + '</span><span>' + m.name + '</span><span class="score">' + m.score.toFixed(3) + '</span></li>'
+    ).join('');
+  }
+  Object.values(weights).forEach(el => el.addEventListener('input', renderSim));
+  renderSim();
+})();
+</script>
+</body>
+</html>

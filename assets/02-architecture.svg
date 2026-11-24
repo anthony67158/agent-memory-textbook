@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="778" height="1139" viewBox="4.0 -4.0 778.0 1139.0" font-family="PingFang SC, Microsoft YaHei, sans-serif">
+<rect x="4.0" y="-4.0" width="778.0" height="1139.0" fill="#ffffff"/>
+<marker id="me11d48" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#e11d48"/></marker>
+<marker id="m646a73" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#646a73"/></marker>
+<marker id="m2e9d5b" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#2e9d5b"/></marker>
+<marker id="md9504f" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#d9504f"/></marker>
+<marker id="m7c3aed" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#7c3aed"/></marker>
+<marker id="mea580c" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#ea580c"/></marker>
+<marker id="mdee0e3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8 z" fill="#dee0e3"/></marker>
+<path d="M 40.0,283.0 L 758.0,283.0" fill="none" stroke="#bbc0c7" stroke-width="1.6" stroke-dasharray="6 4"/>
+<path d="M 40.0,501.0 L 758.0,501.0" fill="none" stroke="#bbc0c7" stroke-width="1.6" stroke-dasharray="6 4"/>
+<path d="M 40.0,697.0 L 758.0,697.0" fill="none" stroke="#bbc0c7" stroke-width="1.6" stroke-dasharray="6 4"/>
+<path d="M 40.0,957.0 L 758.0,957.0" fill="none" stroke="#bbc0c7" stroke-width="1.6" stroke-dasharray="6 4"/>
+<path d="M 348.0,208.0 L 348.0,248.0 L 270.1,248.0 L 270.1,347.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<text x="270.1" y="294.5" font-size="13" fill="#1f2329" text-anchor="middle" stroke="#ffffff" stroke-width="3.5" paint-order="stroke">写入 / 召回</text>
+<path d="M 620.5,219.0 L 620.5,291.5 L 424.9,291.5 L 424.9,347.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<text x="522.7" y="288.5" font-size="13" fill="#1f2329" text-anchor="middle" stroke="#ffffff" stroke-width="3.5" paint-order="stroke">注册 / 管理</text>
+<path d="M 270.1,437.0 L 270.1,509.0 L 348.0,509.0 L 348.0,565.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<text x="309.1" y="506.0" font-size="13" fill="#1f2329" text-anchor="middle" stroke="#ffffff" stroke-width="3.5" paint-order="stroke">写入</text>
+<path d="M 424.9,437.0 L 424.9,490.0 L 621.0,490.0 L 621.0,565.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<text x="522.9" y="487.0" font-size="13" fill="#1f2329" text-anchor="middle" stroke="#ffffff" stroke-width="3.5" paint-order="stroke">召回</text>
+<path d="M 348.0,633.0 L 348.0,663.0 L 227.0,663.0 L 227.0,798.0 L 236.0,798.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<text x="227.0" y="727.5" font-size="13" fill="#1f2329" text-anchor="middle" stroke="#ffffff" stroke-width="3.5" paint-order="stroke">落库</text>
+<path d="M 621.0,633.0 L 621.0,697.0 L 269.6,697.0 L 269.6,761.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<text x="445.3" y="694.0" font-size="13" fill="#1f2329" text-anchor="middle" stroke="#ffffff" stroke-width="3.5" paint-order="stroke">按主体查询</text>
+<path d="M 460.0,827.0 L 510.0,827.0 L 510.0,938.0 L 620.5,938.0 L 620.5,893.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<text x="510.0" y="879.5" font-size="13" fill="#1f2329" text-anchor="middle" stroke="#ffffff" stroke-width="3.5" paint-order="stroke">建索引</text>
+<path d="M 347.5,1021.0 L 347.5,991.0 L 208.0,991.0 L 208.0,827.0 L 236.0,827.0" fill="none" stroke="#646a73" stroke-width="1.6" marker-end="url(#m646a73)"/>
+<text x="208.0" y="906.0" font-size="13" fill="#1f2329" text-anchor="middle" stroke="#ffffff" stroke-width="3.5" paint-order="stroke">TTL / 删除 / 审计</text>
+<rect x="28.0" y="146.0" width="156.0" height="56.0" rx="8" fill="#eef1f5" stroke="#bbc0c7" stroke-width="1.6"/>
+<text x="106.0" y="179.0" font-size="14" fill="#1f2329" text-anchor="middle">接入层</text>
+<rect x="28.0" y="364.0" width="156.0" height="56.0" rx="8" fill="#eef1f5" stroke="#bbc0c7" stroke-width="1.6"/>
+<text x="106.0" y="397.0" font-size="14" fill="#1f2329" text-anchor="middle">编排层</text>
+<rect x="28.0" y="571.0" width="156.0" height="56.0" rx="8" fill="#eef1f5" stroke="#bbc0c7" stroke-width="1.6"/>
+<text x="106.0" y="604.0" font-size="14" fill="#1f2329" text-anchor="middle">生产与召回</text>
+<rect x="28.0" y="799.0" width="156.0" height="56.0" rx="8" fill="#eef1f5" stroke="#bbc0c7" stroke-width="1.6"/>
+<text x="106.0" y="832.0" font-size="14" fill="#1f2329" text-anchor="middle">存储层</text>
+<rect x="28.0" y="1038.0" width="156.0" height="56.0" rx="8" fill="#eef1f5" stroke="#bbc0c7" stroke-width="1.6"/>
+<text x="106.0" y="1071.0" font-size="14" fill="#1f2329" text-anchor="middle">治理与观测</text>
+<rect x="234.0" y="140.0" width="228.0" height="68.0" rx="8" fill="#e6faff" stroke="#0891b2" stroke-width="1.6"/>
+<text x="348.0" y="169.8" font-size="14" fill="#164e63" text-anchor="middle">业务 Agent</text>
+<text x="348.0" y="188.3" font-size="14" fill="#164e63" text-anchor="middle">客服 / CRM / 研发 / 办公</text>
+<rect x="511.0" y="129.0" width="219.0" height="90.0" rx="8" fill="#e6faff" stroke="#0891b2" stroke-width="1.6"/>
+<text x="620.5" y="160.6" font-size="14" fill="#164e63" text-anchor="middle">记忆管理台</text>
+<text x="620.5" y="179.0" font-size="14" fill="#164e63" text-anchor="middle">注册 / 查看 / 纠错 / 删</text>
+<text x="620.5" y="197.5" font-size="14" fill="#164e63" text-anchor="middle">除</text>
+<rect x="237.0" y="347.0" width="221.0" height="90.0" rx="8" fill="#e9fbf3" stroke="#059669" stroke-width="1.6"/>
+<text x="347.5" y="378.6" font-size="14" fill="#064e3b" text-anchor="middle">记忆网关</text>
+<text x="347.5" y="397.0" font-size="14" fill="#064e3b" text-anchor="middle">Generate / Retrieve · </text>
+<text x="347.5" y="415.5" font-size="14" fill="#064e3b" text-anchor="middle">租户与 ACL</text>
+<rect x="243.0" y="565.0" width="210.0" height="68.0" rx="8" fill="#e9fbf3" stroke="#059669" stroke-width="1.6"/>
+<text x="348.0" y="594.8" font-size="14" fill="#064e3b" text-anchor="middle">记忆生产</text>
+<text x="348.0" y="613.3" font-size="14" fill="#064e3b" text-anchor="middle">抽取 / 去重 / 冲突合并</text>
+<rect x="516.0" y="565.0" width="210.0" height="68.0" rx="8" fill="#e9fbf3" stroke="#059669" stroke-width="1.6"/>
+<text x="621.0" y="594.8" font-size="14" fill="#064e3b" text-anchor="middle">记忆召回</text>
+<text x="621.0" y="613.3" font-size="14" fill="#064e3b" text-anchor="middle">四路召回 / 重排 / 过滤</text>
+<path d="M236.0,771.0 V883.0 A112.0,10 0 0 0 460.0,883.0 V771.0 M236.0,771.0 A112.0,10 0 0 0 460.0,771.0" fill="#f2eeff" stroke="#7f5ad5" stroke-width="1.6"/>
+<text x="348.0" y="813.6" font-size="14" fill="#1f2329" text-anchor="middle">Record 主表</text>
+<text x="348.0" y="832.0" font-size="14" fill="#1f2329" text-anchor="middle">关系库 · 唯一真源 · 变更</text>
+<text x="348.0" y="850.5" font-size="14" fill="#1f2329" text-anchor="middle">历史</text>
+<path d="M511.0,771.0 V883.0 A109.5,10 0 0 0 730.0,883.0 V771.0 M511.0,771.0 A109.5,10 0 0 0 730.0,771.0" fill="#f2eeff" stroke="#7f5ad5" stroke-width="1.6"/>
+<text x="620.5" y="813.6" font-size="14" fill="#1f2329" text-anchor="middle">记忆索引</text>
+<text x="620.5" y="832.0" font-size="14" fill="#1f2329" text-anchor="middle">向量 + 全文 + 图谱 · 可</text>
+<text x="620.5" y="850.5" font-size="14" fill="#1f2329" text-anchor="middle">重建</text>
+<rect x="232.0" y="1021.0" width="231.0" height="90.0" rx="8" fill="#fff0f3" stroke="#e11d48" stroke-width="1.6"/>
+<text x="347.5" y="1052.6" font-size="14" fill="#881337" text-anchor="middle">治理与观测</text>
+<text x="347.5" y="1071.0" font-size="14" fill="#881337" text-anchor="middle">TTL / 删除 / 审计 / Trac</text>
+<text x="347.5" y="1089.5" font-size="14" fill="#881337" text-anchor="middle">e / 评测</text>
+<text x="42.0" y="40.0" font-size="20" fill="#1f2329" text-anchor="start">B 端 Agent 记忆平台分层架构</text>
+<text x="42.0" y="67.0" font-size="13" fill="#646a73" text-anchor="start">接入、编排、生产与召回、存储、治理五层；Record 是唯一事实源</text>
+</svg>
