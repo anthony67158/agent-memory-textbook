@@ -727,7 +727,7 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
         <tr><td><code>source_id</code></td><td>string</td><td>来源实例 ID；重试必须保持稳定，参与 memory_id 生成</td></tr>
         <tr><td><code>source_session_id</code></td><td>string</td><td>来源会话 ID，用于回放上下文</td></tr>
         <tr><td><code>source_message_id</code></td><td>string</td><td>来源消息 ID，用于精确回引证据</td></tr>
-        <tr><td><code>user_id</code> / <code>agent_id</code> / <code>run_id</code></td><td>string</td><td>写入者、Agent、运行批次；企业记忆平台 中四者与 strategy 全一致才会合并</td></tr>
+        <tr><td><code>user_id</code> / <code>agent_id</code> / <code>run_id</code></td><td>string</td><td>写入者、Agent、运行批次；企业记忆平台中四者与 strategy 全一致才会合并</td></tr>
         <tr><td><code>domain</code></td><td>string</td><td>领域记忆的隔离域；共享领域知识必须按业务边界拆 domain</td></tr>
         <tr><td><code>owner_scope</code></td><td>string / JSON</td><td>可见范围：负责人、协作者、团队、角色；权限变化时重新计算</td></tr>
         <tr><td><code>visibility</code></td><td>enum</td><td><span class="mono">private / team / tenant / public</span>；不等于最终鉴权</td></tr>

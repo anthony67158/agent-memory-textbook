@@ -4,7 +4,7 @@
 
 ## 在线阅读
 
-GitHub Pages 部署完成后，访问仓库主页右侧的 Pages 链接，或直接打开 `index.html`。
+在线阅读：https://anthony67158.github.io/agent-memory-textbook/
 
 ## 本地查看
 
