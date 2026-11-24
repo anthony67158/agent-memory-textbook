@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Agent 记忆模块：B 端平台落地教材</title>
-<meta name="description" content="从边界、准入、架构、字段模型到写入、召回、治理、接入上线，一步一步教你把 Agent 记忆模块做成 B 端平台能力。">
+<meta name="description" content="从边界、准入、架构、字段模型到生产触发、写入、调用、召回、治理、接入上线，一步一步教你把 Agent 记忆模块做成 B 端平台能力。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%231E5E4E'/%3E%3Crect x='14' y='14' width='36' height='10' fill='%23F2F3EE'/%3E%3Crect x='14' y='28' width='36' height='6' fill='%23F2F3EE'/%3E%3Crect x='14' y='38' width='22' height='6' fill='%23F2F3EE'/%3E%3C/svg%3E">
 <style>
 :root{
@@ -233,13 +233,14 @@ h2{
 .lede{margin:0;color:var(--muted);font-size:14.5px;line-height:1.7;max-width:46em}
 h3{font-family:var(--sans);font-size:1.18rem;line-height:1.4;margin:44px 0 12px;font-weight:600;letter-spacing:-.01em}
 h3 .h3n{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--green);display:block;margin-bottom:5px}
-h4{font-size:14.5px;margin:26px 0 8px;font-weight:600}
+h4{font-size:14.5px;margin:30px 0 8px;font-weight:600}
+h4 .h3n{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--green);display:block;margin-bottom:3px}
 p{margin:0 0 16px}
 ul,ol{margin:0 0 18px;padding-left:1.3em}
 li{margin:6px 0}
 strong{font-weight:600}
 .small{font-size:13px;color:var(--muted)}
-.mono{font-family:var(--mono);font-size:.92em}
+.mono{font-family:var(--mono);font-size:.92em;overflow-wrap:anywhere;word-break:break-word}
 .tag{
   display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;
   padding:2px 6px;border:1px solid var(--line-strong);color:var(--green);background:var(--white);
@@ -261,7 +262,7 @@ table{border-collapse:collapse;width:100%;table-layout:fixed;font-size:13.5px;li
 th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
 th{background:var(--green-soft);color:var(--green);font-weight:600;font-size:12px;letter-spacing:.02em}
 tr:last-child td{border-bottom:0}
-td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-2);padding:1px 4px;border-radius:2px}
+td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-2);padding:1px 4px;border-radius:2px;overflow-wrap:anywhere;word-break:break-word}
 .table-caption{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--muted);margin:22px 0 -10px}
 .table-caption::before{content:"TABLE / ";color:var(--green)}
 
@@ -289,6 +290,84 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
 }
 .expand-btn:hover{background:var(--green);color:var(--white)}
 .figure-note{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.6}
+
+/* 页面内 HTML 流程图：不依赖飞书白板 / 外部 SVG */
+.hf{
+  border:1px solid var(--line-strong);
+  background-color:var(--white);
+  background-image:
+    linear-gradient(rgba(30,94,78,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(30,94,78,.03) 1px,transparent 1px);
+  background-size:24px 24px;
+  padding:16px 16px 14px;
+  color:var(--ink);
+}
+.hf-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:8px}
+.hf-head .tag{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--green)}
+.hf-head .hint{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.04em;text-align:right}
+.hf-title{font-family:var(--serif);font-size:19px;line-height:1.32;margin:0 0 4px;letter-spacing:-.015em}
+.hf-sub{font-size:12px;line-height:1.55;color:var(--muted);margin:0 0 13px}
+.hf-track{display:grid}
+.hf-step{display:grid;grid-template-columns:30px minmax(0,1fr);gap:9px;align-items:start}
+.hf-step .idx{width:28px;height:28px;border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;color:var(--green);background:var(--white)}
+.hf-step .body{border:1px solid var(--line);background:rgba(252,253,249,.94);padding:9px 11px;min-width:0}
+.hf-step .body h5{font-size:13px;line-height:1.4;margin:0 0 3px}
+.hf-step .body p{font-size:11.5px;line-height:1.55;color:var(--muted);margin:0}
+.hf-step .body .meta{font-family:var(--mono);font-size:8.5px;color:var(--green);letter-spacing:.05em;margin-top:5px;display:block}
+.hf-step .body.green{background:var(--green-soft);border-color:var(--green)}
+.hf-step .body.rust{background:var(--rust-soft);border-color:var(--rust)}
+.hf-conn{height:16px;margin-left:14px;position:relative}
+.hf-conn::before{content:"";position:absolute;left:0;top:0;bottom:0;border-left:1px solid var(--line-strong)}
+.hf-conn::after{content:"";position:absolute;left:-3px;bottom:0;width:0;height:0;border-left:3px solid transparent;border-right:3px solid transparent;border-top:5px solid var(--line-strong)}
+.hf-gate{display:grid;grid-template-columns:minmax(0,1fr) 152px;gap:9px;align-items:stretch}
+.hf-gate .q{border:1px solid var(--line);background:var(--white);padding:9px 11px;min-width:0}
+.hf-gate .q b{font-family:var(--mono);font-size:9px;color:var(--green);display:block;margin-bottom:2px;letter-spacing:.08em}
+.hf-gate .q p{font-size:12px;line-height:1.5;margin:0}
+.hf-gate .out{border-left:2px solid var(--line-strong);padding:8px 10px;background:var(--paper-2);font-size:11px;line-height:1.5;color:var(--muted)}
+.hf-gate .out.no{border-left-color:var(--rust);color:var(--rust);background:var(--rust-soft)}
+.hf-gate .out.yes{border-left-color:var(--green);color:var(--green);background:var(--green-soft)}
+.hf-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.hf-cols.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.hf-cols.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.hf-node{border:1px solid var(--line);background:rgba(252,253,249,.94);padding:10px 11px;min-width:0}
+.hf-node h5{font-size:12.5px;line-height:1.4;margin:0 0 4px}
+.hf-node p{font-size:11px;line-height:1.5;color:var(--muted);margin:0}
+.hf-node .when{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;color:var(--green);display:block;margin-bottom:4px}
+.hf-node.green{background:var(--green-soft);border-color:var(--green)}
+.hf-node.rust{background:var(--rust-soft);border-color:var(--rust)}
+.hf-note{font-size:11px;line-height:1.55;color:var(--muted);border-left:2px solid var(--green);padding-left:9px;margin:11px 0 0}
+.hf-layer{display:grid;grid-template-columns:92px minmax(0,1fr);gap:9px;padding:7px 0;border-top:1px solid var(--line)}
+.hf-layer:first-child{border-top:0}
+.hf-layer .lab{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--green);display:flex;align-items:center;line-height:1.4}
+.hf-layer .items{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.hf-chip{border:1px solid var(--line);background:var(--white);padding:6px 8px;font-size:10.5px;line-height:1.4}
+.hf-time{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.hf-time .item{border-top:2px solid var(--green);padding-top:8px;min-width:0}
+.hf-time .item .when{font-family:var(--mono);font-size:8.5px;color:var(--green);letter-spacing:.06em;display:block;margin-bottom:3px}
+.hf-time .item h5{font-size:12px;line-height:1.35;margin:0 0 3px}
+.hf-time .item p{font-size:10.5px;line-height:1.5;color:var(--muted);margin:0}
+.hf-seq{display:grid;gap:7px}
+.hf-seq .row{display:grid;grid-template-columns:30px 92px minmax(0,1fr);gap:8px;align-items:start}
+.hf-seq .row .idx{width:26px;height:26px;border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9.5px;color:var(--green);background:var(--white)}
+.hf-seq .row .actor{font-family:var(--mono);font-size:8.5px;color:var(--green);letter-spacing:.05em;line-height:1.45;padding-top:5px}
+.hf-seq .row .msg{border:1px solid var(--line);background:rgba(252,253,249,.94);padding:7px 9px;font-size:11.5px;line-height:1.5}
+.hf-seq .row .msg b{font-weight:600}
+.hf-seq .row .msg .tag{display:inline-block;margin-left:6px;padding:1px 4px;border:1px solid var(--line-strong);font-family:var(--mono);font-size:8px;color:var(--muted);vertical-align:1px}
+.hf-badge{display:inline-block;margin-right:4px;padding:1px 4px;border:1px solid var(--line-strong);font-family:var(--mono);font-size:8px;line-height:1.4;color:var(--green);background:var(--white)}
+.hf-badge.llm{border-color:var(--green);background:var(--green-soft)}
+.hf-badge.emb{border-color:var(--rust);background:var(--rust-soft);color:var(--rust)}
+@media (max-width:760px){
+  .hf{padding:13px}
+  .hf-gate{grid-template-columns:1fr}
+  .hf-cols,.hf-cols.two,.hf-cols.four{grid-template-columns:1fr}
+  .hf-layer{grid-template-columns:1fr}
+  .hf-layer .items{grid-template-columns:1fr 1fr}
+  .hf-time{grid-template-columns:1fr 1fr}
+  .hf-seq .row{grid-template-columns:26px minmax(0,1fr)}
+  .hf-seq .row .actor{grid-column:2;padding-top:0}
+  .hf-seq .row .msg{grid-column:2}
+}
+
 
 .codeblock{
   white-space:pre;
@@ -492,7 +571,7 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
       <p class="hero-thesis"><strong>记忆是可复用、可追溯、可治理的资产。</strong> 它解决的不是“多存几轮对话”，而是让下一次任务接得上、让不同人用得对、让企业敢把它放进生产。</p>
       <div class="hero-meta">
         <div><span>读者</span><p>产品、研发、算法、业务负责人，第一次搭记忆模块的人</p></div>
-        <div><span>读完能做什么</span><p>定边界、定字段、跑通写入与召回、把权限和删除做完整</p></div>
+        <div><span>读完能做什么</span><p>定边界、定字段、跑通生产/写入/调用/召回、把权限和删除做完整</p></div>
         <div><span>推进方式</span><p>按接入五阶段和分角色灰度，从试点走到上线</p></div>
       </div>
     </div>
@@ -614,8 +693,24 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
   <p>一条候选信息要进入记忆，必须同时满足四个条件：<strong>后续任务会复用、主体明确、来源可追溯、生命周期可治理。</strong> 这四问来自记忆平台的接入评估原则，也是 B 端记忆和“聊天记录备份”的分界线。</p>
 
   <div class="figure">
-    <div class="figure-head"><span class="cap">FIG. 1 / ADMISSION GATE</span><span class="src">原生流程图</span></div>
-    <div class="diagram-frame"><img src="assets/01-admission.svg" alt="记忆准入判定流程图：四问检查、高频变化排除与三类出口"></div>
+    <div class="figure-head"><span class="cap">FIG. 1 / ADMISSION GATE</span><span class="src">HTML 流程图</span></div>
+    <div class="hf">
+  <div class="hf-head"><span class="tag">ADMISSION GATE / 4 QUESTIONS</span><span class="hint">先分流，再抽取</span></div>
+  <div class="hf-title">一条事件，先过四道门</div>
+  <p class="hf-sub">顺序固定：高频变化值先转权威系统；主体不清不落库；24 小时没用的不记；权限不够不进入候选队列。</p>
+  <div class="hf-step"><div class="idx">00</div><div class="body"><h5>事件到达</h5><p>通话结束、跟进提交、试驾完成、聊天结束；带 <code>source_type</code> / <code>source_id</code> / <code>occurred_at</code>。</p></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-gate"><div class="q"><b>Q1 / 会变吗</b><p>报价、库存、订单状态、客户归属，24 小时内可能变。</p></div><div class="out no">会变 → 查权威系统<br>只存引用，不存值</div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-gate"><div class="q"><b>Q2 / 主体清楚吗</b><p>这条信息属于哪个客户、车辆、订单、门店？</p></div><div class="out no">不清 → 待确认<br>不落库，不进索引</div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-gate"><div class="q"><b>Q3 / 未来还有用吗</b><p>下次接待、回访、辅导、巡店时会不会用到？</p></div><div class="out no">没用 → 不记<br>只保留原始日志</div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-gate"><div class="q"><b>Q4 / 权限允许吗</b><p>当前租户、角色、对象 ACL、聚合级别是否允许？</p></div><div class="out no">不允许 → 不记<br>或只进隔离区</div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">→</div><div class="body green"><h5>进入记忆候选队列</h5><p>生成 <code>candidate_id</code>，带上 <code>idempotency_key</code>，交给 11.5.2 的生产流水线。</p><span class="meta">RULE → CANDIDATE → EXTRACT</span></div></div>
+  <p class="hf-note">四问的价值不是“多记”，而是把 60% 的无效事件挡在 LLM 之前。先分流，再抽取，成本和噪声都会降下来。</p>
+</div>
     <p class="figure-note">先过四问，再在写入前排除“24 小时内会变”的值。不通过不等于失败：有的该丢弃，有的该补来源，有的该去权威系统查。</p>
   </div>
 
@@ -680,8 +775,19 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
   <p>下面这张图是 B 端平台的最小完整形态。它不追求组件最多，而是把“谁接收请求、谁生产记忆、谁负责召回、谁是唯一真源、谁做治理”这五件事分开。</p>
 
   <div class="figure">
-    <div class="figure-head"><span class="cap">FIG. 2 / PLATFORM LAYERS</span><span class="src">原生流程图</span></div>
-    <div class="diagram-frame"><img src="assets/02-architecture.svg" alt="B 端 Agent 记忆平台分层架构图：接入层、编排层、生产与召回、存储层、治理与观测"></div>
+    <div class="figure-head"><span class="cap">FIG. 2 / PLATFORM LAYERS</span><span class="src">HTML 流程图</span></div>
+    <div class="hf">
+  <div class="hf-head"><span class="tag">PLATFORM LAYERS / 6 LAYERS</span><span class="hint">平台能力，不是一次 Prompt</span></div>
+  <div class="hf-title">B 端记忆平台的六层</div>
+  <p class="hf-sub">越往下越稳定，越往上越贴近业务。接入层可以换，字段模型和治理层不要轻易换。</p>
+  <div class="hf-layer"><div class="lab">接入层</div><div class="items"><div class="hf-chip">会话 / 通话</div><div class="hf-chip">CRM / 工单</div><div class="hf-chip">开放 API / 批量导入</div></div></div>
+  <div class="hf-layer"><div class="lab">事件层</div><div class="items"><div class="hf-chip">事件归一</div><div class="hf-chip">身份解析</div><div class="hf-chip">幂等队列</div></div></div>
+  <div class="hf-layer"><div class="lab">生产层</div><div class="items"><div class="hf-chip">准入四问</div><div class="hf-chip">LLM 抽取</div><div class="hf-chip">校验与合并</div></div></div>
+  <div class="hf-layer"><div class="lab">召回层</div><div class="items"><div class="hf-chip">多路召回</div><div class="hf-chip">重排</div><div class="hf-chip">权限 / 证据包</div></div></div>
+  <div class="hf-layer"><div class="lab">存储层</div><div class="items"><div class="hf-chip">Record 主表</div><div class="hf-chip">Vector / Graph</div><div class="hf-chip">Audit 审计</div></div></div>
+  <div class="hf-layer"><div class="lab">治理层</div><div class="items"><div class="hf-chip">权限版本</div><div class="hf-chip">删除穿透</div><div class="hf-chip">评测与观测</div></div></div>
+  <p class="hf-note">常见错误是把“记忆”做成一个向量库 + 一段 Prompt。真正上线后，80% 的工作在事件、权限、合并、删除和审计。</p>
+</div>
     <p class="figure-note">Record 主表是唯一事实源；向量、全文、图谱都是可重建的索引。治理层不在主链路里，但决定这条链路能不能上生产。</p>
   </div>
 
@@ -894,8 +1000,30 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
   <p>先记住一条主线：<strong>原始事件 → 身份与主体 → 准入 → 候选事实 → 冲突检测 → 写入策略 → Record + Memory → 索引 → 审计。</strong> 这条链路允许异步，但不允许“提交成功就算记住”。业务必须能查到 job 状态，召回必须能感知“还没生效”。</p>
 
   <div class="figure" data-figure="write">
-    <div class="figure-head"><span class="cap">FIG. 3 / WRITE PIPELINE</span><span class="src">原生流程图</span></div>
-    <div class="diagram-frame"><img src="assets/03-write.svg" alt="记忆写入链路流程图：收集事件、解析身份、准入、抽取、冲突检测、写入策略、落库、建索引、审计"></div>
+    <div class="figure-head"><span class="cap">FIG. 3 / WRITE PIPELINE</span><span class="src">HTML 流程图</span></div>
+    <div class="hf">
+  <div class="hf-head"><span class="tag">WRITE PIPELINE / 9 STEPS</span><span class="hint">同步受理，异步生产</span></div>
+  <div class="hf-title">写入链路：从事件到一条可召回的记忆</div>
+  <p class="hf-sub">接口只负责受理，重活放在 worker。每一步都要能重放、能幂等、能解释失败。</p>
+  <div class="hf-step"><div class="idx">01</div><div class="body"><h5>事件归一</h5><p>把录音、文本、表单统一成 <code>event</code>；计算 <code>source_type + source_id + event_seq</code> 的幂等键。</p></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">02</div><div class="body"><h5>身份与范围</h5><p>解析 <code>entity_type / entity_id</code>；补齐 <code>owner_sales_id / store_id / region_id / permission_version</code>。</p></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">03</div><div class="body"><h5>准入四问</h5><p>会变 / 主体清 / 未来有用 / 权限允许；不合格写 <code>reject_reason</code>，不调用 LLM。</p><span class="meta">RULE</span></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">04</div><div class="body"><h5>LLM 抽取候选</h5><p>按 schema 输出 <code>memory_type / predicate / value / text / evidence_quote / confidence</code>；温度 0–0.2。</p><span class="meta">LLM</span></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">05</div><div class="body"><h5>证据校验</h5><p><code>evidence_quote</code> 必须能在原文定位；说话人、时间、主体对不上就转 <code>PENDING</code> 或 <code>PARTIAL</code>。</p><span class="meta">RULE + GROUNDING</span></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">06</div><div class="body"><h5>冲突合并</h5><p>同 <code>entity + predicate</code> 先精确匹配，再用 embedding 找相似；输出 merge / cover / supersede / dispute。</p><span class="meta">EMBED + RULE</span></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">07</div><div class="body"><h5>向量化</h5><p>按“一条记忆”切块，不按整段对话；记录 <code>embedding_model / model_version / dim</code>，支持重建。</p><span class="meta">EMBED</span></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">08</div><div class="body"><h5>落库 + 索引 + 审计</h5><p>写 Record 主表、向量索引、图谱边；同一事务写 <code>audit_id</code>，保证“谁写的、依据哪句”。</p><span class="meta">DB</span></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">09</div><div class="body green"><h5>状态回写</h5><p><code>SUCCEEDED / PARTIAL / FAILED</code> 回传 UI；失败保留原始事件，给重试入口，不静默丢。</p><span class="meta">ASYNC CALLBACK</span></div></div>
+  <p class="hf-note">写入受理 P95 ≤2s，抽取完成 P95 可以到 30s。不要把“抽取完成”做成同步接口，否则一次 LLM 抖动就会拖垮整个会话。</p>
+</div>
     <p class="figure-note">图中两条红色异常路径不是“失败”，而是必须被产品化的分支：不通过就丢弃，冲突未决就待确认，不能静默覆盖。</p>
   </div>
 
@@ -1000,8 +1128,28 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
   <p>一条记忆被写入，不等于它会被正确使用。召回要同时解决四件事：找得到、排得对、有权限、能解释。少了任何一件，模型都会把“看起来相关”当成“事实”。</p>
 
   <div class="figure" data-figure="recall">
-    <div class="figure-head"><span class="cap">FIG. 4 / RECALL PIPELINE</span><span class="src">原生流程图</span></div>
-    <div class="diagram-frame"><img src="assets/04-recall.svg" alt="记忆召回与注入链路流程图：构造条件、四路召回、合并去重、重排、权限过滤、证据校验、组包、注入、生成、反馈"></div>
+    <div class="figure-head"><span class="cap">FIG. 4 / RECALL PIPELINE</span><span class="src">HTML 流程图</span></div>
+    <div class="hf">
+  <div class="hf-head"><span class="tag">RECALL PIPELINE / 8 STEPS</span><span class="hint">召回不是搜索，是组证据</span></div>
+  <div class="hf-title">召回链路：从请求到证据包</div>
+  <p class="hf-sub">先问“谁、为什么、看多深”，再去检索。没有 <code>purpose</code> 的召回，最后都会变成一堆相似文本。</p>
+  <div class="hf-step"><div class="idx">01</div><div class="body"><h5>构造请求</h5><p>带 <code>role / user_id / purpose / entity_id / as_of / top_k / token_budget / permission_version</code>。</p></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">02</div><div class="body"><h5>多路召回</h5><p>向量、BM25、图谱多跳、最近事件各召回一批；不要只靠 embedding。</p><span class="meta">VECTOR + BM25 + GRAPH</span></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">03</div><div class="body"><h5>合并去重</h5><p>按 <code>memory_id</code> 去重；同 predicate 的多条保留最新、保留有证据的那条。</p></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">04</div><div class="body"><h5>重排</h5><p>按相关度、新近度、重要性、角色用途加权；店长名单和销售单客户不能同一套权重。</p></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">05</div><div class="body"><h5>权限与聚合过滤</h5><p>校验 <code>owner_scope / aggregation_level / permission_version</code>；越权返回明确错误，不返回空数组。</p><span class="meta">ACL</span></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">06</div><div class="body"><h5>证据校验</h5><p>丢掉过期、被替代、无来源、<code>valid_until</code> 已过的条目；冲突项标 <code>disputed</code>。</p></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">07</div><div class="body"><h5>组证据包</h5><p>输出 <code>items + gaps + next_actions</code>；每条带 <code>evidence_quote / occurred_at / confidence / why_relevant</code>。</p></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">08</div><div class="body green"><h5>注入、生成、反馈</h5><p>按 <code>token_budget</code> 截断；Prompt 要求逐条引用；用户点“有用 / 不对”回写评测。</p><span class="meta">PROMPT + FEEDBACK</span></div></div>
+  <p class="hf-note">召回 P95 ≤300ms 是平台目标；如果一次请求要跑 3 次 LLM 重排，就不可能达标。重排先用规则和小模型，LLM 只做最后的冲突解释。</p>
+</div>
     <p class="figure-note">四路召回不是四套系统，而是四种检索信号；最终只输出一个证据包，避免模型收到互相矛盾的多份上下文。</p>
   </div>
 
@@ -1215,8 +1363,21 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
   <p>下面这条路径适用于已有记忆平台的团队，也适用于自建平台的第一批业务。核心顺序不能反：<strong>先注册和建模，再写接口；先验写入，再验召回；先灰度，再全量。</strong></p>
 
   <div class="figure" data-figure="onboard">
-    <div class="figure-head"><span class="cap">FIG. 5 / ONBOARDING</span><span class="src">原生流程图</span></div>
-    <div class="diagram-frame"><img src="assets/05-onboarding.svg" alt="B 端记忆平台接入与上线流程图：平台注册、模型设计、服务端接入、数据验收、灰度写入、灰度召回、全量上线"></div>
+    <div class="figure-head"><span class="cap">FIG. 5 / ONBOARDING</span><span class="src">HTML 流程图</span></div>
+    <div class="hf">
+  <div class="hf-head"><span class="tag">ONBOARDING / 6 GATES</span><span class="hint">每个阶段都有退出标准</span></div>
+  <div class="hf-title">平台接入：六个阶段，不要跳</div>
+  <p class="hf-sub">先注册，再建模；先跑通一条事件，再谈全量。每个阶段都要有可验收产物，而不是“已经开发完了”。</p>
+  <div class="hf-cols">
+    <div class="hf-node"><span class="when">W0 / 注册</span><h5>注册记忆类型</h5><p>memory_name、entity_type、lifecycle、default_ttl、read/write_tenant。</p></div>
+    <div class="hf-node"><span class="when">W1 / 建模</span><h5>字段与权限</h5><p>主体、predicate、scope、aggregation_level、permission_version、PII 级别。</p></div>
+    <div class="hf-node"><span class="when">W2–3 / 接入</span><h5>服务端接两条 API</h5><p><code>ProduceMemory</code> + <code>RetrieveMemory</code>；接审计、幂等、重试。</p></div>
+    <div class="hf-node"><span class="when">W4–5 / 灰度写入</span><h5>20 条真实事件回放</h5><p>每条能追到 source_id、evidence_quote、写入状态；失败可重试。</p></div>
+    <div class="hf-node"><span class="when">W6–7 / 灰度召回</span><h5>影子召回 + 10 个销售</h5><p>top-3 有用率 ≥60%；越权 0；召回日志能解释“为什么是这条”。</p></div>
+    <div class="hf-node green"><span class="when">W8 / 上线</span><h5>全量 + 观测</h5><p>召回 P95、陈旧率、删除 SLA、审计覆盖；不达标只修一个变量。</p></div>
+  </div>
+  <p class="hf-note">接入不是“把数据灌进去”。接入是让一条事件从产生、抽取、写入、召回到反馈完整跑通，再复制到第二个事件源。</p>
+</div>
     <p class="figure-note">五阶段不是五个会议，而是五个有退出标准的交付节点；每个节点都要有可验收的产物。</p>
   </div>
 
@@ -1486,12 +1647,22 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
 
   <div class="note">
     <span class="label">本章交付物</span>
-    <p>照着做完，你手里应该有 7 张纸：<strong>角色任务表、场景评分表、记忆盘点表、字段模型、角色权限矩阵、12 周计划、验收指标。</strong> 没有这 7 张纸，不要开始写代码；否则你会做出一个“能存很多、但没人敢用”的记忆库。</p>
+    <p>照着做完，你手里应该有 8 张纸：<strong>角色任务表、场景评分表、记忆盘点表、字段模型、生产触发与调用表、角色权限矩阵、12 周计划、验收指标。</strong> 没有这 8 张纸，不要开始写代码；否则你会做出一个“能存很多、但没人敢用”的记忆库。</p>
   </div>
 
-  <div class="figure" style="max-width:560px;margin:26px auto 30px">
-    <div class="figure-head"><span class="cap">FIG. 6 / SEVEN-STEP PLAYBOOK</span><span class="src">原生流程图</span></div>
-    <div class="diagram-frame natural" style="max-width:560px;margin:0 auto"><img src="assets/06-playbook.svg" style="width:100%;max-width:460px;margin:0 auto" alt="七步开工法三阶段概览：角色与场景、模型与链路、灰度验收"></div>
+  <div class="figure" style="margin:26px auto 30px">
+    <div class="figure-head"><span class="cap">FIG. 6 / SEVEN-STEP PLAYBOOK</span><span class="src">HTML 流程图</span></div>
+    <div class="hf">
+  <div class="hf-head"><span class="tag">SEVEN-STEP PLAYBOOK / 3 PHASES</span><span class="hint">先问人，再问模型</span></div>
+  <div class="hf-title">七步开工：三阶段，七个可验收动作</div>
+  <p class="hf-sub">不要从“选哪个向量库”开始。先把角色、场景、记忆清单、权限跑一遍，再决定技术选型。</p>
+  <div class="hf-cols">
+    <div class="hf-node"><span class="when">PHASE 1 / 角色与场景</span><h5>先搞清楚谁在用什么</h5><p><span class="hf-badge">01</span>访谈 2 销售 + 1 店长 + 1 区域</p><p><span class="hf-badge">02</span>画角色任务与信息缺口</p><p><span class="hf-badge">03</span>选 3 个试点场景，写禁止清单</p></div>
+    <div class="hf-node"><span class="when">PHASE 2 / 模型与链路</span><h5>再决定记什么、怎么记</h5><p><span class="hf-badge">04</span>记忆盘点：类型、主体、TTL</p><p><span class="hf-badge">05</span>字段模型 + 权限矩阵 + 交接</p><p><span class="hf-badge">06</span>接生产、写入、召回三条链路</p></div>
+    <div class="hf-node"><span class="when">PHASE 3 / 灰度与验收</span><h5>最后才是扩量</h5><p><span class="hf-badge">07</span>影子召回 → 10 销售 → 1 店 → 区域只读</p><p>每层都有退出标准；不达标只修一个变量。</p></div>
+  </div>
+  <p class="hf-note">七步不是瀑布。第 4 步发现记忆类型太多，就回第 2 步砍场景；第 6 步发现权限挡不住，就回第 5 步重画矩阵。</p>
+</div>
     <p class="figure-note">这张图把七步压成三个阶段，先看骨架；每一步的具体产物和退出标准看下面这张表。七步不是七个会议，而是七个有产物的节点。</p>
   </div>
 
@@ -1506,7 +1677,7 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
         <tr><td><strong>3</strong></td><td>选 3 个试点场景</td><td>只选高频、后果重、记忆能改变动作、数据拿得到、权限边界清楚的三条</td><td>业务负责人签字确认“首期就做这三条”</td></tr>
         <tr><td><strong>4</strong></td><td>做记忆盘点</td><td>把每条候选信息过“四问 + 24 小时规则”，标主体、类型、生命周期、权威来源</td><td>形成记忆清单：记 / 不记 / 待确认 / 查系统</td></tr>
         <tr><td><strong>5</strong></td><td>定模型与权限</td><td>把清单落成 Identity / Content / Policy 字段，再画角色可见性矩阵</td><td>字段表 + 注册表 + 权限矩阵评审通过</td></tr>
-        <tr><td><strong>6</strong></td><td>接写入与召回</td><td>首期只接 2 个事件源；先做一条“事件 → 抽取 → 证据包”的闭环</td><td>20 条真实事件可回放，top-3 可解释</td></tr>
+        <tr><td><strong>6</strong></td><td>接生产、写入与召回</td><td>首期只接 2 个事件源；先跑通“触发 → 抽取 → 证据包 → 异步写入”的闭环</td><td>20 条真实事件可回放；触发/调用日志齐全，top-3 可解释</td></tr>
         <tr><td><strong>7</strong></td><td>灰度与验收</td><td>影子召回 → 10 个销售 → 1 个店 → 区域只读聚合；每层有退出标准</td><td>角色指标达标，越权 0，能决定扩不扩</td></tr>
       </tbody>
     </table>
@@ -1528,9 +1699,25 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
     </table>
   </div>
 
-  <div class="figure" style="max-width:820px;margin:26px auto 30px">
-    <div class="figure-head"><span class="cap">FIG. 7 / ROLE PROJECTION</span><span class="src">原生流程图</span></div>
-    <div class="diagram-frame natural" style="max-width:820px;margin:0 auto"><img src="assets/07-role-view.svg" style="width:100%;max-width:760px;margin:0 auto" alt="三类角色的记忆投影：普通销售、店长、区域负责人，经权限与聚合检查后形成证据包"></div>
+  <div class="figure" style="margin:26px auto 30px">
+    <div class="figure-head"><span class="cap">FIG. 7 / ROLE PROJECTION</span><span class="src">HTML 流程图</span></div>
+    <div class="hf">
+  <div class="hf-head"><span class="tag">ROLE PROJECTION / 3 VIEWS</span><span class="hint">同一记忆库，三种投影</span></div>
+  <div class="hf-title">三类角色，看到的不是同一份记忆</div>
+  <p class="hf-sub">原始事件是共同的，投影规则不同：销售看客户，店长看门店，区域看模式。投影之前先过权限与聚合。</p>
+  <div class="hf-node green"><h5>原始事件与记忆记录</h5><p>通话、跟进、试驾、报价引用、承诺、顾虑；统一挂到 customer / vehicle / order / store / region。</p></div>
+  <div class="hf-conn"></div>
+  <div class="hf-cols">
+    <div class="hf-node"><span class="when">SALES / 我的客户</span><h5>普通销售</h5><p>本人负责与协作客户：顾虑、预算、决策人、承诺、偏好。</p><p><b>禁止：</b>其他销售客户、当前报价、库存。</p></div>
+    <div class="hf-node"><span class="when">STORE / 我的门店</span><h5>店长</h5><p>本店客户与聚合：逾期承诺、停滞客户、战败模式、辅导证据。</p><p><b>禁止：</b>销售私聊原文、跨店下钻。</p></div>
+    <div class="hf-node"><span class="when">REGION / 我的区域</span><h5>区域负责人</h5><p>跨店聚合与审核后经验：可复制打法、政策偏差、门店对比。</p><p><b>禁止：</b>姓名、电话、个人明细。</p></div>
+  </div>
+  <div class="hf-conn"></div>
+  <div class="hf-node rust"><h5>权限 + 聚合检查</h5><p><code>role</code> × <code>store_id / region_id</code> × <code>aggregation_level</code> × <code>permission_version</code>；不通过就返回明确错误。</p></div>
+  <div class="hf-conn"></div>
+  <div class="hf-node"><h5>角色证据包</h5><p><code>items + gaps + next_actions</code>；销售 3 条提醒 + 1 个下一步，店长名单 + 原因 + 证据，区域模式 + 适用门店。</p></div>
+  <p class="hf-note">不要给三类角色做三套记忆库。做一套记录、三套投影；否则交接和删除会变成三倍工作量。</p>
+</div>
     <p class="figure-note">同一份原始记录，普通销售看客户级、店长看门店级、区域看聚合级；越权或超出聚合级别时返回空，而不是把原始明细换个标题继续下发。</p>
   </div>
 
@@ -1790,7 +1977,309 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
 
   <p class="small">这张表是产品投影，不是权限系统的替代品。最终以企业 CRM / HR 权限为准；每次召回前必须再按租户、角色、对象 ACL、聚合级别、<span class="mono">permission_version</span> 过滤一次。</p>
 
-  <h3><span class="h3n">11.5</span>接写入：先接两个事件源，不要一口吃全</h3>
+  <h3><span class="h3n">11.5</span>记忆生产与写入：什么时候产、怎么产、怎么调</h3>
+  <p>很多团队把“写入”当成“记忆生产”。其实中间有三段：<strong>触发</strong>决定什么时候值得抽，<strong>生产</strong>决定怎么把原话变成结构化记忆，<strong>调用</strong>决定谁在什么时刻调用生产端和召回端。少一段，最后都会变成“有库、但没人用”。</p>
+
+  <div class="note">
+    <span class="label">本节回答三个问题</span>
+    <p><strong>什么时候生产？</strong>不是每轮都抽，默认“事件边界优先、会话缓冲兜底、条件触发补漏、定时任务只做合并”。<strong>怎么生产？</strong>LLM 抽候选，规则做准入与校验，embedding 找相似和建索引，数据库做真相。<strong>怎么调用？</strong>读同步、写异步；召回带 <code>purpose</code>，生产带 <code>idempotency_key</code>。</p>
+  </div>
+
+  <h4><span class="h3n">11.5.1</span>什么时候生产：事件边界优先，会话缓冲兜底</h4>
+  <p>每轮对话都抽，是记忆模块最常见的浪费。它带来三个问题：LLM 成本随轮次线性上涨、同一件事被反复写成多条、抽取延迟打断正在进行的对话。默认用四类自动触发加一层人工兜底，把“值得记”的时点收窄。</p>
+
+  <p class="table-caption">四类触发：什么时候入队，什么时候不入队</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:13%"><col style="width:26%"><col style="width:23%"><col style="width:18%"><col style="width:20%"></colgroup>
+      <thead><tr><th>触发类型</th><th>典型时点</th><th>触发条件</th><th>产出</th><th>延迟 / 失败</th></tr></thead>
+      <tbody>
+        <tr><td><strong>事件边界</strong></td><td>通话结束、CRM 跟进提交、试驾完成、工单关闭、客户交接生效</td><td>事件已落库，<span class="mono">source_id</span> 稳定，内容可回点</td><td>一条完整事件的候选集合</td><td>异步 30s 内完成；失败可重放</td></tr>
+        <tr><td><strong>会话缓冲</strong></td><td>长对话每 6 轮、空闲 3 分钟、会话结束</td><td>有增量信息，且不是纯问候/确认</td><td>按时间段切分的候选</td><td>3–10s 完成；短对话只在结束时抽</td></tr>
+        <tr><td><strong>条件触发</strong></td><td>出现明确承诺、核心顾虑、客户纠正、决策人、预算变化、负面反馈</td><td>规则或意图分类命中关键信号</td><td>单条高价值候选</td><td>立即入队；不等待会话结束</td></tr>
+        <tr><td><strong>定时补算</strong></td><td>每晚 02:00；每周日组织记忆重算</td><td>合并同义、衰减过期、重算聚合、补跑失败</td><td>合并任务、聚合任务、质量报告</td><td>小时级；不处理报价/库存等实时值</td></tr>
+        <tr><td><strong>人工触发</strong></td><td>用户点“记住这条”、编辑记忆、点“不对”纠错</td><td>显式用户动作</td><td>固定 / 修正 / 删除任务</td><td>同步受理，异步生效；必须可撤销</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">按来源定频率：同一套“每轮抽”不适用于所有事件源</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:17%"><col style="width:24%"><col style="width:21%"><col style="width:24%"><col style="width:14%"></colgroup>
+      <thead><tr><th>事件源</th><th>主触发</th><th>兜底</th><th>幂等键</th><th>首期</th></tr></thead>
+      <tbody>
+        <tr><td>通话录音 / ASR</td><td>通话结束 + 关键信号条件触发</td><td>空闲 10 分钟强制 flush</td><td><span class="mono">call_id + turn_range</span></td><td><strong>是</strong></td></tr>
+        <tr><td>在线聊天 / 企微</td><td>每 6 轮、空闲 3 分钟、会话结束</td><td>会话关闭后 5 分钟补跑</td><td><span class="mono">session_id + seq</span></td><td>第二批</td></tr>
+        <tr><td>CRM 跟进记录</td><td>销售点击提交</td><td>保存草稿不触发；提交失败不触发</td><td><span class="mono">followup_id + version</span></td><td><strong>是</strong></td></tr>
+        <tr><td>试驾记录</td><td>试驾完成</td><td>24 小时批处理补跑</td><td><span class="mono">test_drive_id</span></td><td>第二批</td></tr>
+        <tr><td>报价 / 订单事件</td><td>只写引用，不抽值</td><td>不补跑；值查权威系统</td><td><span class="mono">quote_id/order_id + version</span></td><td>只做引用</td></tr>
+        <tr><td>人工导入</td><td>批量任务提交</td><td>按批次重放</td><td><span class="mono">import_batch_id + row_no</span></td><td>只做回放</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="figure" style="margin:26px auto 30px">
+    <div class="figure-head"><span class="cap">FIG. 8 / PRODUCTION TRIGGERS</span><span class="src">HTML 流程图</span></div>
+    <div class="diagram-frame natural" style="margin:0 auto"><div class="hf">
+  <div class="hf-head"><span class="tag">WHEN / 4 TRIGGERS</span><span class="hint">不是每轮都抽</span></div>
+  <div class="hf-title">什么时候生产：四类触发，一个队列</div>
+  <p class="hf-sub">默认异步。事件边界优先，会话缓冲兜底，条件触发补漏，定时任务只做合并与衰减。</p>
+  <div class="hf-cols four">
+    <div class="hf-node"><span class="when">01 / 事件边界</span><h5>任务结束才生产</h5><p>通话结束、CRM 跟进提交、试驾完成、工单关闭、客户交接生效。</p></div>
+    <div class="hf-node"><span class="when">02 / 会话缓冲</span><h5>长对话分段生产</h5><p>每 6 轮、空闲 3 分钟、会话结束各触发一次；短对话只在结束时抽。</p></div>
+    <div class="hf-node"><span class="when">03 / 条件触发</span><h5>出现关键信号立即抽</h5><p>明确承诺、核心顾虑、纠正、决策人、预算变化、负面反馈。</p></div>
+    <div class="hf-node"><span class="when">04 / 定时补算</span><h5>只做合并，不追实时</h5><p>每晚合并同义记忆、衰减过期、重算组织聚合；不处理报价/库存。</p></div>
+  </div>
+  <div class="hf-conn"></div>
+  <div class="hf-node green"><h5>统一生产队列</h5><p>同一 <code>idempotency_key</code> 只入队一次；按 <code>tenant / project / priority</code> 分片；可延迟、可重试、可死信。</p></div>
+  <div class="hf-conn"></div>
+  <div class="hf-node"><h5>准入四问 + 版本检查</h5><p><code>rule_version</code> / <code>extractor_version</code> / <code>schema_version</code> 三个版本必须一起记录，否则无法回放。</p></div>
+  <p class="hf-note"><b>不触发：</b>纯问候、当前报价、库存、订单状态、客户归属、销量/转化率、销售个人私事。实时值一律查权威系统，不进记忆。</p>
+</div></div>
+    <p class="figure-note">先定“什么时候抽”，再谈“抽得多准”。事件边界负责完整性，会话缓冲负责长对话，条件触发负责高价值信号，定时任务负责收敛噪声。</p>
+  </div>
+
+  <p class="table-caption">触发器字段：每个入队任务都要能回放到原始事件</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:26%"><col style="width:14%"><col style="width:60%"></colgroup>
+      <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>trigger_id</code></td><td>string</td><td>触发器唯一 ID；同一次事件重复触发时保持不变</td></tr>
+        <tr><td><code>trigger_type</code></td><td>enum</td><td>event_boundary / session_buffer / condition / scheduled / manual</td></tr>
+        <tr><td><code>source_type</code> / <code>source_id</code></td><td>string</td><td>来源类型与来源 ID；必须能回点到录音、聊天、跟进记录</td></tr>
+        <tr><td><code>event_seq</code></td><td>int</td><td>同一来源内的顺序号；用于切分和去重</td></tr>
+        <tr><td><code>entity_hint</code></td><td>object</td><td><span class="mono">{type, id}</span>；允许为空，由身份解析补齐</td></tr>
+        <tr><td><code>occurred_at</code></td><td>int64</td><td>事件真实发生时间，不是入队时间；晚到数据靠它排序</td></tr>
+        <tr><td><code>fired_at</code></td><td>int64</td><td>触发器触发时间；用于计算延迟和补跑</td></tr>
+        <tr><td><code>priority</code></td><td>enum</td><td>high / normal / low；条件触发和人工触发优先</td></tr>
+        <tr><td><code>idempotency_key</code></td><td>string</td><td>建议 <span class="mono">source_type:source_id:event_seq:extractor_version</span></td></tr>
+        <tr><td><code>payload_ref</code></td><td>string</td><td>原始内容引用；不要直接把长文本塞进队列消息</td></tr>
+        <tr><td><code>rule_version</code> / <code>schema_version</code></td><td>string</td><td>准入规则与抽取 schema 版本；回放时必须固定</td></tr>
+        <tr><td><code>trace_id</code></td><td>string</td><td>串联触发、生产、写入、召回、反馈</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4><span class="h3n">11.5.2</span>怎么生产：LLM 抽候选，规则做否决，embedding 找相似</h4>
+  <p>生产不是“让 LLM 写一段客户总结”。总结无法合并、无法权限过滤、无法删除穿透。正确做法是把原话抽成一条条结构化记忆，每条带主体、predicate、值、证据、置信和有效期。LLM 只做“抽取候选”，不做最终裁决。</p>
+
+  <p class="table-caption">生产的九道工序：谁做、输入什么、输出什么、失败怎么办</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:14%"><col style="width:16%"><col style="width:24%"><col style="width:28%"><col style="width:18%"></colgroup>
+      <thead><tr><th>工序</th><th>谁做</th><th>输入</th><th>输出字段</th><th>失败处理</th></tr></thead>
+      <tbody>
+        <tr><td><strong>01 归一</strong></td><td>规则</td><td>原始事件、附件、ASR 分段</td><td><code>event_id / source_type / source_id / occurred_at</code></td><td>缺来源直接拒绝；不进入 LLM</td></tr>
+        <tr><td><strong>02 身份</strong></td><td>规则 + 实体解析</td><td><code>entity_hint</code>、CRM 主数据</td><td><code>entity_type / entity_id / owner_sales_id / store_id / region_id</code></td><td>解析不到 → <code>PENDING_IDENTITY</code>，不落索引</td></tr>
+        <tr><td><strong>03 准入</strong></td><td>规则</td><td>事件文本、记忆类型注册表</td><td><code>decision / reject_reason</code></td><td>拒绝写审计；不调用 LLM</td></tr>
+        <tr><td><strong>04 抽取</strong></td><td>LLM</td><td>清洗后的文本、schema、few-shot</td><td><code>should_remember / memory_type / predicate / value / text / evidence_quote</code></td><td>JSON 解析失败重试 1 次；仍失败转 <code>FAILED</code></td></tr>
+        <tr><td><strong>05 校验</strong></td><td>规则 + grounding</td><td>抽取结果、原文、说话人</td><td><code>evidence_valid / confidence_level / valid_until</code></td><td>证据定位失败 → <code>PENDING</code>，不自动生效</td></tr>
+        <tr><td><strong>06 合并</strong></td><td>embedding + 规则</td><td>同主体同 predicate 的旧记忆</td><td><code>merge_action / supersedes_id / conflict_group</code></td><td>无法判断 → <code>disputed</code>，保留双方证据</td></tr>
+        <tr><td><strong>07 向量化</strong></td><td>embedding</td><td>单条记忆的 <code>text</code></td><td><code>vector / embedding_model / model_version / dim</code></td><td>失败 → 先落 Record，标 <code>INDEX_FAILED</code>，可重建</td></tr>
+        <tr><td><strong>08 落库</strong></td><td>数据库事务</td><td>Record、向量、图谱边</td><td><code>memory_id / audit_id / index_status</code></td><td>任一处失败回滚；重试按 <code>job_id</code> 幂等</td></tr>
+        <tr><td><strong>09 回写</strong></td><td>worker</td><td>写入结果、错误码</td><td><code>status / error_code / retry_count</code></td><td>3 次失败进死信；告警并保留原始事件</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">模型分工：LLM、规则、embedding 各管一段，不要互相越界</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:28%"><col style="width:20%"><col style="width:24%"><col style="width:28%"></colgroup>
+      <thead><tr><th>任务</th><th>用什么</th><th>不要用什么</th><th>原因</th></tr></thead>
+      <tbody>
+        <tr><td>把原话抽成 predicate / value</td><td>LLM + JSON schema</td><td>正则硬抽全部</td><td>中文表达太散；但 schema 和 few-shot 必须固定</td></tr>
+        <tr><td>判断是否准入、是否越权、是否过期</td><td>规则 + 权威系统</td><td>让 LLM 自由裁量</td><td>权限和时效不能靠概率；必须可审计、可复现</td></tr>
+        <tr><td>找同义记忆、做候选聚类</td><td>embedding</td><td>LLM 扫全库</td><td>全库扫描成本高、不稳定；向量只负责“找相似”</td></tr>
+        <tr><td>最终合并 / 覆盖 / 冲突裁决</td><td>规则 + 人工审核</td><td>LLM 直接覆盖</td><td>覆盖会丢历史；冲突要保留双方证据</td></tr>
+        <tr><td>生成给用户看的回答</td><td>业务 LLM</td><td>记忆平台代写</td><td>记忆平台只提供证据包；生成由业务 Agent 负责</td></tr>
+        <tr><td>重排 top-k</td><td>规则 / 小模型 / reranker</td><td>每次调大模型</td><td>召回 P95 ≤300ms，大模型重排无法稳定达标</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">抽取 schema：至少这些字段，少一个后面都要返工</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:24%"><col style="width:12%"><col style="width:10%"><col style="width:54%"></colgroup>
+      <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>约束 / 说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>should_remember</code></td><td>bool</td><td>是</td><td>false 时只写拒绝理由，不产生记忆</td></tr>
+        <tr><td><code>reason</code></td><td>string</td><td>是</td><td>为什么记 / 为什么不记；用于审计和调 Prompt</td></tr>
+        <tr><td><code>memory_type</code></td><td>enum</td><td>是</td><td>preference / fact / concern / commitment / relationship / feedback / experience / procedure / policy_ref</td></tr>
+        <tr><td><code>sub_type</code></td><td>string</td><td>否</td><td>例如 concern 下的 space / price / range / resale</td></tr>
+        <tr><td><code>entity_type</code> / <code>entity_id</code></td><td>string</td><td>是</td><td>customer / vehicle / order / store / region / user / test_drive / follow_up</td></tr>
+        <tr><td><code>predicate</code></td><td>string</td><td>是</td><td>可枚举的语义键，例如“后排空间顾虑”“下次回电时间”</td></tr>
+        <tr><td><code>value</code></td><td>string</td><td>是</td><td>归一化后的值；预算统一成“35 万”，时间统一成时间戳</td></tr>
+        <tr><td><code>text</code></td><td>string</td><td>是</td><td>给用户看的一句话；不超过 60 字，不堆原文</td></tr>
+        <tr><td><code>confidence_level</code></td><td>enum</td><td>是</td><td>customer_quote / sales_note / model_inference；决定自动生效还是待确认</td></tr>
+        <tr><td><code>evidence_quote</code></td><td>string</td><td>是</td><td>原文片段，必须能在 <code>content_ref</code> 中定位</td></tr>
+        <tr><td><code>occurred_at</code></td><td>int64</td><td>是</td><td>客户说这句话的时间，不是抽取时间</td></tr>
+        <tr><td><code>valid_until</code></td><td>int64</td><td>否</td><td>预算、阶段、意向等有时效的值必须填；null 表示长期</td></tr>
+        <tr><td><code>importance</code></td><td>float</td><td>是</td><td>0–1；用于召回重排，不要所有记忆都填 1.0</td></tr>
+        <tr><td><code>pii_level</code></td><td>enum</td><td>是</td><td>low / medium / high；决定脱敏、加密和审计级别</td></tr>
+        <tr><td><code>role_scope</code></td><td>string[]</td><td>是</td><td>owner_sales / store_manager / region_manager；默认最小可见</td></tr>
+        <tr><td><code>aggregation_level</code></td><td>enum</td><td>是</td><td>individual / store / region；区域只能看聚合</td></tr>
+        <tr><td><code>schema_version</code></td><td>string</td><td>是</td><td>抽取 schema 版本；升级后旧记录仍可回放</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">置信级别与默认动作：不要让“模型猜的”自动生效</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:20%"><col style="width:24%"><col style="width:34%"><col style="width:22%"></colgroup>
+      <thead><tr><th>置信级别</th><th>典型来源</th><th>默认动作</th><th>UI</th></tr></thead>
+      <tbody>
+        <tr><td><code>customer_quote</code></td><td>客户原话、录音片段、聊天原文</td><td>可直接 <code>active</code>；仍需证据校验</td><td>显示“客户原话”与来源</td></tr>
+        <tr><td><code>sales_note</code></td><td>销售跟进记录、试驾反馈</td><td><code>require_merge</code>；与旧值冲突时进 <code>disputed</code></td><td>显示“销售记录”，可纠错</td></tr>
+        <tr><td><code>model_inference</code></td><td>模型根据上下文推断，原文没有直接说</td><td>只进 <code>PENDING</code>，需用户确认</td><td>显示“待确认”，不进入自动召回</td></tr>
+        <tr><td><code>conflict</code></td><td>两个来源给出不同值</td><td><code>disputed</code>；保留双方证据和裁决人</td><td>显示“待核实”，不能单选</td></tr>
+        <tr><td><code>stale</code></td><td>超过 <code>valid_until</code> 或被新版本替代</td><td>不参与召回；保留历史可追溯</td><td>不展示，除非用户主动查历史</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="figure" style="margin:26px auto 30px">
+    <div class="figure-head"><span class="cap">FIG. 9 / PRODUCE PIPELINE</span><span class="src">HTML 流程图</span></div>
+    <div class="diagram-frame natural" style="margin:0 auto"><div class="hf">
+  <div class="hf-head"><span class="tag">PRODUCE PIPELINE / MODEL SPLIT</span><span class="hint">LLM 抽，规则判，向量找</span></div>
+  <div class="hf-title">怎么生产：一条候选的 8 道工序</div>
+  <p class="hf-sub">LLM 只负责“把原话变成结构化候选”，不负责最终真假；规则负责否决，embedding 负责找相似和建索引。</p>
+  <div class="hf-step"><div class="idx">01</div><div class="body"><h5>归一 + 身份</h5><p>统一事件格式，解析客户/车辆/订单/门店；补 <code>owner_scope</code> 与 <code>permission_version</code>。</p><span class="meta">RULE</span></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">02</div><div class="body"><h5>准入</h5><p>四问过滤；命中禁止清单直接拒绝，写 <code>reject_reason</code>，不花 LLM 成本。</p><span class="meta">RULE</span></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">03</div><div class="body"><h5>LLM 结构化抽取</h5><p>输出 17 个字段：类型、主体、predicate、value、text、quote、置信、PII、有效期、理由。</p><span class="meta">LLM / TEMP 0–0.2</span></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">04</div><div class="body"><h5>证据与置信校验</h5><p>quote 必须可定位；客户原话 &gt; 销售转述 &gt; 模型推断；低置信进 <code>PENDING</code>，不自动生效。</p><span class="meta">RULE + GROUNDING</span></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">05</div><div class="body"><h5>冲突与合并</h5><p>先按 <code>entity + predicate</code> 精确匹配，再 embedding 找同义；决定 merge / cover / supersede / dispute。</p><span class="meta">EMBED + RULE</span></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">06</div><div class="body"><h5>向量化</h5><p>一条记忆一个 chunk；写 <code>embedding_model / model_version / dim</code>；批量重建要可切换版本。</p><span class="meta">EMBED</span></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">07</div><div class="body"><h5>落库 + 索引 + 审计</h5><p>Record、Vector、Graph 三处一致；写 <code>audit_id</code>、<code>source_id</code>、<code>evidence_quote</code>。</p><span class="meta">DB</span></div></div>
+  <div class="hf-conn"></div>
+  <div class="hf-step"><div class="idx">08</div><div class="body green"><h5>状态回写 + 可重试</h5><p><code>SUCCEEDED / PARTIAL / FAILED</code>；原始事件保留 30 天，支持按 <code>job_id</code> 重放。</p><span class="meta">ASYNC</span></div></div>
+  <p class="hf-note">分工口诀：<b>LLM 抽候选，规则做否决，embedding 找相似，数据库做真相，审计做解释。</b>任何一步让 LLM 直接写最终记录，都会在纠错和删除时出问题。</p>
+</div></div>
+    <p class="figure-note">把“生产”拆成工序之后，才能定位问题：是抽取错、证据假、合并错，还是索引没建。否则所有 Badcase 都会被笼统归因成“模型不行”。</p>
+  </div>
+
+  <h4><span class="h3n">11.5.3</span>怎么调用：读同步、写异步，调用点要带 purpose</h4>
+  <p>“调用记忆”不是一次 API 调用，而是两种方向的调用：<strong>生产端调用</strong>把事件交给记忆平台，<strong>消费端调用</strong>把证据包取回来。生产端只受理，消费端才同步等待。两者混在一个请求里，延迟和失败会互相拖累。</p>
+
+  <p class="table-caption">调用点：谁在什么时刻调、调哪个接口、等不等结果</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:13%"><col style="width:16%"><col style="width:18%"><col style="width:23%"><col style="width:16%"><col style="width:14%"></colgroup>
+      <thead><tr><th>调用点</th><th>调用方</th><th>接口</th><th>时刻</th><th>同步 / 异步</th><th>超时 / 重试</th></tr></thead>
+      <tbody>
+        <tr><td><strong>任务前准备</strong></td><td>Agent 后端</td><td><code>RetrieveMemory</code></td><td>销售打开客户、店长开晨会、区域巡店前</td><td>同步</td><td>300ms；失败 1 次，降级无记忆</td></tr>
+        <tr><td><strong>对话中按需</strong></td><td>Agent 工具层</td><td><code>RetrieveMemory</code></td><td>用户问“上次聊到哪”、实体切换、进入新阶段</td><td>同步</td><td>300ms；同参数缓存 5 分钟</td></tr>
+        <tr><td><strong>任务结束</strong></td><td>Agent 后端</td><td><code>ProduceMemory</code></td><td>通话结束、跟进提交、试驾完成、会话关闭</td><td>异步</td><td>受理 ≤2s；返回 <code>job_id</code></td></tr>
+        <tr><td><strong>批量补算</strong></td><td>调度器</td><td><code>ProduceMemoryBatch</code></td><td>每晚 02:00；失败补偿；历史回放</td><td>异步</td><td>小时级；死信告警</td></tr>
+        <tr><td><strong>人工纠错</strong></td><td>前端</td><td><code>UpdateMemory</code> / <code>DeleteMemory</code></td><td>用户点“不对”“记住这条”“删除”</td><td>同步受理</td><td>1s；审计必须写</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-caption">最小接口面：两条主接口 + 一条状态查询</p>
+  <pre class="codeblock">POST /v1/memory/jobs            # 生产：提交事件，202 受理
+{ "tenant_id":"...", "source_type":"call", "source_id":"R-215",
+  "event_type":"call_ended", "idempotency_key":"call:R-215:1:v3",
+  "content_ref":"asr://...", "trace_id":"..." }
+→ 202 { "job_id":"J-901", "status":"PENDING" }
+
+POST /v1/memory/retrieve        # 消费：同步取证据包
+{ "role":"sales", "purpose":"prepare_call", "entity_id":"C-2087",
+  "as_of":1763188320000, "top_k":5, "token_budget":1200,
+  "permission_version":7, "trace_id":"..." }
+→ 200 { "items":[...], "gaps":[...], "next_actions":[...] }
+
+GET  /v1/memory/jobs/{job_id}    # 状态：不要靠前端猜
+→ 200 { "status":"SUCCEEDED", "memory_ids":["M-4471"], "error_code":null }</pre>
+
+  <p class="table-caption">ProduceMemory 请求字段：生产端只需要“事件”，不需要“结论”</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:26%"><col style="width:14%"><col style="width:60%"></colgroup>
+      <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>tenant_id</code> / <code>project_id</code></td><td>string</td><td>从鉴权上下文取，不由前端传</td></tr>
+        <tr><td><code>source_type</code> / <code>source_id</code></td><td>string</td><td>call / chat / crm_followup / test_drive / ticket；必须能回点</td></tr>
+        <tr><td><code>event_type</code></td><td>enum</td><td>call_ended / followup_submitted / test_drive_completed / chat_closed</td></tr>
+        <tr><td><code>event_seq</code></td><td>int</td><td>同一来源内的顺序号；分段抽取时必填</td></tr>
+        <tr><td><code>occurred_at</code></td><td>int64</td><td>事件发生时间；晚到数据不能覆盖新事实</td></tr>
+        <tr><td><code>actor</code></td><td>object</td><td><span class="mono">{user_id, role, store_id, region_id}</span></td></tr>
+        <tr><td><code>entity_hint</code></td><td>object</td><td><span class="mono">{type, id}</span>；允许为空，由平台解析</td></tr>
+        <tr><td><code>content_ref</code></td><td>string</td><td>录音 URL、ASR 文本 ID、跟进记录 ID；不要直接传大段文本</td></tr>
+        <tr><td><code>idempotency_key</code></td><td>string</td><td>重复提交必须返回同一个 <code>job_id</code></td></tr>
+        <tr><td><code>schema_version</code> / <code>extractor_version</code></td><td>string</td><td>固定抽取契约；升级不影响旧任务回放</td></tr>
+        <tr><td><code>mode</code></td><td>enum</td><td>async / sync；默认 async，只有测试和小批量用 sync</td></tr>
+        <tr><td><code>priority</code></td><td>enum</td><td>high / normal / low；条件触发走 high</td></tr>
+        <tr><td><code>trace_id</code></td><td>string</td><td>串联召回、回答、生产、反馈</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>返回至少包含 <code>job_id / status / accepted_at / estimated_complete_at</code>；状态查询走 <code>GetMemoryJob</code>，不要靠前端轮询猜。受理成功不等于记忆生效，UI 必须区分“已提交”和“已记录”。</p>
+
+  <p class="table-caption">调用纪律：调用次数、缓存与失败策略</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:20%"><col style="width:22%"><col style="width:26%"><col style="width:32%"></colgroup>
+      <thead><tr><th>场景</th><th>调用次数</th><th>缓存键</th><th>失败策略</th></tr></thead>
+      <tbody>
+        <tr><td>任务前准备</td><td>每个任务 1 次</td><td><span class="mono">tenant+project+user+entity+purpose+as_of+permission_version</span></td><td>失败不阻塞任务；提示“记忆暂不可用”，并列出 gaps</td></tr>
+        <tr><td>对话中按需</td><td>每轮最多 2 次</td><td>同上；实体不变时复用</td><td>超时静默降级；不要让用户看到技术错误</td></tr>
+        <tr><td>任务结束生产</td><td>每个事件 1 次</td><td><span class="mono">idempotency_key</span></td><td>202 受理；worker 失败重试 3 次，再进死信</td></tr>
+        <tr><td>批量补算</td><td>按批次</td><td><span class="mono">batch_id + row_no</span></td><td>失败可重放；不能重复写</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="figure" style="margin:26px auto 30px">
+    <div class="figure-head"><span class="cap">FIG. 10 / CALL SEQUENCE</span><span class="src">HTML 流程图</span></div>
+    <div class="diagram-frame natural" style="margin:0 auto"><div class="hf">
+  <div class="hf-head"><span class="tag">CALL SEQUENCE / SYNC + ASYNC</span><span class="hint">读同步，写异步</span></div>
+  <div class="hf-title">怎么调用：一次任务里的 8 个调用点</div>
+  <p class="hf-sub">召回在任务开始前和对话中按需调用；生产在任务结束后异步调用。两者不要混在同一个请求里。</p>
+  <div class="hf-seq">
+    <div class="row"><div class="idx">01</div><div class="actor">UI / 销售</div><div class="msg"><b>打开助手，准备电话</b>；选择客户，进入“电话前准备”。</div></div>
+    <div class="row"><div class="idx">02</div><div class="actor">AGENT</div><div class="msg"><b>组装 RecallRequest</b>：<code>role=sales / purpose=prepare_call / entity_id / as_of / top_k=5</code>；带 <code>permission_version</code>。</div></div>
+    <div class="row"><div class="idx">03</div><div class="actor">MEMORY</div><div class="msg"><b>RetrieveMemory（同步）</b> 返回证据包：items + gaps + next_actions；P95 ≤300ms。<span class="tag">SYNC</span></div></div>
+    <div class="row"><div class="idx">04</div><div class="actor">AGENT / LLM</div><div class="msg"><b>注入 Prompt 并生成</b>：每条记忆带来源；要求“3 条提醒 + 1 个下一步”，当前报价缺口明确提示。</div></div>
+    <div class="row"><div class="idx">05</div><div class="actor">UI / 销售</div><div class="msg"><b>完成任务 / 通话结束</b>；确认记忆卡片、建待办、改客户阶段。</div></div>
+    <div class="row"><div class="idx">06</div><div class="actor">AGENT → PRODUCER</div><div class="msg"><b>ProduceMemory（异步）</b>：提交事件，返回 <code>202 + job_id</code>；不阻塞 UI。<span class="tag">ASYNC</span></div></div>
+    <div class="row"><div class="idx">07</div><div class="actor">WORKER</div><div class="msg"><b>抽取 → 校验 → 合并 → 向量化 → 落库</b>；失败进重试队列，超过 3 次进死信并告警。</div></div>
+    <div class="row"><div class="idx">08</div><div class="actor">MEMORY / UI</div><div class="msg"><b>状态回写“已记录”</b>；下一次打开该客户时，新记忆进入召回候选。<span class="tag">NEXT TURN</span></div></div>
+  </div>
+  <p class="hf-note">调用纪律：同一 <code>purpose + entity + as_of + permission_version</code> 的召回结果缓存 5 分钟；一轮对话最多 2 次召回；生产接口只受理，不在请求里等 LLM。</p>
+</div></div>
+    <p class="figure-note">这张时序图只画销售场景；店长晨会、区域巡店的差异在 <code>purpose</code>、<code>top_k</code>、<code>aggregation_level</code>，调用顺序不变。</p>
+  </div>
+
+  <p class="table-caption">失败补偿：每一种失败都要有“用户看到什么、系统做什么”</p>
+  <div class="table-wrap">
+    <table>
+      <colgroup><col style="width:22%"><col style="width:24%"><col style="width:32%"><col style="width:22%"></colgroup>
+      <thead><tr><th>故障</th><th>用户看到什么</th><th>系统怎么补</th><th>验收</th></tr></thead>
+      <tbody>
+        <tr><td>召回超时</td><td>“记忆暂不可用”，任务继续</td><td>1 次重试；返回空证据包 + gaps</td><td>不阻塞主流程；错误可观测</td></tr>
+        <tr><td>生产受理失败</td><td>“提交失败，可重试”</td><td>客户端保留事件；按 <code>idempotency_key</code> 重试</td><td>重复提交不产生两条</td></tr>
+        <tr><td>LLM 抽取失败</td><td>“正在整理”变“整理失败”</td><td>重试 1 次；仍失败保留原始事件，进死信</td><td>不静默丢事件</td></tr>
+        <tr><td>embedding 失败</td><td>“已记录，暂不可搜”</td><td>先落 Record，标 <code>INDEX_FAILED</code>，后台重建</td><td>重建后能召回；不重复写</td></tr>
+        <tr><td>冲突无法裁决</td><td>“待核实”，展示双方证据</td><td><code>disputed</code>；不进自动召回，等人工/规则裁决</td><td>不能自动选一个</td></tr>
+        <tr><td><code>permission_version</code> 不一致</td><td>“无权限”或“需刷新”</td><td>返回 <code>scope_mismatch</code>；刷新权限后重试</td><td>越权 0；不返回空数组</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <h4><span class="h3n">11.5.4</span>首期事件源与写入策略：先接两个，不要一口吃全</h4>
   <p>首期只接两个事件源：<strong>通话录音/ASR</strong> 和 <strong>CRM 跟进记录</strong>。试驾、报价、订单先做“引用”，不写值。事件源越多，幂等、冲突、权限、回放越难；先把两个跑通，再扩。</p>
 
   <p class="table-caption">CRM 事件源与首期取舍</p>
@@ -2044,7 +2533,7 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
       <tbody>
         <tr><td>W1</td><td>角色访谈、场景评分、禁止清单</td><td>角色任务表、场景评分表、禁止清单</td><td>业务负责人签字确认 3 个试点</td></tr>
         <tr><td>W2–3</td><td>记忆盘点、字段模型、权限矩阵</td><td>注册表、字段表、角色可见性矩阵</td><td>评审通过，无悬空主体/权限</td></tr>
-        <tr><td>W3–5</td><td>接通话录音 + CRM 跟进记录</td><td>写入链路、抽取 Schema、审计</td><td>20 条真实事件可回放</td></tr>
+        <tr><td>W3–5</td><td>接通话录音 + CRM 跟进记录的生产、写入与召回</td><td>触发规则、抽取 Schema、写入状态机、调用日志、审计</td><td>20 条真实事件可回放；触发/调用可追溯</td></tr>
         <tr><td>W5–6</td><td>销售召回影子模式</td><td>证据包、召回日志、Badcase</td><td>top-3 有用率 ≥60%（影子）</td></tr>
         <tr><td>W7–8</td><td>10 个销售灰度</td><td>反馈表、指标看板</td><td>每人每周 ≥3 次真实使用</td></tr>
         <tr><td>W9–12</td><td>1 个店 + 区域只读聚合</td><td>门店报告、区域模式报告</td><td>越权 0，PII 0，能决定扩不扩</td></tr>
@@ -2142,6 +2631,11 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
   "authoritative_sources": ["CRM", "报价系统", "库存系统", "订单系统", "BI"],
   "forbidden": ["当前报价", "库存", "订单状态", "客户归属", "业绩数字", "个人私事"],
   "permission_model": "tenant + role + object ACL + aggregation_level",
+  "production_triggers": ["call_end", "crm_submit", "test_drive_complete", "6_turns", "3min_idle"],
+  "extractor": "LLM JSON schema + rule gate",
+  "embedding_model": "bge-m3 / text-embedding-3",
+  "call_points": ["prepare_call_before", "in_turn_on_demand", "post_task_async"],
+  "latency_budget": {"retrieve_p95_ms": 300, "produce_accept_p95_ms": 2000},
   "pilot": "10 sales -> 1 store -> region read-only",
   "metrics": ["top-3 useful rate", "commitment on-time rate", "permission incidents"],
   "owner": "crm-product / sales-ops",
@@ -2223,7 +2717,7 @@ td code,th code{font-family:var(--mono);font-size:11.5px;background:var(--paper-
   <h3><span class="h3n">A.4</span>方法来源说明</h3>
   <div class="note"><span class="label">PUBLIC EDITION</span><p>本公开版基于企业内部的记忆平台实践整理，已移除内部文档链接、内部产品名称与内部指标。文中的字段名、接口名与示例均为教学化、通用化表述，不代表任何具体平台的最终接口；落地时请以你所在团队的实际规范为准。</p></div>
 
-  <p class="small" style="margin-top:36px;border-top:1px solid var(--line);padding-top:16px">本教材中的流程图与架构图使用原生流程图生成；页面为单文件 HTML，图形资源位于 <span class="mono">assets/</span>。</p>
+  <p class="small" style="margin-top:36px;border-top:1px solid var(--line);padding-top:16px">本教材中的流程图与架构图使用页面内 HTML/CSS 绘制，不依赖外部图形文件；页面为单文件 HTML。</p>
 </section>
 </main>
 </div>
